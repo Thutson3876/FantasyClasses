@@ -1,0 +1,193 @@
+package me.thutson3876.fantasyclasses.gui;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.entity.HumanEntity;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryDragEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+
+import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
+
+public abstract class AbstractGUI implements Listener {
+	protected final Inventory inv;
+
+	protected List<GuiItem> items = new ArrayList<>();
+	protected FantasyPlayer player;
+	protected GuiItem back = null;
+	protected GuiItem forward = null;
+
+	public AbstractGUI(Player p, final String title, final int size, AbstractGUI forward, AbstractGUI back) {
+		FantasyClasses plugin = FantasyClasses.getPlugin();
+		player = plugin.getPlayerManager().getPlayer(p);
+		Bukkit.getPluginManager().registerEvents(this, plugin);
+		
+		inv = Bukkit.createInventory(null, size, title);
+		
+		initializeItems();
+		
+		if (forward != null)
+			initializeForwardItem(forward);
+
+		if (back != null)
+			initializeBackItem(back);
+	}
+
+	public abstract void initializeItems();
+
+	protected void initializeForwardItem(AbstractGUI forward) {
+		int size = inv.getSize();
+		int forPos = size - 1;
+
+		this.forward = createGuiItem(forward, Material.EMERALD_BLOCK, ChatUtils.chat("&2Next"));
+		ItemStack forwardItem = this.forward.getItem();
+
+		inv.setItem(forPos, forwardItem);
+		items.add(this.forward);
+	}
+
+	protected void initializeBackItem(AbstractGUI back) {
+		int size = inv.getSize();
+		int backPos = size - 9;
+
+		this.back = createGuiItem(back, Material.REDSTONE_BLOCK, ChatUtils.chat("&4Back"));
+		ItemStack backItem = this.back.getItem();
+
+		inv.setItem(backPos, backItem);
+		items.add(this.back);
+	}
+
+	public void setItems(List<GuiItem> items) {
+		this.items = items;
+		initializeItems();
+	}
+	
+	protected void reInitializeForwardBack() {
+		if(this.back != null) {
+			if(!this.items.contains(back)) {
+				this.items.add(back);
+			}
+		}
+		
+		if(this.forward != null) {
+			if(!this.items.contains(forward)) {
+				this.items.add(forward);
+			}
+		}
+	}
+	
+	protected void fillGaps(ItemStack filler) {
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack item = inv.getItem(i);
+			if (item == null || item.getType().equals(Material.AIR)) {
+				inv.setItem(i, filler);
+			}
+		}
+	}
+	
+	public void defaultFillGaps(Material filler) {
+		ItemStack fill = new ItemStack(filler);
+		ItemMeta meta = fill.getItemMeta();
+		meta.setDisplayName(" ");
+		fill.setItemMeta(meta);
+		
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack item = inv.getItem(i);
+			if (item == null || item.getType().equals(Material.AIR)) {
+				inv.setItem(i, fill);
+			}
+		}
+	}
+
+	protected static GuiItem createGuiItem(final AbstractGUI linkedInventory, final Material material, final String name, final String... lore) {
+		final ItemStack item = new ItemStack(material, 1);
+		final ItemMeta meta = item.getItemMeta();
+
+		meta.setDisplayName(name);
+		meta.setLore(Arrays.asList(lore));
+		item.setItemMeta(meta);
+		
+		GuiItem guiItem = new GuiItem(item, linkedInventory);
+
+		return guiItem;
+	}
+
+	public void openInventory(final HumanEntity ent) {
+		ent.openInventory(inv);
+	}
+	
+	public void refresh() {
+		initializeItems();
+		player.getPlayer().openInventory(inv);
+	}
+	
+	public static Inventory defaultFillGaps(Inventory inv, Material filler) {
+		ItemStack fill = new ItemStack(filler);
+		ItemMeta meta = fill.getItemMeta();
+		meta.setDisplayName(" ");
+		fill.setItemMeta(meta);
+		
+		for (int i = 0; i < inv.getSize(); i++) {
+			ItemStack item = inv.getItem(i);
+			if (item == null || item.getType().equals(Material.AIR)) {
+				inv.setItem(i, fill);
+			}
+		}
+		
+		return inv;
+	}
+	
+	public static ItemStack getDefaultFiller() {
+		ItemStack fill = new ItemStack(Material.BLACK_STAINED_GLASS_PANE);
+		ItemMeta meta = fill.getItemMeta();
+		meta.setDisplayName(" ");
+		fill.setItemMeta(meta);
+		
+		return fill;
+	}
+
+	@EventHandler
+	public void onInventoryClick(final InventoryClickEvent e) {
+		if (e.getInventory() != inv)
+			return;
+
+		e.setCancelled(true);
+
+		final ItemStack clickedItem = e.getCurrentItem();
+
+		if (clickedItem == null || clickedItem.getType().isAir())
+			return;
+
+		final Player p = (Player) e.getWhoClicked();
+		
+		p.playSound(p.getLocation(), Sound.UI_BUTTON_CLICK, 0.4F, 1F);
+		
+		for(GuiItem item : items) {
+			if(clickedItem.equals(item.getItem())) {
+				if(item.getLinkedInventory() == null)
+					break;
+				p.openInventory(item.getLinkedInventory().inv);
+				break;
+			}
+		}
+	}
+
+	@EventHandler
+	public void onInventoryDrag(final InventoryDragEvent e) {
+		if (e.getInventory().equals(inv)) {
+			e.setCancelled(true);
+		}
+	}
+}

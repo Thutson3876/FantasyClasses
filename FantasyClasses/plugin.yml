@@ -1,0 +1,14 @@
+name: FantasyClasses
+version: 0.1
+author: thutson3876
+main: me.thutson3876.fantasyclasses.FantasyClasses
+description: The spiritual successor to my previous plugin FantasyTools
+api-version: 1.17
+
+commands:
+  chooseclass:
+    usage: /<command>
+    description: opens the gui for the user to choose their class and look at their skill trees
+  bindability:
+    usage: /<command> <ability>
+    description: binds the specified ability to the material held in the player's hand
