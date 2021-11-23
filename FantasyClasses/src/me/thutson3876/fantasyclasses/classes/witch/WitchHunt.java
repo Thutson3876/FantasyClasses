@@ -14,9 +14,10 @@ import org.bukkit.loot.LootContext;
 import org.bukkit.loot.LootTable;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.abilities.Scalable;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
-public class WitchHunt extends AbstractAbility {
+public class WitchHunt extends AbstractAbility implements Scalable {
 
 	private Random rng = new Random();
 	private int magicka = 100;
@@ -94,16 +95,19 @@ public class WitchHunt extends AbstractAbility {
 	public void applyLevelModifiers() {
 	}
 
-	public int getMagicka() {
+	@Override
+	public int getScalableValue() {
 		return magicka;
 	}
 
-	public void addMagicka(int amt) {
-		magicka += amt;
+	@Override
+	public void setScalableValue(int amt) {
+		magicka = amt;
 	}
 
-	public void setMagicka(int amt) {
-		magicka = amt;
+	@Override
+	public String getScalableValueName() {
+		return "magicka";
 	}
 
 }

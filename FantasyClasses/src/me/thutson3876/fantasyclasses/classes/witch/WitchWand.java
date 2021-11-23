@@ -138,6 +138,6 @@ public class WitchWand extends AbstractAbility implements Bindable {
 		if (this.fplayer == null)
 			return 0;
 
-		return (fplayer.getMagicka() / 100);
+		return (fplayer.getScalableValue("magicka") / 100);
 	}
 }

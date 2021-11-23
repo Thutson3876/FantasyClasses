@@ -171,6 +171,6 @@ public class VexWand extends AbstractAbility implements Bindable {
 		if(fplayer == null)
 			return 0;
 		
-		return this.fplayer.getMagicka() / 100;
+		return fplayer.getScalableValue("magicka") / 100;
 	}
 }

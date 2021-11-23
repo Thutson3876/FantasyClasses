@@ -7,7 +7,7 @@ import org.bukkit.Material;
 
 public enum MaterialLists {
 	
-	MELEE_WEAPON, SWORD, AXE, HOE, EXOTIC_WEAPON, ARMOR, POTION, ALCHEMICAL_INGREDIENT, DRUID_FOOD, LEAVES;
+	MELEE_WEAPON, SWORD, AXE, HOE, PICKAXE, EXOTIC_WEAPON, TOOL, ARMOR, POTION, ALCHEMICAL_INGREDIENT, DRUID_FOOD, LEAVES;
 	
 	private List<Material> matList = new ArrayList<>();
 	
@@ -51,6 +51,13 @@ public enum MaterialLists {
 		HOE.matList.add(Material.STONE_HOE);
 		HOE.matList.add(Material.NETHERITE_HOE);
 		HOE.matList.add(Material.DIAMOND_HOE);
+		//Pickaxe
+		PICKAXE.matList.add(Material.IRON_PICKAXE);
+		PICKAXE.matList.add(Material.WOODEN_PICKAXE);
+		PICKAXE.matList.add(Material.STONE_PICKAXE);
+		PICKAXE.matList.add(Material.GOLDEN_PICKAXE);
+		PICKAXE.matList.add(Material.DIAMOND_PICKAXE);
+		PICKAXE.matList.add(Material.NETHERITE_PICKAXE);
 		//Exotic
 		EXOTIC_WEAPON.matList.add(Material.TRIDENT);
 		EXOTIC_WEAPON.matList.add(Material.IRON_HOE);
@@ -59,6 +66,12 @@ public enum MaterialLists {
 		EXOTIC_WEAPON.matList.add(Material.STONE_HOE);
 		EXOTIC_WEAPON.matList.add(Material.NETHERITE_HOE);
 		EXOTIC_WEAPON.matList.add(Material.DIAMOND_HOE);
+		//Tool
+		TOOL.matList.addAll(MELEE_WEAPON.matList);
+		TOOL.matList.addAll(EXOTIC_WEAPON.matList);
+		TOOL.matList.addAll(PICKAXE.matList);
+		TOOL.matList.add(Material.FISHING_ROD);
+		
 		//Armor
 		ARMOR.matList.add(Material.LEATHER_HELMET);
 		ARMOR.matList.add(Material.LEATHER_CHESTPLATE);
@@ -121,6 +134,7 @@ public enum MaterialLists {
 		LEAVES.matList.add(Material.JUNGLE_LEAVES);
 		LEAVES.matList.add(Material.OAK_LEAVES);
 		LEAVES.matList.add(Material.SPRUCE_LEAVES);
+		
 	}
 	
 	public List<Material> getMaterials(){

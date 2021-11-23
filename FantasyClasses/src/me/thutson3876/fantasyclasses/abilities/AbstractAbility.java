@@ -14,7 +14,6 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
-import me.thutson3876.fantasyclasses.classes.witch.WitchHunt;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
 import me.thutson3876.fantasyclasses.util.ChatUtils;
 
@@ -219,8 +218,8 @@ public abstract class AbstractAbility implements Ability, Listener {
 				map.put("type", ((Bindable)this).getBoundType().name());
 			}
 		}
-		else if(this instanceof WitchHunt) {
-			map.put("magicka", ((WitchHunt)this).getMagicka());
+		else if(this instanceof Scalable) {
+			map.put(((Scalable)this).getScalableValueName(), ((Scalable)this).getScalableValue());
 		}
 			
 		

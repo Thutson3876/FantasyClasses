@@ -10,10 +10,13 @@ import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllBuffs
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllDebuffs;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Arrowsplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Cleanse;
+import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.CowSplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.DeathByDiamonds;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Explosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.GodMode;
+import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.MidasTouch;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.RandomAbility;
+import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.RandomTeleport;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.SelfExplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.SelfSmite;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.SmiteAll;
@@ -44,6 +47,9 @@ public class WondrousTable {
 		abilities.add(new GodMode());
 		abilities.add(new Speed());
 		abilities.add(new DeathByDiamonds());
+		abilities.add(new CowSplosion());
+		abilities.add(new RandomTeleport());
+		abilities.add(new MidasTouch());
 	}
 	
 	public static void roll(Player p) {

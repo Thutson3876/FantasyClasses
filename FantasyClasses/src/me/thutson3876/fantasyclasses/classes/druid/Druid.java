@@ -15,7 +15,20 @@ public class Druid extends AbstractFantasyClass {
 		this.setItemStack(Material.AZALEA, name, "A class based on revering nature and its gifts");
 
 		skillTree = new Skill(new Forager(p));
-		skillTree.addChild(new BeastMaster(p));
 		
+		Skill beast = new Skill(new BestFriend(p));
+		beast.addChild(new BeastMaster(p));
+		beast.addChild(new Stampede(p));
+		skillTree.addChild(beast);
+		
+		Skill rejuv = new Skill(new Rejuvination(p));
+		rejuv.addChild(new Barkskin(p));
+		rejuv.addChild(new NaturesBlessing(p));
+		rejuv.addChild(new Tranquility(p));
+		skillTree.addChild(rejuv);
+		
+		Skill surv = new Skill(new Survivalist(p));
+		surv.addChild(new SurvivalInstincts(p));
+		skillTree.addChild(surv);
 	}
 }

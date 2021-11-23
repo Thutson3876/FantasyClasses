@@ -18,6 +18,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -441,6 +442,18 @@ public class AbilityUtils {
 			}
 		}
 		return false;
+	}
+	
+	public static List<LivingEntity> getNearbyPlayerPets(Player p, double distance){
+		List<LivingEntity> pets = new ArrayList<>();
+		for(Entity e : p.getNearbyEntities(distance, distance, distance)) {
+			if(e instanceof Tameable) {
+				if(((Tameable) e).getOwner().equals(p))
+					pets.add((LivingEntity) e);
+			}
+		}
+		
+		return pets;
 	}
 
 	public static boolean isBloodVial(ItemStack item) {

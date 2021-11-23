@@ -12,8 +12,8 @@ import me.thutson3876.fantasyclasses.commands.CommandManager;
 import me.thutson3876.fantasyclasses.cooldowns.CooldownManager;
 import me.thutson3876.fantasyclasses.listeners.AbilityListener;
 import me.thutson3876.fantasyclasses.listeners.BrewingListener;
-import me.thutson3876.fantasyclasses.listeners.PlayerListener;
 import me.thutson3876.fantasyclasses.listeners.PlayerRegistryListener;
+import me.thutson3876.fantasyclasses.listeners.SkillPointExpListener;
 import me.thutson3876.fantasyclasses.listeners.WitchesBrewListener;
 import me.thutson3876.fantasyclasses.playermanagement.BrewTracker;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
@@ -54,8 +54,8 @@ public class FantasyClasses extends JavaPlugin {
 	
 	private void registerListeners() {
 		new PlayerRegistryListener();
-		new PlayerListener();
 		new AbilityListener();
+		new SkillPointExpListener();
 		new BrewingListener();
 		new WitchesBrewListener();
 	}

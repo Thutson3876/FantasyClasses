@@ -12,8 +12,8 @@ import me.thutson3876.fantasyclasses.FantasyClasses;
 
 public class PlayerRegistryListener implements Listener {
 
-	protected static final FantasyClasses plugin = FantasyClasses.getPlugin();
-	
+	private static final FantasyClasses plugin = FantasyClasses.getPlugin();
+
 	public PlayerRegistryListener() {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}

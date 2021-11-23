@@ -18,8 +18,8 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class BeastMaster extends AbstractAbility {
 
-	private double healthMod = 0.4;
-	private double damageMod = 0.3;
+	private double healthMod = 0.3;
+	private double damageMod = 0.2;
 	private AttributeModifier attackDmg;
 	private AttributeModifier maxHealth;
 	
@@ -87,8 +87,8 @@ public class BeastMaster extends AbstractAbility {
 			e.getAttribute(Attribute.GENERIC_ATTACK_DAMAGE).removeModifier(attackDmg);
 		}
 		
-		healthMod = 0.4 * currentLevel;
-		damageMod = 0.3 * currentLevel;
+		healthMod = 0.3 * currentLevel;
+		damageMod = 0.2 * currentLevel;
 		maxHealth = new AttributeModifier("maxHealth", healthMod, Operation.ADD_SCALAR);
 		attackDmg = new AttributeModifier("attackDmg", damageMod, Operation.ADD_SCALAR);
 		

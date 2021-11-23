@@ -129,6 +129,6 @@ public class ConfusionWand extends AbstractAbility implements Bindable {
 		if(fplayer == null)
 			return 0;
 		
-		return fplayer.getMagicka() / 75;
+		return fplayer.getScalableValue("magicka") / 75;
 	}
 }

@@ -7,6 +7,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
@@ -15,8 +16,10 @@ import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerItemConsumeEvent;
+import org.bukkit.event.player.PlayerItemDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.event.world.LootGenerateEvent;
@@ -121,4 +124,18 @@ public class AbilityListener implements Listener {
 		plugin.triggerAll(e);
 	}
 	
+	@EventHandler
+	public void onEntityRegainHealthEvent(EntityRegainHealthEvent e) {
+		plugin.triggerAll(e);
+	}
+	
+	@EventHandler
+	public void onPlayerItemDamageEvent(PlayerItemDamageEvent e) {
+		plugin.triggerAll(e);
+	}
+	
+	@EventHandler
+	public void onPlayerExpChangeEvent(PlayerExpChangeEvent e) {
+		plugin.triggerAll(e);
+	}
 }

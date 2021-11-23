@@ -12,7 +12,6 @@ import org.bukkit.inventory.ItemStack;
 
 import me.thutson3876.fantasyclasses.abilities.skills.Skill;
 import me.thutson3876.fantasyclasses.classes.AbstractFantasyClass;
-import me.thutson3876.fantasyclasses.classes.witch.WitchHunt;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
 
 @SerializableAs("Ability")
@@ -69,7 +68,6 @@ public interface Ability extends ConfigurationSerializable {
 		String name = null;
 		int level = -1;
 		String type = null;
-		int magicka = 0;
 		
 		if (map.containsKey("name")) {
 			name = (String) map.get("name");
@@ -79,9 +77,6 @@ public interface Ability extends ConfigurationSerializable {
 		}
 		if (map.containsKey("type")) {
 			type = ((String) map.get("type"));
-		}
-		if (map.containsKey("magicka")) {
-			magicka = ((Integer) map.get("magicka"));
 		}
 		
 		if (name == null || level < 0) {
@@ -103,8 +98,8 @@ public interface Ability extends ConfigurationSerializable {
 						}
 						
 					}
-					else if(abil instanceof WitchHunt) {
-						((WitchHunt)abil).setMagicka(magicka);
+					else if(abil instanceof Scalable) {
+						((Scalable)abil).setScalableValue((Integer) map.get(((Scalable)abil).getScalableValueName()));
 					}
 						
 					s.replaceSkillAbility(abil);

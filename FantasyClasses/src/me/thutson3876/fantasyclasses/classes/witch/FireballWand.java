@@ -16,7 +16,7 @@ import me.thutson3876.fantasyclasses.abilities.Bindable;
 public class FireballWand extends AbstractAbility implements Bindable {
 
 	private Material boundType = null;
-	private double velocity = 1.5;
+	private double velocity = 1.2;
 	private float yield = 1.0f;
 	
 	public FireballWand(Player p) {
@@ -73,8 +73,8 @@ public class FireballWand extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		yield = 1.0f * currentLevel;
-		velocity = 1.5 + 0.2 * currentLevel;
+		yield = 0.5f + (0.5f * currentLevel);
+		velocity = 1.0 + 0.2 * currentLevel;
 	}
 
 	@Override
@@ -102,6 +102,6 @@ public class FireballWand extends AbstractAbility implements Bindable {
 		if(fplayer == null)
 			return 0.0f;
 		
-		return fplayer.getMagicka() / 100;
+		return fplayer.getScalableValue("magicka") / 100;
 	}
 }
