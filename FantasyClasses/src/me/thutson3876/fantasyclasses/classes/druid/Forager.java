@@ -11,6 +11,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.util.AbilityUtils;
 import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class Forager extends AbstractAbility {
@@ -72,7 +73,7 @@ public class Forager extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Leaves have a &6" + chanceOnBreak * 100 + "% &rchance to drop fresh food, and a &6" + goldenChance * 100
+		return "Leaves have a &6" + AbilityUtils.doubleRoundToXDecimals(chanceOnBreak * 100, 1) + "% &rchance to drop fresh food, and a &6" + goldenChance * 100
 				+ "% &rchance to drop a golden apple";
 	}
 

@@ -38,6 +38,9 @@ public class WitchHunt extends AbstractAbility implements Scalable {
 
 	@Override
 	public boolean trigger(Event event) {
+		if(!isEnabled())
+			return false;
+		
 		if (!(event instanceof LootGenerateEvent))
 			return false;
 

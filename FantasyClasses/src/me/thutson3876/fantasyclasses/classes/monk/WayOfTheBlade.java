@@ -5,24 +5,24 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 
+import me.thutson3876.fantasyclasses.abilities.Ability;
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
-public class OpenPalm extends AbstractAbility {
+public class WayOfTheBlade extends AbstractAbility {
 
-	private double damageMod = 3.0;
-	
-	public OpenPalm(Player p) {
+	public WayOfTheBlade(Player p) {
 		super(p);
 	}
 	
+	//convert half of open palm damage increase to use with a weapon
 	@Override
 	public void setDefaults() {
 		this.coolDowninTicks = 0;
-		this.displayName = "Open Palm";
-		this.skillPointCost = 1;
-		this.maximumLevel = 4;
-		
-		this.createItemStack(Material.ACACIA_TRAPDOOR);
+		this.displayName = "Way Of The Blade";
+		this.skillPointCost = 2;
+		this.maximumLevel = 1;
+
+		this.createItemStack(Material.IRON_SWORD);
 	}
 
 	@Override
@@ -35,9 +35,16 @@ public class OpenPalm extends AbstractAbility {
 		if(!e.getDamager().equals(this.player))
 			return false;
 		
-		if (!(player.getInventory().getItemInMainHand() == null
+		if ((player.getInventory().getItemInMainHand() == null
 				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)))
 			return false;
+		
+		double damageMod = 0.0;
+		
+		for(Ability abil : fplayer.getAbilities()) {
+			if(abil instanceof OpenPalm)
+				damageMod = ((OpenPalm)abil).getDamageModifier();
+		}
 		
 		e.setDamage(e.getDamage() + damageMod);
 		
@@ -46,12 +53,12 @@ public class OpenPalm extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Attack an entity with an empty hand";
+		return "Attack with a weapon";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Your attacks deal &6" + damageMod + "&r extra damage";
+		return "Your weapon attacks deal bonus damage equal to half of your &6Open Palm &rmodifier";
 	}
 
 	@Override
@@ -61,10 +68,6 @@ public class OpenPalm extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		damageMod = 3.0 * currentLevel;
 	}
 
-	public double getDamageModifier() {
-		return damageMod;
-	}
 }

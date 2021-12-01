@@ -12,3 +12,6 @@ commands:
   bindability:
     usage: /<command> <ability>
     description: binds the specified ability to the material held in the player's hand
+  resetskills:
+    usage: /<command>
+    description: resets the player's skill tree and abilities

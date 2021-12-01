@@ -26,13 +26,17 @@ public class CollectibleListener implements Listener {
 			return;
 		
 		Random rng = new Random();
+		
+		if(rng.nextDouble() > 0.001)
+			return;
+		
 		Chunk chunk = e.getChunk();
 		World world = chunk.getWorld();
 		int x = chunk.getX();
 		int z = chunk.getZ();
 		
 		//Ancient Technique Spawner
-		if(chunk.getWorld().getHighestBlockYAt(x, z) > 70) {
+		if(chunk.getWorld().getHighestBlockYAt(x, z) > 80) {
 			Block b = world.getHighestBlockAt(x, z);
 			b.setType(Collectible.ANCIENT_TECHNIQUE.getType());
 			b.setMetadata("Collectible", new FixedMetadataValue(plugin, Collectible.ANCIENT_TECHNIQUE));
@@ -40,11 +44,13 @@ public class CollectibleListener implements Listener {
 		}
 		
 		//Mining Schematics Spawner
-		if(rng.nextDouble() < 0.001) {
-			Block b = world.getBlockAt(x, rng.nextInt(5) + 5, z);
+		if(rng.nextDouble() < 0.01) {
+			Block b = world.getBlockAt(x, rng.nextInt(10) + 5, z);
 			b.setType(Collectible.MINING_SCHEMATICS.getType());
 			b.setMetadata("Collectible", new FixedMetadataValue(plugin, Collectible.MINING_SCHEMATICS));
 			return;
 		}
 	}
+	
+	
 }

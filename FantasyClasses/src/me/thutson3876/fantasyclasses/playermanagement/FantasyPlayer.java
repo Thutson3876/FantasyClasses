@@ -1,4 +1,4 @@
-package me.thutson3876.fantasyclasses.playermanagement;
+	package me.thutson3876.fantasyclasses.playermanagement;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -139,6 +139,21 @@ public class FantasyPlayer {
 		ClassSelectionGUI gui = new ClassSelectionGUI(bukkitPlayer);
 		gui.openInventory(bukkitPlayer);
 	}
+	
+	public void resetAllAbilities() {
+		List<Ability> newAbils = new ArrayList<>();
+		for(Ability abil : abilities) {
+			this.addSkillPoints(abil.getSkillPointCost() * abil.getCurrentLevel());
+			abil.deInit();
+			abil.setLevel(0);
+			if(abil instanceof Scalable) {
+				newAbils.add(abil);
+				continue;
+			}
+		}
+		
+		this.abilities = newAbils;
+	}
 
 	public void removeAbility(Ability abil) {
 		this.abilities.remove(abil);
@@ -217,6 +232,7 @@ public class FantasyPlayer {
 		for(Ability abil : this.abilities) {
 			if(abil == null)
 				continue;
+			abil.deInit();
 			list.add(abil.serialize());
 		}
 		config.set("players." + uuid + ".abilities", list);

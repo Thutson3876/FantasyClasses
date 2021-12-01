@@ -1,6 +1,10 @@
-package me.thutson3876.fantasyclasses.classes.druid;
+package me.thutson3876.fantasyclasses.classes.dungeoneer;
 
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -9,24 +13,24 @@ import org.bukkit.scheduler.BukkitRunnable;
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
-public class Barkskin extends AbstractAbility {
+public class StoneSkin extends AbstractAbility {
 
-	private double dmgReduction = 0.1;
+	private double dmgReduction = 0.15;
 	private boolean isOn = false;
-	private int durationInTicks = 8 * 20;
+	private int durationInTicks = 10 * 20;
 	
-	public Barkskin(Player p) {
+	public StoneSkin(Player p) {
 		super(p);
 	}
-	
+
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 45 * 20;
-		this.displayName = "Barkskin";
+		this.coolDowninTicks = 90 * 20;
+		this.displayName = "Stoneskin";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
-
-		this.createItemStack(Material.OAK_WOOD);	
+		
+		this.createItemStack(Material.STONE_BRICKS);
 	}
 
 	@Override
@@ -47,6 +51,12 @@ public class Barkskin extends AbstractAbility {
 		}
 		
 		e.setDamage(dmgReduction * e.getDamage());
+		
+		World world = player.getWorld();
+		Location loc = player.getLocation();
+		
+		world.playSound(loc, Sound.BLOCK_DRIPSTONE_BLOCK_BREAK, 1.0f, 0.8f);
+		world.spawnParticle(Particle.ASH, loc, currentLevel * 2);
 		
 		isOn = true;
 		
@@ -70,7 +80,7 @@ public class Barkskin extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Take &6" + AbilityUtils.doubleRoundToXDecimals(dmgReduction * 100, 1) + "% &rless damage for 8 seconds";
+		return "Take &6" + AbilityUtils.doubleRoundToXDecimals(dmgReduction * 100, 1) + "% &rless damage for &6" + (durationInTicks / 20) + " &rseconds";
 	}
 
 	@Override
@@ -80,7 +90,8 @@ public class Barkskin extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		dmgReduction = 0.1 * currentLevel;
+		dmgReduction = 0.15 * currentLevel;
+		durationInTicks = (4 + 3 * currentLevel) * 20;
 	}
 
 }

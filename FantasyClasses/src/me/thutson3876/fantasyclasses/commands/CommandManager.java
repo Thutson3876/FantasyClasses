@@ -7,6 +7,7 @@ import java.util.List;
 import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_BindAbility;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ChooseClass;
+import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ResetSkills;
 
 public class CommandManager {
 	private List<AbstractCommand> commands = new LinkedList<>();
@@ -14,6 +15,7 @@ public class CommandManager {
 	public CommandManager() {
 		commands.add(new Command_ChooseClass());
 		commands.add(new Command_BindAbility());
+		commands.add(new Command_ResetSkills());
 		
 		this.registerCommands();
 	}

@@ -7,7 +7,7 @@ import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 
 public enum DamageCauseList {
 
-	MAGICAL, PHYSICAL, ENVIRONMENTAL;
+	MAGICAL, PHYSICAL, ENVIRONMENTAL, FIRE;
 	
 	private List<DamageCause> causeList = new ArrayList<>();
 	
@@ -53,9 +53,18 @@ public enum DamageCauseList {
 		ENVIRONMENTAL.causeList.add(DamageCause.FIRE_TICK);
 		ENVIRONMENTAL.causeList.add(DamageCause.FREEZE);
 		ENVIRONMENTAL.causeList.add(DamageCause.HOT_FLOOR);
+		//Fire
+		FIRE.causeList.add(DamageCause.FIRE);
+		FIRE.causeList.add(DamageCause.FIRE_TICK);
+		FIRE.causeList.add(DamageCause.HOT_FLOOR);
+		FIRE.causeList.add(DamageCause.LAVA);
 	}
 	
 	public List<DamageCause> getDamageCauseList(){
 		return this.causeList;
+	}
+	
+	public boolean contains(DamageCause cause) {
+		return causeList.contains(cause);
 	}
 }

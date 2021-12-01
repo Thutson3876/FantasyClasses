@@ -134,7 +134,6 @@ public enum MaterialLists {
 		LEAVES.matList.add(Material.JUNGLE_LEAVES);
 		LEAVES.matList.add(Material.OAK_LEAVES);
 		LEAVES.matList.add(Material.SPRUCE_LEAVES);
-		
 	}
 	
 	public List<Material> getMaterials(){

@@ -6,37 +6,38 @@ import org.bukkit.event.Event;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
-public class AncientTechniques extends AbstractAbility {
+public class CulturalWisdom extends AbstractAbility {
 
-	public AncientTechniques(Player p) {
+	public CulturalWisdom(Player p) {
 		super(p);
 	}
 	
+	// use world.locateneareststructure() to find nearest structure
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 30;
-		this.displayName = "Ancient Techniques";
-		this.skillPointCost = 1;
+		this.coolDowninTicks = 30 * 20;
+		this.displayName = "Cultural Wisdom";
+		this.skillPointCost = 2;
 		this.maximumLevel = 1;
-		
-		this.createItemStack(Material.LECTERN);		
+
+		this.createItemStack(Material.ENCHANTED_BOOK);
 	}
 
 	@Override
 	public boolean trigger(Event event) {
-		// TODO Auto-generated method stub
+		
 		return false;
 	}
 
 	@Override
 	public String getInstructions() {
-		return "Find ";
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Send out an ender signal that points in the direction of the nearest structure";
 	}
 
 	@Override

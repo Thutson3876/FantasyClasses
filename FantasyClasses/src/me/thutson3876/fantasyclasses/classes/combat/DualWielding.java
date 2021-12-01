@@ -147,4 +147,8 @@ public class DualWielding extends AbstractAbility {
 	public void applyLevelModifiers() {
 	}
 
+	@Override
+	public void deInit() {
+		swordPassiveOff();
+	}
 }

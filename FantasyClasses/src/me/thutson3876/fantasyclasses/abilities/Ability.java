@@ -110,4 +110,6 @@ public interface Ability extends ConfigurationSerializable {
 
 		return abil;
 	}
+
+	void deInit();
 }

@@ -1,5 +1,6 @@
 package me.thutson3876.fantasyclasses.classes.druid;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.LivingEntity;
@@ -76,7 +77,7 @@ public class NaturesBlessing extends AbstractAbility {
 	public void applyLevelModifiers() {
 		coolDowninTicks = (10 - (currentLevel * 2)) * 20;
 		
-		if(task != null)
+		if(task != null && (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
 			task.cancel();
 		
 		task = runnable.runTaskTimer(plugin, coolDowninTicks, coolDowninTicks);

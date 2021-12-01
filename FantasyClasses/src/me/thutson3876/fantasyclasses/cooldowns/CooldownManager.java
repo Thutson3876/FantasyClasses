@@ -62,6 +62,18 @@ public class CooldownManager {
 		}
 		return playerCooldownList;
 	}
+	
+	public boolean resetPlayerCooldowns(Player p) {
+		boolean hadCooldown = false;
+		synchronized (this.cooldownList) {
+			for (CooldownContainer container : this.cooldownList) {
+				if (container.getPlayer().equals(p))
+					cooldownList.remove(container);
+				hadCooldown = true;
+			}
+		}
+		return hadCooldown;
+	}
 
 	public Map<Ability, Integer> getAllCooldownsForPlayer(Player p) {
 		Map<Ability, Integer> playerCooldownMap = new HashMap<>();

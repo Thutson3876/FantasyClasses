@@ -231,4 +231,9 @@ public abstract class AbstractAbility implements Ability, Listener {
 	public String toString() {
 		return "\nName: " + this.getCommandName().toLowerCase() + "\nLevel: " + this.currentLevel + "\n";
 	}
+	
+	@Override
+	public void deInit() {
+		
+	}
 }

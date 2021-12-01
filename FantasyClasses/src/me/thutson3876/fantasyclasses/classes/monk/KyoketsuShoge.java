@@ -13,19 +13,23 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.abilities.Bindable;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
-public class KyoketsuShoge extends AbstractAbility {
+public class KyoketsuShoge extends AbstractAbility implements Bindable {
 
 	private double velocityMod = 1.2;
 	private double damage = 4.0;
 	private Arrow arrow = null;
 	private double yMod = 1.0;
+	
+	private Material type = null;
 
 	public KyoketsuShoge(Player p) {
 		super(p);
 	}
 
+	//fix weird launching
 	@Override
 	public void setDefaults() {
 		this.coolDowninTicks = 18 * 20;
@@ -49,9 +53,7 @@ public class KyoketsuShoge extends AbstractAbility {
 
 			if (!(e.getAction() == Action.RIGHT_CLICK_AIR))
 				return false;
-			if (!(player.getInventory().getItemInMainHand() != null
-					
-				&& player.getInventory().getItemInMainHand().getType().equals(Material.ARROW)))
+			if (!(player.getInventory().getItemInOffHand().getType().equals(type) || player.getInventory().getItemInMainHand().getType().equals(type)))
 				return false;
 
 			fireArrow();
@@ -119,6 +121,16 @@ public class KyoketsuShoge extends AbstractAbility {
 	public void applyLevelModifiers() {
 		coolDowninTicks = (23 - currentLevel * 5) * 20;
 		damage = 4.0 * currentLevel;
+	}
+
+	@Override
+	public Material getBoundType() {
+		return type;
+	}
+
+	@Override
+	public void setBoundType(Material type) {
+		this.type = type;
 	}
 
 }

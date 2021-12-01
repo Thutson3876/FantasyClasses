@@ -10,6 +10,7 @@ import java.util.Random;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.advancement.Advancement;
+import org.bukkit.block.data.Ageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
@@ -19,6 +20,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.inventory.FurnaceExtractEvent;
@@ -27,11 +29,13 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
 
 public class SkillPointExpListener implements Listener {
 
-	private static Map<EntityType, Integer> entityTypeExpDrop;
-	private static Map<Material, Integer> blockTypeExpDrop;
+	private static Map<EntityType, Integer> entityTypeExpDrop = new HashMap<>();
+	private static Map<Material, Integer> blockTypeExpDrop = new HashMap<>();
+	private static Map<Material, Integer> smeltTypeExpDrop = new HashMap<>();
 	private static final Random rng = new Random();
 	
 	//Entity Killed
@@ -62,8 +66,8 @@ public class SkillPointExpListener implements Listener {
 		entityTypeExpDrop.put(EntityType.PILLAGER, 1);
 		entityTypeExpDrop.put(EntityType.GUARDIAN, 2);
 		entityTypeExpDrop.put(EntityType.GHAST, 5);
-		entityTypeExpDrop.put(EntityType.BLAZE, 3);
-		entityTypeExpDrop.put(EntityType.WITHER_SKELETON, 3);
+		entityTypeExpDrop.put(EntityType.BLAZE, 5);
+		entityTypeExpDrop.put(EntityType.WITHER_SKELETON, 5);
 		entityTypeExpDrop.put(EntityType.WITCH, 4);
 		entityTypeExpDrop.put(EntityType.RAVAGER, 7);
 		entityTypeExpDrop.put(EntityType.ENDERMAN, 4);
@@ -81,11 +85,11 @@ public class SkillPointExpListener implements Listener {
 		blockTypeExpDrop.put(Material.LAPIS_ORE, 5);
 		blockTypeExpDrop.put(Material.REDSTONE_ORE, 5);
 		blockTypeExpDrop.put(Material.COAL_ORE, 1);
-		
-		blockTypeExpDrop.put(Material.COPPER_ORE, 3);
-		blockTypeExpDrop.put(Material.IRON_ORE, 3);
-		blockTypeExpDrop.put(Material.GOLD_ORE, 7);
-		}
+		//Smelt Types
+		smeltTypeExpDrop.put(Material.COPPER_INGOT, 3);
+		smeltTypeExpDrop.put(Material.IRON_INGOT, 3);
+		smeltTypeExpDrop.put(Material.GOLD_INGOT, 7);
+	}
 	
 	@EventHandler
 	public void onEntityDamageByEntityEvent(EntityDamageByEntityEvent e) {
@@ -120,7 +124,10 @@ public class SkillPointExpListener implements Listener {
 	
 	@EventHandler
 	public void onEntityDeathEvent(EntityDeathEvent e) {
-		int expDrop = entityTypeExpDrop.get(e.getEntityType());
+		Integer expDrop = entityTypeExpDrop.get(e.getEntityType());
+		if(expDrop == null)
+			return;
+		
 		List<Player> players = trackedEntities.remove(e.getEntity());
 		if(players == null || players.isEmpty())
 			return;
@@ -135,7 +142,13 @@ public class SkillPointExpListener implements Listener {
 		if(rng.nextDouble() > 0.995)
 			plugin.getPlayerManager().getPlayer(e.getPlayer()).addSkillExp(1);
 		
-		if(e.getExpToDrop() <= 0)
+		if(e.getBlock() instanceof Ageable) {
+			Ageable agedBlock = (Ageable)e.getBlock();
+			if(agedBlock.getAge() >= agedBlock.getMaximumAge())
+				plugin.getPlayerManager().getPlayer(e.getPlayer()).addSkillExp(1);
+		}
+		
+		if(e.getExpToDrop() == 0)
 			return;
 		
 		Integer expToDrop = blockTypeExpDrop.get(e.getBlock().getType());
@@ -152,6 +165,13 @@ public class SkillPointExpListener implements Listener {
 	}
 	
 	@EventHandler
+	public void onEntityBreedEvent(EntityBreedEvent e) {
+		if(e.getBreeder() instanceof Player) {
+			plugin.getPlayerManager().getPlayer((Player)e.getBreeder()).addSkillExp(1);
+		}
+	}
+	
+	@EventHandler
 	public void onFurnaceExtractEvent(FurnaceExtractEvent e) {
 		Integer exp = blockTypeExpDrop.get(e.getItemType());
 		if(exp != null) {
@@ -162,8 +182,10 @@ public class SkillPointExpListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent e) {
-		if(checkAdvancementValidity(e.getAdvancement()))
-			plugin.getPlayerManager().getPlayer(e.getPlayer()).addSkillExp(10);
+		if(checkAdvancementValidity(e.getAdvancement())) {
+			FantasyPlayer fplayer = plugin.getPlayerManager().getPlayer(e.getPlayer());
+			fplayer.addSkillExp((int) Math.round(10 * (1.0 + fplayer.getPlayerLevel() * 0.01)));
+		}
 	}
 	
 	private void addEntity(LivingEntity ent, Player...players) {
@@ -183,5 +205,21 @@ public class SkillPointExpListener implements Listener {
 			}
 		}
 		return true;
+	}
+	
+	public static int getExpReward(Material type) {
+		Integer val = blockTypeExpDrop.get(type);
+		if(val != null)
+			return val;
+		
+		return 0;
+	}
+	
+	public static int getExpReward(EntityType type) {
+		Integer val = entityTypeExpDrop.get(type);
+		if(val != null)
+			return val;
+		
+		return 0;
 	}
 }

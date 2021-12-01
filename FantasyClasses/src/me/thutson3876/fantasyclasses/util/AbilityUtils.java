@@ -1,5 +1,6 @@
 package me.thutson3876.fantasyclasses.util;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 public class AbilityUtils {
@@ -116,6 +118,9 @@ public class AbilityUtils {
 
 	public static void heal(LivingEntity e, double amt) {
 		double maxhp = e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
+		if(e.hasPotionEffect(PotionEffectType.UNLUCK))
+			amt *= 0.5;
+		
 		double newhp = e.getHealth() + amt;
 		if (newhp > maxhp)
 			newhp = maxhp;
@@ -455,6 +460,15 @@ public class AbilityUtils {
 		
 		return pets;
 	}
+	
+	public static double doubleRoundToXDecimals(double val, int decimals){
+		String format = "###.";
+		for(int i = 0; i < decimals; i++) {
+			format += "#";
+		}
+		DecimalFormat df2 = new DecimalFormat(format);
+		return Double.valueOf(df2.format(val));
+		}
 
 	public static boolean isBloodVial(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();

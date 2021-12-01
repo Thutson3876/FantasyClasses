@@ -50,7 +50,7 @@ public class UnarmoredMovement extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "While wearing no armor you move &6 " + speedMod * 100 + "% &rfaster";
+		return "While wearing no armor you move &6" + AbilityUtils.doubleRoundToXDecimals(speedMod * 100, 1)+ "% &rfaster";
 	}
 
 	@Override
@@ -61,5 +61,10 @@ public class UnarmoredMovement extends AbstractAbility {
 	@Override
 	public void applyLevelModifiers() {
 		speedMod = 0.02f * currentLevel;
+	}
+	
+	@Override
+	public void deInit() {
+		player.setWalkSpeed(0.2f);
 	}
 }

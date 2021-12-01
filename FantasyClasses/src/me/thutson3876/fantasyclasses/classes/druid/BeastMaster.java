@@ -72,7 +72,7 @@ public class BeastMaster extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Your tamed animals have &6" + healthMod * 100 + "% &rmore health and deal &6" + damageMod * 100 + "% &rmore damage";
+		return "Your tamed animals have &6" + AbilityUtils.doubleRoundToXDecimals(healthMod * 100, 1) + "% &rmore health and deal &6" + AbilityUtils.doubleRoundToXDecimals(damageMod * 100, 1) + "% &rmore damage";
 	}
 
 	@Override

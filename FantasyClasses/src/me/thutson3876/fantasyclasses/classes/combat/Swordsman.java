@@ -94,5 +94,11 @@ public class Swordsman extends AbstractAbility {
 	public void applyLevelModifiers() {
 		attackSpeed = new AttributeModifier("Swordsman", speedMod * currentLevel, Operation.ADD_NUMBER);
 	}
+	
+	@Override
+	public void deInit() {
+		if(player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).getModifiers().contains(attackSpeed))
+			player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(attackSpeed);
+	}
 
 }

@@ -6,6 +6,7 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExhaustionEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
@@ -39,6 +40,9 @@ public class Survivalist extends AbstractAbility implements Scalable {
 
 	@Override
 	public boolean trigger(Event event) {
+		if(!isEnabled())
+			return false;
+		
 		//Penalty Events
 		if(event instanceof FoodLevelChangeEvent) {
 			FoodLevelChangeEvent e = (FoodLevelChangeEvent) event;
@@ -52,7 +56,18 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			
 			e.setFoodLevel(e.getFoodLevel() - (Math.round(change * foodMod)));
 			
-			return true;
+			
+			return false;
+		}
+		else if(event instanceof EntityExhaustionEvent) {
+			EntityExhaustionEvent e = (EntityExhaustionEvent)event;
+			
+			if(!e.getEntity().equals(player))
+				return false;
+			
+			e.setExhaustion(e.getExhaustion() * foodMod);
+			
+			return false;
 		}
 		else if(event instanceof EntityDamageEvent) {
 			EntityDamageEvent e = (EntityDamageEvent)event;
@@ -66,7 +81,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			double newDmg = e.getDamage() * (enviroMod - (bonusValue() / 500.0));
 			e.setDamage(newDmg);
 			
-			return true;
+			return false;
 		}
 		else if(event instanceof PlayerItemDamageEvent) {
 			PlayerItemDamageEvent e = (PlayerItemDamageEvent)event;
@@ -80,7 +95,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 					e.setDamage(e.getDamage() + 1);
 			}
 			
-			return true;
+			return false;
 		}
 		//Bonus Events
 		else if(event instanceof PlayerExpChangeEvent) {
@@ -92,7 +107,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			int newAmt = (int) Math.round(e.getAmount() * (1 + (bonusValue() / 1000.0)));
 			e.setAmount(newAmt);
 			
-			return true;
+			return false;
 		}
 		else if(event instanceof EntityRegainHealthEvent) {
 			EntityRegainHealthEvent e = (EntityRegainHealthEvent)event;
@@ -105,10 +120,8 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			
 			double newAmt = e.getAmount() * (1 + (bonusValue() / 1000.0));
 			e.setAmount(newAmt);
-			return true;
+			return false;
 		}
-		
-		//ADD EVENTS TO ABILITY LISTENER
 		
 		return false;
 	}

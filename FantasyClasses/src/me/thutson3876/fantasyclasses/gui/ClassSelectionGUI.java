@@ -44,6 +44,7 @@ public class ClassSelectionGUI extends AbstractGUI {
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatUtils.chat("&3Player Level: &6" + player.getPlayerLevel()));
 		meta.setLore(lore);
+		item.setItemMeta(meta);
 		
 		for(int i = 0; i < 9; i++) {
 			if(i > progressPercent) {
