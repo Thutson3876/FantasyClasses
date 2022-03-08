@@ -59,7 +59,7 @@ public class BuiltToLast extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Reduce the durability consumption of your pickaxes by &6" + (AbilityUtils.doubleRoundToXDecimals(chance, 1) * 100);
+		return "Reduce the durability consumption of your pickaxes by &6" + (AbilityUtils.doubleRoundToXDecimals(chance, 1) * 100 + "%");
 	}
 
 	@Override

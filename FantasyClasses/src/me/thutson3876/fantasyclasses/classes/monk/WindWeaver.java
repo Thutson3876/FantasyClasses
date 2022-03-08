@@ -21,7 +21,7 @@ public class WindWeaver extends AbstractAbility {
 	private double distance = 5.0;
 	private int jumpDistance = 5;
 	private double velocity = 1.5;
-	private double offset = 0.15;
+	private double offset = 0.3;
 	
 	public WindWeaver(Player p) {
 		super(p);
@@ -50,11 +50,14 @@ public class WindWeaver extends AbstractAbility {
 		if(isOnCooldown())
 			return false;
 		
+		if(player.isSneaking())
+			return false;
+		
 		if(!e.getAction().equals(Action.LEFT_CLICK_AIR) && !e.getAction().equals(Action.LEFT_CLICK_BLOCK))
 			return false;
 		
 		if (!(player.getInventory().getItemInMainHand() == null
-				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)))
+				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)  || player.getInventory().getItemInMainHand().getType().equals(Material.STICK)))
 			return false;
 
 		double damage = 3.0;
@@ -62,7 +65,7 @@ public class WindWeaver extends AbstractAbility {
 		
 		for(int i = 0; i < abils.size(); i++) {
 			if(abils.get(i).getName().equalsIgnoreCase("open palm")) {
-				damage = abils.get(i).getCurrentLevel() * 3.0;
+				damage = abils.get(i).getCurrentLevel() * 1.5;
 			}
 		}
 		

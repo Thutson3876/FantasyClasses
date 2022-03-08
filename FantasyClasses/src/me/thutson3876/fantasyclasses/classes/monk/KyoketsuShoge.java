@@ -18,7 +18,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class KyoketsuShoge extends AbstractAbility implements Bindable {
 
-	private double velocityMod = 1.2;
+	private double velocityMod = 1.6;
 	private double damage = 4.0;
 	private Arrow arrow = null;
 	private double yMod = 1.0;
@@ -66,11 +66,18 @@ public class KyoketsuShoge extends AbstractAbility implements Bindable {
 				return false;
 
 			if (e.getHitBlock() != null) {
+				double speed = player.getLocation().distance(e.getHitBlock().getLocation());
+				if(AbilityUtils.getHeightAboveGround(player) > 0.3)
+					speed = Math.sqrt(speed);
 				AbilityUtils.moveToward(player, e.getHitBlock().getLocation(),
-						player.getLocation().distance(e.getHitBlock().getLocation()), yMod);
-			} else if (e.getHitEntity() != null) {
+						speed, yMod);
+			}
+			if (e.getHitEntity() != null) {
+				double speed = player.getLocation().distance(e.getHitEntity().getLocation());
+				if(!e.getEntity().isOnGround())
+					speed = Math.sqrt(speed);
 				AbilityUtils.moveToward(e.getHitEntity(), player.getLocation(),
-						player.getLocation().distance(e.getHitEntity().getLocation()), yMod);
+						Math.sqrt(player.getLocation().distance(e.getHitEntity().getLocation())), yMod);
 			}
 		}
 

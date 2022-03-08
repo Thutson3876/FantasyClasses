@@ -70,7 +70,7 @@ public class BrewMaster extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		duration = (6 * currentLevel) * 20;
+		duration = (8 * currentLevel) * 20;
 		resistance = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 0);
 		nausea = new PotionEffect(PotionEffectType.CONFUSION, duration, 0);
 		if(currentLevel >= 3)

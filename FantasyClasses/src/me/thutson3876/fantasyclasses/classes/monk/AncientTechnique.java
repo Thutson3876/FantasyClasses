@@ -19,7 +19,7 @@ public class AncientTechnique extends AbstractAbility {
 	public void setDefaults() {
 		this.coolDowninTicks = 30;
 		this.displayName = "Ancient Technique";
-		this.skillPointCost = 3;
+		this.skillPointCost = 2;
 		this.maximumLevel = 1;
 
 		this.createItemStack(Material.LECTERN);
@@ -38,6 +38,8 @@ public class AncientTechnique extends AbstractAbility {
 		Block b = e.getBlock();
 		if(b.hasMetadata("Collectible")) {
 			if(Collectible.ANCIENT_TECHNIQUE.equals(Collectible.getMatchingCollectible(b.getType()))) {
+				player.sendMessage(Collectible.ANCIENT_TECHNIQUE.getRandomLore());
+				e.setDropItems(false);
 				b.getWorld().dropItemNaturally(b.getLocation(), Collectible.generateDrop());
 				return true;
 			}

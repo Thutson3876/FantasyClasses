@@ -29,7 +29,7 @@ public class Stampede extends AbstractAbility implements Bindable {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 60 * 20;
+		this.coolDowninTicks = 40 * 20;
 		this.displayName = "Stampede";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
@@ -51,7 +51,7 @@ public class Stampede extends AbstractAbility implements Bindable {
 		if (isOnCooldown())
 			return false;
 		
-		if(e.isSprinting())
+		if(!e.isSprinting())
 			return false;
 		
 		if(!Bindable.isHolding(player, type))
@@ -65,7 +65,7 @@ public class Stampede extends AbstractAbility implements Bindable {
 		}
 		
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_RAVAGER_ROAR, 1.2f, 0.9f);
-		player.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, player.getLocation(), amp*2);
+		player.getWorld().spawnParticle(Particle.VILLAGER_ANGRY, player.getLocation(), amp);
 		return true;
 	}
 

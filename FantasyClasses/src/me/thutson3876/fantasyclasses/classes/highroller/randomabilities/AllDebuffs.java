@@ -11,7 +11,7 @@ public class AllDebuffs implements RandomAbility {
 	@Override
 	public void run(Player p) {
 		for(PotionEffectType t : PotionList.DEBUFF.getPotList()) {
-			p.addPotionEffect(new PotionEffect(t, 600, 1));
+			p.addPotionEffect(new PotionEffect(t, 30 * 20, 1));
 		}
 	}
 

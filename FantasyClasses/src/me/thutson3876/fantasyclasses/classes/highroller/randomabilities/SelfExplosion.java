@@ -6,7 +6,7 @@ public class SelfExplosion implements RandomAbility {
 
 	@Override
 	public void run(Player p) {
-		p.getWorld().createExplosion(p.getLocation(), 4.0f, true, true, p);
+		p.getWorld().createExplosion(p.getLocation(), 4.0f, true, true);
 	}
 
 }

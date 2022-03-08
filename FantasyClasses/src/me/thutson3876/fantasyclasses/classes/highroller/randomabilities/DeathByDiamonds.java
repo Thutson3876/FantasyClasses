@@ -8,6 +8,7 @@ import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.util.Vector;
 
 public class DeathByDiamonds implements RandomAbility {
 
@@ -27,10 +28,11 @@ public class DeathByDiamonds implements RandomAbility {
 		FallingBlock fb = loc.getWorld().spawnFallingBlock(loc, b.getBlockData());
 		
 		fb.setHurtEntities(true);
+		fb.setVelocity(new Vector(0, 1, 0));
 		fb.setFallDistance(6.0f);
 	
-		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 60, 1));
-		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 60, 1));
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 120, 4));
+		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 4));
 	}
 
 }

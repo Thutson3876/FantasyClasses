@@ -1,10 +1,14 @@
 	package me.thutson3876.fantasyclasses.playermanagement;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
@@ -12,13 +16,15 @@ import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.abilities.Ability;
 import me.thutson3876.fantasyclasses.abilities.Scalable;
 import me.thutson3876.fantasyclasses.classes.AbstractFantasyClass;
-import me.thutson3876.fantasyclasses.classes.alchemy.Alchemy;
 import me.thutson3876.fantasyclasses.classes.combat.Combat;
 import me.thutson3876.fantasyclasses.classes.druid.Druid;
+import me.thutson3876.fantasyclasses.classes.dungeoneer.Dungeoneer;
 import me.thutson3876.fantasyclasses.classes.highroller.HighRoller;
 import me.thutson3876.fantasyclasses.classes.monk.Monk;
+import me.thutson3876.fantasyclasses.classes.seaguardian.SeaGuardian;
 import me.thutson3876.fantasyclasses.classes.witch.Witchcraft;
 import me.thutson3876.fantasyclasses.gui.ClassSelectionGUI;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class FantasyPlayer {
 
@@ -39,9 +45,10 @@ public class FantasyPlayer {
 		classes.add(new Combat(p));
 		classes.add(new Monk(p));
 		classes.add(new Druid(p));
-		classes.add(new Alchemy(p));
 		classes.add(new Witchcraft(p));
 		classes.add(new HighRoller(p));
+		classes.add(new Dungeoneer(p));
+		classes.add(new SeaGuardian(p));
 		
 		FileConfiguration config = plugin.getConfig();
 		if(!config.contains("players." + uuid)) {
@@ -83,6 +90,10 @@ public class FantasyPlayer {
 		if(newLevel > level) {
 			skillPoints += newLevel - level;
 			level = newLevel;
+			
+			bukkitPlayer.playSound(bukkitPlayer.getLocation(), Sound.ENTITY_WANDERING_TRADER_YES, 1.0f, 1.3f);
+			bukkitPlayer.sendMessage(ChatUtils.chat("%6Level Up! Your new level is &3" + newLevel));
+			bukkitPlayer.sendMessage(ChatUtils.chat("%6Use &3/chooseclass &6to spend your new skillpoint!"));
 		}
 	}
 	
@@ -143,7 +154,6 @@ public class FantasyPlayer {
 	public void resetAllAbilities() {
 		List<Ability> newAbils = new ArrayList<>();
 		for(Ability abil : abilities) {
-			this.addSkillPoints(abil.getSkillPointCost() * abil.getCurrentLevel());
 			abil.deInit();
 			abil.setLevel(0);
 			if(abil instanceof Scalable) {
@@ -151,6 +161,8 @@ public class FantasyPlayer {
 				continue;
 			}
 		}
+		
+		this.skillPoints = this.level;
 		
 		this.abilities = newAbils;
 	}
@@ -237,5 +249,19 @@ public class FantasyPlayer {
 		}
 		config.set("players." + uuid + ".abilities", list);
 		plugin.saveConfig();
+		
+		removeAttributeModifiers(bukkitPlayer, Attribute.GENERIC_ATTACK_SPEED);
+		removeAttributeModifiers(bukkitPlayer, Attribute.GENERIC_MOVEMENT_SPEED);
+	}
+	
+	private static void removeAttributeModifiers(Player p, Attribute att) {
+		Collection<AttributeModifier> mods = p.getAttribute(att).getModifiers();
+		
+		if(mods == null || mods.isEmpty())
+			return;
+		
+		for(AttributeModifier mod : mods) {
+			p.getAttribute(att).removeModifier(mod);
+		}
 	}
 }

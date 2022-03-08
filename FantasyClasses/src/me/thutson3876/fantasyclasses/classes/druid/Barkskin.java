@@ -11,7 +11,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class Barkskin extends AbstractAbility {
 
-	private double dmgReduction = 0.1;
+	private double dmgReduction = 0.08;
 	private boolean isOn = false;
 	private int durationInTicks = 8 * 20;
 	
@@ -80,7 +80,7 @@ public class Barkskin extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		dmgReduction = 0.1 * currentLevel;
+		dmgReduction = 0.08 * currentLevel;
 	}
 
 }

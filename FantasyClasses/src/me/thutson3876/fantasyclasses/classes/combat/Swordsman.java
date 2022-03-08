@@ -10,7 +10,10 @@ import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerItemHeldEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.ItemStack;
+
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.MaterialLists;
 
@@ -37,32 +40,51 @@ public class Swordsman extends AbstractAbility {
 
 	@Override
 	public boolean trigger(Event event) {
-		if (!(event instanceof PlayerItemHeldEvent)) {
-			return false;
-		}
+		if (event instanceof PlayerItemHeldEvent) {
+			PlayerItemHeldEvent e = (PlayerItemHeldEvent) event;
 
-		PlayerItemHeldEvent e = (PlayerItemHeldEvent) event;
-
-		if (!e.getPlayer().equals(this.player))
-			return false;
-
-		AttributeInstance att = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
-		if (MaterialLists.SWORD.getMaterials().contains(player.getInventory().getItem(e.getNewSlot()).getType())) {
-			if (!att.getModifiers().contains(attackSpeed)) {
-				player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).addModifier(attackSpeed);
-				System.out.println("Attack speed boosted");
-				return true;
-			}
-			return false;
-		} else {
-			if (att.getModifiers().contains(attackSpeed)) {
-				player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(attackSpeed);
-				System.out.println("Attack speed decreased");
+			if (!e.getPlayer().equals(this.player))
 				return false;
+
+			AttributeInstance att = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+			if (player.getInventory().getItem(e.getNewSlot()) != null && MaterialLists.SWORD.getMaterials()
+					.contains(player.getInventory().getItem(e.getNewSlot()).getType())) {
+				if (!att.getModifiers().contains(attackSpeed)) {
+					player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).addModifier(attackSpeed);
+					return true;
+				}
+				return false;
+			} else {
+				if (att.getModifiers().contains(attackSpeed)) {
+					player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(attackSpeed);
+					return false;
+				}
 			}
 		}
-
-		return true;
+		else if(event instanceof PlayerSwapHandItemsEvent) {
+			PlayerSwapHandItemsEvent e = (PlayerSwapHandItemsEvent) event;
+			
+			if(!e.getPlayer().equals(this.player))
+				return false;
+			
+			ItemStack mainHand = e.getMainHandItem();
+			AttributeInstance att = player.getAttribute(Attribute.GENERIC_ATTACK_SPEED);
+			
+			if(mainHand == null || !MaterialLists.SWORD.contains(mainHand.getType())) {
+				if (att.getModifiers().contains(attackSpeed)) {
+					player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).removeModifier(attackSpeed);
+					return false;
+				}
+			}
+			else {
+				if (!att.getModifiers().contains(attackSpeed)) {
+					player.getAttribute(Attribute.GENERIC_ATTACK_SPEED).addModifier(attackSpeed);
+					return true;
+				}
+			}
+		}
+		
+		return false;
 	}
 
 	@Override

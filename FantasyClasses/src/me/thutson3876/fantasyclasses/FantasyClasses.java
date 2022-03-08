@@ -11,11 +11,12 @@ import me.thutson3876.fantasyclasses.classes.combat.Combat;
 import me.thutson3876.fantasyclasses.commands.CommandManager;
 import me.thutson3876.fantasyclasses.cooldowns.CooldownManager;
 import me.thutson3876.fantasyclasses.listeners.AbilityListener;
-import me.thutson3876.fantasyclasses.listeners.BrewingListener;
+import me.thutson3876.fantasyclasses.listeners.CollectibleListener;
+import me.thutson3876.fantasyclasses.listeners.MobSpawnListener;
 import me.thutson3876.fantasyclasses.listeners.PlayerRegistryListener;
+import me.thutson3876.fantasyclasses.listeners.ScalingListener;
 import me.thutson3876.fantasyclasses.listeners.SkillPointExpListener;
 import me.thutson3876.fantasyclasses.listeners.WitchesBrewListener;
-import me.thutson3876.fantasyclasses.playermanagement.BrewTracker;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
 import me.thutson3876.fantasyclasses.playermanagement.PlayerManager;
 
@@ -29,8 +30,6 @@ public class FantasyClasses extends JavaPlugin {
 	
 	private PlayerManager playerManager;
 	
-	private BrewTracker brewTracker;
-	
 	@Override
 	public void onEnable() {
 		registerSerializableClasses();
@@ -39,7 +38,6 @@ public class FantasyClasses extends JavaPlugin {
 		playerManager.init();
 		cooldownManager = new CooldownManager();
 		commandManager = new CommandManager();
-		brewTracker = new BrewTracker();
 		
 		registerListeners();
 		log("FantasyClasses has been loaded!");
@@ -53,11 +51,13 @@ public class FantasyClasses extends JavaPlugin {
 	}
 	
 	private void registerListeners() {
+		new CollectibleListener();
 		new PlayerRegistryListener();
 		new AbilityListener();
 		new SkillPointExpListener();
-		new BrewingListener();
 		new WitchesBrewListener();
+		new ScalingListener();
+		new MobSpawnListener();
 	}
 	
 	public void triggerAllAbilities(Event e) {
@@ -103,10 +103,6 @@ public class FantasyClasses extends JavaPlugin {
 
 	public PlayerManager getPlayerManager() {
 		return playerManager;
-	}
-	
-	public BrewTracker getBrewTracker() {
-		return brewTracker;
 	}
 	
 	public void log(String message) {

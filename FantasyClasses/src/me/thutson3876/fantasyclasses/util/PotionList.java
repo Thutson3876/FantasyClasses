@@ -2,20 +2,17 @@ package me.thutson3876.fantasyclasses.util;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.bukkit.potion.PotionEffectType;
 
 public enum PotionList {
-	
+
 	BUFF, DEBUFF, DAMAGING;
+
 	private List<PotionEffectType> potList = new ArrayList<>();
-	
+
 	static {
-		generateLists();
-	}
-	
-	private static void generateLists() {
-		//BUFF
+
+		// BUFF
 		BUFF.potList.add(PotionEffectType.ABSORPTION);
 		BUFF.potList.add(PotionEffectType.CONDUIT_POWER);
 		BUFF.potList.add(PotionEffectType.DAMAGE_RESISTANCE);
@@ -35,7 +32,7 @@ public enum PotionList {
 		BUFF.potList.add(PotionEffectType.SLOW_FALLING);
 		BUFF.potList.add(PotionEffectType.SPEED);
 		BUFF.potList.add(PotionEffectType.WATER_BREATHING);
-		//DEBUFF
+		// DEBUFF
 		DEBUFF.potList.add(PotionEffectType.BAD_OMEN);
 		DEBUFF.potList.add(PotionEffectType.BLINDNESS);
 		DEBUFF.potList.add(PotionEffectType.CONFUSION);
@@ -49,13 +46,14 @@ public enum PotionList {
 		DEBUFF.potList.add(PotionEffectType.UNLUCK);
 		DEBUFF.potList.add(PotionEffectType.WEAKNESS);
 		DEBUFF.potList.add(PotionEffectType.WITHER);
-		//DAMAGING
+		// DAMAGING
 		DEBUFF.potList.add(PotionEffectType.HARM);
 		DEBUFF.potList.add(PotionEffectType.POISON);
 		DEBUFF.potList.add(PotionEffectType.WITHER);
 	}
-	
-	public List<PotionEffectType> getPotList(){
+
+	public List<PotionEffectType> getPotList() {
 		return this.potList;
 	}
+
 }

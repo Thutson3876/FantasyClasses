@@ -13,6 +13,7 @@ import me.thutson3876.fantasyclasses.util.PotionList;
 public class Immunology extends AbstractAbility {
 
 	private boolean increaseBuffs = false;
+	private boolean justTriggered = false;
 	
 	public Immunology(Player p) {
 		super(p);
@@ -20,9 +21,9 @@ public class Immunology extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 10;
+		this.coolDowninTicks = 2 * 20;
 		this.displayName = "Immunology";
-		this.skillPointCost = 3;
+		this.skillPointCost = 2;
 		this.maximumLevel = 2;
 		
 		this.createItemStack(Material.TOTEM_OF_UNDYING);
@@ -30,6 +31,12 @@ public class Immunology extends AbstractAbility {
 
 	@Override
 	public boolean trigger(Event event) {
+		if(justTriggered)
+			return false;
+		
+		if(isOnCooldown())
+			return false;
+		
 		if(!(event instanceof EntityPotionEffectEvent))
 			return false;
 		
@@ -48,13 +55,17 @@ public class Immunology extends AbstractAbility {
 				return false;
 			
 			e.setCancelled(true);
+			justTriggered = true;
 			player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), amp - 1));
+			justTriggered = false;
 			return true;
 		}
 		else if(increaseBuffs){
 			PotionEffect effect = e.getNewEffect();
 			e.setCancelled(true);
+			justTriggered = true;
 			player.addPotionEffect(new PotionEffect(effect.getType(), effect.getDuration(), effect.getAmplifier() + 1));
+			justTriggered = false;
 			return true;
 		}
 		

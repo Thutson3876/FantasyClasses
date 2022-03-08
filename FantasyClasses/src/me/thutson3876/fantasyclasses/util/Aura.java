@@ -26,8 +26,8 @@ public abstract class Aura implements Runnable {
 		this.p = p;
 		this.range = range;
 		this.tickRate = tickRate;
-		this.duration = duration;
-		counter = duration;
+		this.duration = (duration / tickRate) + 1;
+		counter = this.duration;
 	}
 	
 	public BossBar getBar() {
@@ -47,7 +47,7 @@ public abstract class Aura implements Runnable {
 	}
 	
 	protected void counterTick() {
-		double value = this.counter / this.duration;
+		double value = ((double)this.counter / (double)this.duration);
 	      if (value <= 0.0D) {
 	        cancel();
 	        return;
@@ -71,14 +71,15 @@ public abstract class Aura implements Runnable {
 		this.tickRate = tickRate;
 	}
 	
-    public void resetCounter() {
+    private void resetCounter() {
         this.counter = (int) this.duration;
       }
       
-      public void cancel() {
+      private void cancel() {
         this.bar.setVisible(false);
         this.bar.setProgress(1.0D);
         Bukkit.getScheduler().cancelTask(taskID);
         isOn = false;
+        resetCounter();
       }
 }

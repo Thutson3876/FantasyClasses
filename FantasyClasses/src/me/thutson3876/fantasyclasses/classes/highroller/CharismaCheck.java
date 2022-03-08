@@ -84,7 +84,7 @@ public class CharismaCheck extends AbstractAbility {
 					}
 				}
 				
-				world.playSound(player.getLocation(), Sound.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, 0.9f, 1.0f);
+				world.playSound(player.getLocation(), Sound.ENTITY_ZOMBIFIED_PIGLIN_ANGRY, 1.0f, 1.0f);
 				world.spawnParticle(Particle.VILLAGER_ANGRY, player.getLocation(), 8);
 			}
 			
@@ -92,8 +92,10 @@ public class CharismaCheck extends AbstractAbility {
 		}
 		else if(event instanceof EntityTargetEvent) {
 			EntityTargetEvent e = (EntityTargetEvent)event;
-			if(!e.getTarget().equals(player))
-				return false;
+			if(e.getTarget() != null) {
+				if(!e.getTarget().equals(player))
+					return false;
+			}
 			
 			e.setCancelled(isOn);
 			World world = player.getWorld();

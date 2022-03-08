@@ -8,16 +8,14 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.scheduler.BukkitRunnable;
-
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class StoneSkin extends AbstractAbility {
 
-	private double dmgReduction = 0.15;
-	private boolean isOn = false;
-	private int durationInTicks = 10 * 20;
+	private double dmgReduction = 0.03;
+	//private boolean isOn = false;
+	//private int durationInTicks = 10 * 20;
 	
 	public StoneSkin(Player p) {
 		super(p);
@@ -25,7 +23,7 @@ public class StoneSkin extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 90 * 20;
+		this.coolDowninTicks = 0;
 		this.displayName = "Stoneskin";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
@@ -43,22 +41,22 @@ public class StoneSkin extends AbstractAbility {
 		if(!e.getEntity().equals(player))
 			return false;
 		
-		if(isOnCooldown()) {
+		/*if(isOnCooldown()) {
 			if(isOn)
 				e.setDamage(dmgReduction * e.getDamage());
 			
 			return false;
-		}
+		}*/
 		
-		e.setDamage(dmgReduction * e.getDamage());
+		e.setDamage((1.0 - dmgReduction) * e.getDamage());
 		
 		World world = player.getWorld();
 		Location loc = player.getLocation();
 		
-		world.playSound(loc, Sound.BLOCK_DRIPSTONE_BLOCK_BREAK, 1.0f, 0.8f);
+		world.playSound(loc, Sound.BLOCK_DRIPSTONE_BLOCK_BREAK, 0.5f, 0.8f);
 		world.spawnParticle(Particle.ASH, loc, currentLevel * 2);
 		
-		isOn = true;
+		/*isOn = true;
 		
 		new BukkitRunnable() {
 
@@ -68,7 +66,7 @@ public class StoneSkin extends AbstractAbility {
 				
 			}
 			
-		}.runTaskLater(plugin, durationInTicks);
+		}.runTaskLater(plugin, durationInTicks);*/
 		
 		return true;
 	}
@@ -80,7 +78,7 @@ public class StoneSkin extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Take &6" + AbilityUtils.doubleRoundToXDecimals(dmgReduction * 100, 1) + "% &rless damage for &6" + (durationInTicks / 20) + " &rseconds";
+		return "Take &6" + AbilityUtils.doubleRoundToXDecimals(dmgReduction * 100, 1) + "% &rless damage from all sources";
 	}
 
 	@Override
@@ -90,8 +88,8 @@ public class StoneSkin extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		dmgReduction = 0.15 * currentLevel;
-		durationInTicks = (4 + 3 * currentLevel) * 20;
+		dmgReduction = 0.03 * currentLevel;
+		//durationInTicks = (4 + 3 * currentLevel) * 20;
 	}
 
 }

@@ -28,7 +28,7 @@ public class ConfusionWand extends AbstractAbility implements Bindable {
 	private Material boundType = null;
 	private double radius = 6.0;
 	private int duration = 10 * 20;
-	private List<PotionEffect> effects;
+	private List<PotionEffect> effects = new ArrayList<>();
 
 	public ConfusionWand(Player p) {
 		super(p);
@@ -40,10 +40,7 @@ public class ConfusionWand extends AbstractAbility implements Bindable {
 		this.displayName = "Confusion Wand";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
-		effects = new ArrayList<>();
-		effects.add(new PotionEffect(PotionEffectType.CONFUSION, duration, 0));
-		effects.add(new PotionEffect(PotionEffectType.BLINDNESS, duration, 0));
-
+		
 		this.createItemStack(Material.ENDER_EYE);
 	}
 

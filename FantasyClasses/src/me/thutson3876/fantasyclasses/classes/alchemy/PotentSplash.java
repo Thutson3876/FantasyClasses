@@ -41,7 +41,7 @@ public class PotentSplash extends AbstractAbility {
 			e.setIntensity(ent, 1.0 + intensity);
 		}
 		
-		e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 0.5f, 1.0f);
+		e.getEntity().getWorld().playSound(e.getEntity().getLocation(), Sound.ENTITY_BLAZE_AMBIENT, 0.5f, 0.6f);
 		
 		return true;
 	}

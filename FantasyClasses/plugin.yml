@@ -1,9 +1,9 @@
 name: FantasyClasses
-version: 0.1
+version: 0.5
 author: thutson3876
 main: me.thutson3876.fantasyclasses.FantasyClasses
 description: The spiritual successor to my previous plugin FantasyTools
-api-version: 1.17
+api-version: 1.18
 
 commands:
   chooseclass:
@@ -15,3 +15,6 @@ commands:
   resetskills:
     usage: /<command>
     description: resets the player's skill tree and abilities
+  fantasyhelp:
+    usage: /<command>
+    description: informs the user of key information relating to this plugin

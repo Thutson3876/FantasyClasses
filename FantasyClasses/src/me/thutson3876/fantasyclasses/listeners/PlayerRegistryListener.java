@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerKickEvent;
@@ -14,6 +13,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 import me.thutson3876.fantasyclasses.util.Collectible;
 
 public class PlayerRegistryListener implements Listener {
@@ -26,7 +26,10 @@ public class PlayerRegistryListener implements Listener {
 	
 	@EventHandler
 	public void onPlayerJoinEvent(PlayerJoinEvent e) {
-		plugin.getPlayerManager().addPlayer(e.getPlayer());
+		Player p = e.getPlayer();
+		plugin.getPlayerManager().addPlayer(p);
+		
+		ChatUtils.welcomeMessage(p);
 	}
 	
 	@EventHandler
@@ -37,14 +40,6 @@ public class PlayerRegistryListener implements Listener {
 	@EventHandler
 	public void onPlayerKickEvent(PlayerKickEvent e) {
 		plugin.getPlayerManager().removePlayer(e.getPlayer());
-	}
-	
-	@EventHandler
-	public void onBrewEvent(BrewEvent e) {
-		if(e.isCancelled())
-			return;
-		
-		plugin.getBrewTracker().remove(e.getBlock().getLocation());
 	}
 	
 	@EventHandler

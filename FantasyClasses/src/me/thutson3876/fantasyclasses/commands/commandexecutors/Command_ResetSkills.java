@@ -23,12 +23,11 @@ public class Command_ResetSkills extends AbstractCommand implements Listener {
 	
 	static {
 		costs.put(Material.DIAMOND, 1);
-		costs.put(Material.BLAZE_ROD, 6);
-		costs.put(Material.ENDER_PEARL, 2);
-		costs.put(Material.IRON_BLOCK, 2);
+		costs.put(Material.BLAZE_ROD, 3);
+		costs.put(Material.ENDER_PEARL, 1);
+		costs.put(Material.IRON_BLOCK, 1);
 		costs.put(Material.GOLD_BLOCK, 1);
 		costs.put(Material.REDSTONE_BLOCK, 2);
-		costs.put(Material.SADDLE, 1);
 		costs.put(Material.GOLDEN_CARROT, 3);
 		costs.put(Material.GLISTERING_MELON_SLICE, 3);
 		costs.put(Material.GOLDEN_APPLE, 1);
@@ -62,12 +61,13 @@ public class Command_ResetSkills extends AbstractCommand implements Listener {
 				
 		Integer cost = costs.get(item.getType());
 		if(cost != null) {
-			cost *= (fplayer.getPlayerLevel() / 5);
+			cost *= 1 + (fplayer.getPlayerLevel() / 5);
 			if(item.getAmount() >= cost) {
 				item.setAmount(item.getAmount() - cost);
 				player.getInventory().setItemInMainHand(item);
-				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1.0f, 1.2f);
+				player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_BREAK, 1.2f, 1.2f);
 				fplayer.resetAllAbilities();
+				player.sendMessage(ChatUtils.chat("&5Successfully reset skills!"));
 				return true;
 			}
 			
@@ -76,7 +76,7 @@ public class Command_ResetSkills extends AbstractCommand implements Listener {
 		sender.sendMessage(ChatUtils.chat("&4Error: Must pay for the cost to reset per 5 player levels. Hold out item type in main hand in an amount equal to the presented cost. Payment options shown below:"));
 		List<Material> keyList = new ArrayList<>(costs.keySet());
 		for(int i = 0; i < keyList.size(); i++) {
-			sender.sendMessage(ChatUtils.chat("&6" + keyList.get(i).name() + "&5: &6" + (costs.get(keyList.get(i)) * (fplayer.getPlayerLevel() / 5))));
+			sender.sendMessage(ChatUtils.chat("&6" + keyList.get(i).name() + "&5: &6" + (1 + costs.get(keyList.get(i)) * (fplayer.getPlayerLevel() / 5))));
 		}
 		
 		

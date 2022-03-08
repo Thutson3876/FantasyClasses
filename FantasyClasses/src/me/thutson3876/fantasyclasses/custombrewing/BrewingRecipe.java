@@ -1,251 +1,206 @@
 package me.thutson3876.fantasyclasses.custombrewing;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
-
-import javax.annotation.Nullable;
 
 import org.bukkit.Color;
 import org.bukkit.Material;
-import org.bukkit.block.BrewingStand;
-import org.bukkit.inventory.BrewerInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.bukkit.scheduler.BukkitRunnable;
 
-import me.thutson3876.fantasyclasses.FantasyClasses;
+public enum BrewingRecipe {
 
-public class BrewingRecipe {
-	private static final FantasyClasses plugin = FantasyClasses.getPlugin();
-	private static List<BrewingRecipe> recipes = new ArrayList<BrewingRecipe>();
-	private ItemStack ingredient;
-	private BrewAction action;
-	private boolean perfect;
-	private ItemStack result;
-	private List<PotionEffect> potionEffects;
-
-	public BrewingRecipe(ItemStack ingredient, BrewAction action, boolean perfect) {
-		this.ingredient = ingredient;
-		
-		if(action == null) {
-			this.action = defaultAction();
-		}
-		else {
-			this.action = action;
-		}
-		
-		this.perfect = perfect;
-		recipes.add(this);
-	}
-
-	public BrewingRecipe(Material ingredient, Color color, BrewAction action, PotionEffect... effects) {
-		this(new ItemStack(ingredient), action, false);
-		potionEffects = Arrays.asList(effects);
-		this.result = initResult(color, effects);
-	}
+	RESISTANCE(Material.DIAMOND, Color.TEAL, new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, 90 * 20, 0)),
+	WITHER(Material.WITHER_ROSE, Color.BLACK, new PotionEffect(PotionEffectType.WITHER, 45 * 20, 0)),
+	NAUSEA(Material.RED_MUSHROOM, Color.OLIVE, new PotionEffect(PotionEffectType.CONFUSION, 180 * 20, 0)),
+	HASTE(Material.DIAMOND_BLOCK, Color.SILVER, new PotionEffect(PotionEffectType.FAST_DIGGING, 300 * 20, 0)),
+	SATURATION(Material.GOLDEN_APPLE, Color.GREEN, new PotionEffect(PotionEffectType.SATURATION, 240 * 20, 0)),
+	HUNGER(Material.ROTTEN_FLESH, Color.MAROON, new PotionEffect(PotionEffectType.HUNGER, 90 * 20, 0)),
+	LUCK(Material.GOLD_INGOT, Color.YELLOW, new PotionEffect(PotionEffectType.LUCK, 360 * 20, 0)),
+	UNLUCK(Material.COAL, Color.GRAY, new PotionEffect(PotionEffectType.UNLUCK, 360 * 20, 0)),
+	GLOWING(Material.GLOW_BERRIES, Color.WHITE, new PotionEffect(PotionEffectType.GLOWING, 180 * 20, 0)),
+	LEVITATION(Material.PHANTOM_MEMBRANE, Color.PURPLE, new PotionEffect(PotionEffectType.LEVITATION, 15 * 20, 0)),
 	
-	public BrewingRecipe(Material ingredient, Color color, PotionEffect... effects) {
-		this(new ItemStack(ingredient), null, false);
-		potionEffects = Arrays.asList(effects);
+	REGENERATION(Material.GHAST_TEAR, Color.FUCHSIA, new PotionEffect(PotionEffectType.REGENERATION, 45 * 20, 0)),
+	HEALING(Material.GLISTERING_MELON_SLICE, Color.RED, new PotionEffect(PotionEffectType.HEAL, 1 * 20, 0)),
+	STRENGTH(Material.BLAZE_ROD, Color.MAROON, new PotionEffect(PotionEffectType.INCREASE_DAMAGE, 180 * 20, 0)),
+	SWIFTNESS(Material.SUGAR, Color.SILVER, new PotionEffect(PotionEffectType.SPEED, 180 * 20, 0)),
+	NIGHT_VISION(Material.GOLDEN_CARROT, Color.NAVY, new PotionEffect(PotionEffectType.NIGHT_VISION, 180 * 20, 0)),
+	INVISIBILITY(Material.ENDER_EYE, Color.WHITE, new PotionEffect(PotionEffectType.INVISIBILITY, 360 * 20, 0)),
+	WATER_BREATHING(Material.PUFFERFISH, Color.AQUA, new PotionEffect(PotionEffectType.WATER_BREATHING, 180 * 20, 0)),
+	LEAPING(Material.RABBIT_FOOT, Color.TEAL, new PotionEffect(PotionEffectType.JUMP, 180 * 20, 0)),
+	SLOW_FALL(Material.PHANTOM_MEMBRANE, Color.WHITE, new PotionEffect(PotionEffectType.SLOW_FALLING, 120 * 20, 0)),
+	FIRE_RESISTANCE(Material.MAGMA_CREAM, Color.ORANGE, new PotionEffect(PotionEffectType.FIRE_RESISTANCE, 180 * 20, 0)),
+	
+	POISON(Material.SPIDER_EYE, Color.GREEN, new PotionEffect(PotionEffectType.POISON, 45 * 20, 0)),
+	WEAKNESS(Material.FERMENTED_SPIDER_EYE, Color.NAVY, new PotionEffect(PotionEffectType.WEAKNESS, 90 * 20, 0)),
+	HARM(Material.IRON_SWORD, Color.MAROON, new PotionEffect(PotionEffectType.HARM, 1 * 20, 1)),
+	SLOWNESS(Material.SCUTE, Color.BLACK, new PotionEffect(PotionEffectType.SLOW, 90 * 20, 0));
+
+	private Material ingredient;
+	private ItemStack result;
+
+	private BrewingRecipe(Material ingredient, Color color, PotionEffect... effects) {
+		this.ingredient = ingredient;
 		this.result = initResult(color, effects);
 	}
 
 	private ItemStack initResult(Color color, PotionEffect... effects) {
 		ItemStack pot = new ItemStack(Material.POTION);
 		PotionMeta meta = (PotionMeta) pot.getItemMeta();
-		for(PotionEffect effect : effects) {
+		for (PotionEffect effect : effects) {
 			meta.addCustomEffect(effect, true);
 		}
 		meta.setColor(color);
 		pot.setItemMeta(meta);
-		
+
 		return pot;
 	}
-	
-	private BrewAction defaultAction() {
-		return (inventory, item, ingredient) -> {
-			if (!item.getType().equals(Material.POTION) && !item.getType().equals(Material.SPLASH_POTION))
-				return;
-			
-			PotionMeta meta = (PotionMeta) item.getItemMeta();
-			if(meta.equals((PotionMeta) result.getItemMeta())) {
-				ItemStack newItem = checkCommons(ingredient, item);
-				if(newItem != null) {
-					item = newItem;
+
+	public static ItemStack getDrop(Collection<ItemStack> ingredients) {
+		BrewingRecipe potentialRecipe = null;
+		ItemStack potentialPotion = null;
+		boolean isAwkward = false;
+		for (ItemStack i : ingredients) {
+			if (i.getType().equals(Material.POTION) || i.getType().equals(Material.SPLASH_POTION)) {
+				PotionMeta potMeta = (PotionMeta) i.getItemMeta();
+				if (potMeta.getBasePotionData().getType().equals(PotionType.UNCRAFTABLE)) {
+					for (BrewingRecipe recipe : values()) {
+						if (recipe.isMatching(i)) {
+							potentialRecipe = recipe;
+							potentialPotion = i;
+							break;
+						}
+					}
+				} else if (potMeta.getBasePotionData().getType().equals(PotionType.AWKWARD)) {
+					isAwkward = true;
 				}
-				return;
+			}
+
+		}
+
+		if (potentialRecipe != null) {
+			ingredients.remove(potentialPotion);
+			if(ingredients.size() != 1)
+				return null;
+			
+			return potentialRecipe.checkCommons((ItemStack) ingredients.toArray()[0], potentialPotion);
+		} else if (isAwkward) {
+			Collection<Material> mats = new ArrayList<>();
+			for (ItemStack i : ingredients) {
+				mats.add(i.getType());
 			}
 			
-			PotionType type = meta.getBasePotionData().getType();
-			if(type.equals(PotionType.AWKWARD)) {
-				item = this.result;
+			if(!mats.contains(Material.BLAZE_POWDER) || !mats.contains(Material.NETHER_WART))
+				return null;
+			
+			for(BrewingRecipe recipe : values()) {
+				if(mats.contains(recipe.ingredient)) {
+					potentialRecipe = recipe;
+					break;
+				}
 			}
-		};
+			if(potentialRecipe == null)
+				return null;
+			
+			return potentialRecipe.result;
+		}
+		
+		
+		return null;
 	}
-	
-	public ItemStack getIngredient() {
+
+	public Material getIngredient() {
 		return ingredient;
 	}
 
-	public BrewAction getAction() {
-		return action;
-	}
-
-	public boolean isPerfect() {
-		return perfect;
-	}
-	
 	public ItemStack getResult() {
 		return result;
 	}
-	
-	public ItemStack ampUp() {
-		ItemStack pot = new ItemStack(Material.POTION);
-		PotionMeta meta = (PotionMeta) result.getItemMeta();
+
+	public ItemStack ampUp(ItemStack item) {
+		PotionMeta resultMeta = (PotionMeta) result.getItemMeta();
+		PotionMeta itemMeta = (PotionMeta) item.getItemMeta();
 		List<PotionEffect> newEffects = new ArrayList<>();
-		for(PotionEffect effect : meta.getCustomEffects()) {
+		for (PotionEffect effect : resultMeta.getCustomEffects()) {
 			newEffects.add(new PotionEffect(effect.getType(), effect.getDuration(), effect.getAmplifier() + 1));
 		}
-		meta.clearCustomEffects();
-		for(PotionEffect effect : newEffects) {
-			meta.addCustomEffect(effect, true);
+		
+		for (PotionEffect effect : newEffects) {
+			itemMeta.addCustomEffect(effect, true);
 		}
-		pot.setItemMeta(meta);
-		return pot;
+		item.setItemMeta(itemMeta);
+		return item;
 	}
-	
-	public ItemStack durationUp() {
-		ItemStack pot = new ItemStack(Material.POTION);
-		PotionMeta meta = (PotionMeta) result.getItemMeta();
+
+	public ItemStack durationUp(ItemStack item) {
+		PotionMeta resultMeta = (PotionMeta) result.getItemMeta();
+		PotionMeta itemMeta = (PotionMeta) item.getItemMeta();
 		List<PotionEffect> newEffects = new ArrayList<>();
-		for(PotionEffect effect : meta.getCustomEffects()) {
-			newEffects.add(new PotionEffect(effect.getType(), effect.getDuration() * 2, effect.getAmplifier()));
+		for (PotionEffect effect : resultMeta.getCustomEffects()) {
+			newEffects.add(new PotionEffect(effect.getType(), effect.getDuration() * 3, effect.getAmplifier()));
 		}
-		meta.clearCustomEffects();
-		for(PotionEffect effect : newEffects) {
-			meta.addCustomEffect(effect, true);
+		
+		for (PotionEffect effect : newEffects) {
+			itemMeta.addCustomEffect(effect, true);
 		}
-		pot.setItemMeta(meta);
-		return pot;
+		item.setItemMeta(itemMeta);
+		return item;
 	}
-	
-	public ItemStack makeSplash() {
+
+	public ItemStack makeSplash(ItemStack item) {
 		ItemStack pot = new ItemStack(Material.SPLASH_POTION);
-		PotionMeta meta = (PotionMeta) result.getItemMeta();
+		PotionMeta resultMeta = (PotionMeta) result.getItemMeta();
+		PotionMeta itemMeta = (PotionMeta) item.getItemMeta();
 		List<PotionEffect> newEffects = new ArrayList<>();
-		for(PotionEffect effect : meta.getCustomEffects()) {
-			newEffects.add(new PotionEffect(effect.getType(), effect.getDuration() * 2, effect.getAmplifier()));
+		for (PotionEffect effect : resultMeta.getCustomEffects()) {
+			newEffects.add(new PotionEffect(effect.getType(), effect.getDuration(), effect.getAmplifier()));
 		}
-		meta.clearCustomEffects();
-		for(PotionEffect effect : newEffects) {
-			meta.addCustomEffect(effect, true);
+		
+		for (PotionEffect effect : newEffects) {
+			itemMeta.addCustomEffect(effect, true);
 		}
-		pot.setItemMeta(meta);
+		pot.setItemMeta(itemMeta);
 		return pot;
 	}
-	
+
 	public ItemStack checkCommons(ItemStack ingredient, ItemStack currentItem) {
-		ItemMeta itemMeta = currentItem.getItemMeta();
-		if(!(itemMeta instanceof PotionMeta))
+		if(!isMatching(currentItem))
 			return null;
-		
-		PotionMeta meta = (PotionMeta) itemMeta;
-		if(!meta.hasCustomEffects())
-			return null;
-		
-		if(!meta.getCustomEffects().containsAll(potionEffects))
-			return null;
-		
+
 		Material ingredientType = ingredient.getType();
-		if(ingredientType.equals(Material.GLOWSTONE_DUST)) {
-			return ampUp();
+		if (ingredientType.equals(Material.GLOWSTONE_DUST)) {
+			return ampUp(currentItem);
+		} else if (ingredientType.equals(Material.REDSTONE)) {
+			return durationUp(currentItem);
+		} else if (ingredientType.equals(Material.GUNPOWDER) && !currentItem.getType().equals(Material.SPLASH_POTION)) {
+			return makeSplash(currentItem);
 		}
-		else if(ingredientType.equals(Material.REDSTONE)) {
-			return durationUp();
-		}
-		else if(ingredientType.equals(Material.GUNPOWDER) && !currentItem.getType().equals(Material.SPLASH_POTION)) {
-			return makeSplash();
-		}
+
+		return null;
+	}
+
+	private boolean isMatching(ItemStack item) {
+		ItemMeta meta = item.getItemMeta();
+		if(!(meta instanceof PotionMeta))
+			return false;
 		
-		return null;
-	}
-	
-	
-	/**
-	 * Get the BrewRecipe of the given recipe , will return null if no recipe is
-	 * found
-	 * 
-	 * @param inventory The inventory
-	 * @return The recipe
-	 */
-	@Nullable
-	public static BrewingRecipe getRecipe(BrewerInventory inventory) {
-		boolean notAllAir = false;
-		for (int i = 0; i < 3 && !notAllAir; i++) {
-			if (inventory.getItem(i) == null)
-				continue;
-			if (inventory.getItem(i).getType() == Material.AIR)
-				continue;
-			notAllAir = true;
-		}
-		if (!notAllAir)
-			return null;
-
-		for (BrewingRecipe recipe : recipes) {
-			if (!recipe.isPerfect() && inventory.getIngredient().getType() == recipe.getIngredient().getType()) {
-				return recipe;
-			}
-			if (recipe.isPerfect() && inventory.getIngredient().isSimilar(recipe.getIngredient())) {
-				return recipe;
-			}
-		}
-		return null;
-	}
-
-	public void startBrewing(BrewerInventory inventory) {
-		new BrewClock(this, inventory);
-	}
-
-	private class BrewClock extends BukkitRunnable {
-		private BrewerInventory inventory;
-		private BrewingRecipe recipe;
-		private ItemStack ingredient;
-		private BrewingStand stand;
-		private int time = 400; // Like I said the starting time is 400
-
-		public BrewClock(BrewingRecipe recipe, BrewerInventory inventory) {
-			this.recipe = recipe;
-			this.inventory = inventory;
-			this.ingredient = inventory.getIngredient();
-			this.stand = inventory.getHolder();
-			runTaskTimer(plugin, 0L, 1L);
-		}
-
-		@Override
-		public void run() {
-			if (time == 0) {
-				inventory.setIngredient(new ItemStack(Material.AIR));
-				for (int i = 0; i < 3; i++) {
-					if (inventory.getItem(i) == null || inventory.getItem(i).getType() == Material.AIR)
-						continue;
-					recipe.getAction().brew(inventory, inventory.getItem(i), ingredient);
-				}
-				cancel();
-				return;
-			}
-			if (inventory.getIngredient().isSimilar(ingredient)) {
-				stand.setBrewingTime(400); // Reseting everything
-				cancel();
-				return;
-			}
-			// You should also add here a check to make sure that there are still items to
-			// brew
-			time--;
-			stand.setBrewingTime(time);
-		}
+		PotionMeta potMeta = (PotionMeta) meta;
+		
+		PotionMeta thisPotMeta = (PotionMeta) this.getResult().getItemMeta();
+		
+		List<PotionEffect> effects = thisPotMeta.getCustomEffects();
+		if(effects == null || effects.isEmpty())
+			return false;
+		
+		if(!potMeta.getCustomEffects().containsAll(effects))
+			return false;
+		
+		return true;
 	}
 }

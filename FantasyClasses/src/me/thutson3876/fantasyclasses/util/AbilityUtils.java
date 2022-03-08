@@ -26,6 +26,8 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import me.thutson3876.fantasyclasses.classes.witch.WitchBrewRecipe;
+
 public class AbilityUtils {
 
 	private static final ItemStack BLOOD_VIAL;
@@ -36,7 +38,8 @@ public class AbilityUtils {
 		PotionMeta bloodMeta = (PotionMeta) bloodTemp.getItemMeta();
 		bloodMeta.setColor(Color.RED);
 		bloodMeta.setDisplayName(ChatUtils.chat("&4Blood Vial"));
-
+		bloodTemp.setItemMeta(bloodMeta);
+		
 		BLOOD_VIAL = bloodTemp;
 
 		ItemStack witchTemp = new ItemStack(Material.SPLASH_POTION);
@@ -45,7 +48,8 @@ public class AbilityUtils {
 		witchMeta.setDisplayName(ChatUtils.chat("&6Witch's Brew"));
 		List<String> lore = new ArrayList<>();
 		lore.add("Ingredients: ");
-
+		witchTemp.setItemMeta(witchMeta);
+		
 		WITCHES_BREW = witchTemp;
 	}
 
@@ -95,6 +99,10 @@ public class AbilityUtils {
 		
 		return nearest;
 	}
+	
+	public static Vector getDifferentialVector(Location from, Location to) {
+        return new Vector((to.getX() - from.getX()), to.getY() - from.getY(), (to.getZ() - from.getZ()));
+    }
 
 	public static void randomSpreadGeneration(Location start, Material fillType, int spreadChance, int decreasePerTick,
 			boolean replaceAll) {
@@ -117,6 +125,9 @@ public class AbilityUtils {
 	}
 
 	public static void heal(LivingEntity e, double amt) {
+		if(e == null || e.isDead())
+			return;
+		
 		double maxhp = e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
 		if(e.hasPotionEffect(PotionEffectType.UNLUCK))
 			amt *= 0.5;
@@ -127,7 +138,7 @@ public class AbilityUtils {
 
 		e.setHealth(newhp);
 		e.getWorld().spawnParticle(Particle.COMPOSTER, e.getLocation(), 6);
-		e.getWorld().playSound(e.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.0f, 1.0f);
+		e.getWorld().playSound(e.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5f, 1.0f);
 	}
 
 	public static void setMaxHealth(Entity e, double amt, Operation op) {
@@ -373,29 +384,18 @@ public class AbilityUtils {
 	}
 
 	public static void moveToward(Entity entity, Location to, double speed) {
-		Location loc = entity.getLocation();
-		double x = loc.getX() - to.getX();
-		double y = loc.getY() - to.getY();
-		double z = loc.getZ() - to.getZ();
-		Vector velocity = new Vector(x, y, z).normalize().multiply(-speed);
-		entity.setVelocity(velocity);
+		entity.setVelocity(to.subtract(entity.getLocation()).toVector().normalize().multiply(speed));
 	}
 
 	public static void moveToward(Entity entity, Location to, double speed, double yMod) {
-		Location loc = entity.getLocation();
-		double x = loc.getX() - to.getX();
-		double y = (loc.getY() - to.getY()) * yMod;
-		double z = loc.getZ() - to.getZ();
-		Vector velocity = new Vector(x, y, z).normalize().multiply(-speed);
+		Vector velocity = to.subtract(entity.getLocation()).toVector().normalize().multiply(speed);
+		velocity.setY(velocity.getY() * yMod);
 		entity.setVelocity(velocity);
 	}
 
 	public static void moveTowardPlusY(Entity entity, Location to, double speed, double bonusY) {
-		Location loc = entity.getLocation();
-		double x = loc.getX() - to.getX();
-		double y = loc.getY() - to.getY() + bonusY;
-		double z = loc.getZ() - to.getZ();
-		Vector velocity = new Vector(x, y, z).normalize().multiply(-speed);
+		Vector velocity = to.subtract(entity.getLocation()).toVector().normalize().multiply(speed);
+		velocity.setY(velocity.getY() + bonusY);
 		entity.setVelocity(velocity);
 	}
 
@@ -453,6 +453,9 @@ public class AbilityUtils {
 		List<LivingEntity> pets = new ArrayList<>();
 		for(Entity e : p.getNearbyEntities(distance, distance, distance)) {
 			if(e instanceof Tameable) {
+				if(((Tameable) e).getOwner() == null)
+					continue;
+				
 				if(((Tameable) e).getOwner().equals(p))
 					pets.add((LivingEntity) e);
 			}
@@ -490,9 +493,15 @@ public class AbilityUtils {
 		return true;
 	}
 
-	// write this
 	public static ItemStack generateRandomWitchesBrew() {
-		return null;
+		Random rng = new Random();
+		WitchBrewRecipe[] recipes = WitchBrewRecipe.values();
+		int i = rng.nextInt(recipes.length);
+		System.out.println(i);
+		ItemStack item = recipes[i].getResult();
+		System.out.println("Generated witch brew: " + recipes[i].name());
+		System.out.println(item.getItemMeta().getDisplayName());
+		return item;
 	}
 
 	public static ItemStack getBloodVial() {

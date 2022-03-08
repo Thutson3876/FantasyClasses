@@ -9,7 +9,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class UnarmoredDexterity extends AbstractAbility {
 
-	private double damageMod = 0.82;
+	private double damageMod = 0.95;
 	
 	public UnarmoredDexterity(Player p) {
 		super(p);
@@ -20,7 +20,7 @@ public class UnarmoredDexterity extends AbstractAbility {
 		this.coolDowninTicks = 0;
 		this.displayName = "Unarmored Dexterity";
 		this.skillPointCost = 1;
-		this.maximumLevel = 4;
+		this.maximumLevel = 7;
 
 		this.createItemStack(Material.SHIELD);
 	}
@@ -39,9 +39,7 @@ public class UnarmoredDexterity extends AbstractAbility {
 			return false;
 		}
 			
-		
 		e.setDamage(e.getDamage() * damageMod);
-		System.out.print(e.getDamage());
 		return true;
 	}
 
@@ -62,7 +60,7 @@ public class UnarmoredDexterity extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		damageMod = 1.0 - (0.18 * currentLevel);
+		damageMod = 1.0 - (0.05 * currentLevel);
 	}
 
 }

@@ -14,6 +14,7 @@ public class FulfillingMead extends AbstractAbility {
 	private int duration = 5 * 20;
 	private int hungerGain = 1;
 	private PotionEffect saturation;
+	private PotionEffect regen = null;
 	
 	public FulfillingMead(Player p) {
 		super(p);
@@ -25,7 +26,7 @@ public class FulfillingMead extends AbstractAbility {
 		this.displayName = "Fulfilling Mead";
 		this.skillPointCost = 1;
 		this.maximumLevel = 2;
-		saturation = new PotionEffect(PotionEffectType.SATURATION, duration, 0);
+		
 
 		this.createItemStack(Material.HONEY_BOTTLE);
 	}
@@ -48,6 +49,8 @@ public class FulfillingMead extends AbstractAbility {
 		
 		player.setFoodLevel(player.getFoodLevel() + hungerGain);
 		player.addPotionEffect(saturation);
+		if(regen != null)
+			player.addPotionEffect(regen);
 		
 		return true;
 	}
@@ -70,6 +73,9 @@ public class FulfillingMead extends AbstractAbility {
 	@Override
 	public void applyLevelModifiers() {
 		duration = (5 * currentLevel) * 20;
+		saturation = new PotionEffect(PotionEffectType.SATURATION, duration, 0);
+		if(currentLevel == this.maximumLevel)
+			regen = new PotionEffect(PotionEffectType.REGENERATION, duration, 0);
 		hungerGain = currentLevel;
 	}
 

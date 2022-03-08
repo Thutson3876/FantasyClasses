@@ -54,7 +54,7 @@ public class HotHands extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Attacking an entity causes them to catch fire for &6" + (duration / 20) + " &rseconds";
+		return "Attacking an entity causes them to catch fire for &6" + (duration / 20) + " &rseconds. Has a cooldown of &6" + (this.coolDowninTicks / 20) + " &rseconds";
 	}
 
 	@Override
@@ -64,7 +64,8 @@ public class HotHands extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		duration = (2 * currentLevel) * 20;
+		duration = (1 + currentLevel) * 20;
+		this.coolDowninTicks = (14 - (2 * currentLevel)) * 20;
 	}
 
 }

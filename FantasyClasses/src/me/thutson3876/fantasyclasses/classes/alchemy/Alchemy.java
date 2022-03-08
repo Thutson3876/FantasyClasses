@@ -17,10 +17,10 @@ public class Alchemy extends AbstractFantasyClass {
 		
 		this.skillTree = new Skill(new ReagantHarvest(p));
 		
-		Skill potent = new Skill(new PotentBrewing(p));
-		potent.addChild(new PotentSplash(p));
-		potent.addChild(new EnhancedRepitoire(p));
-		skillTree.addChild(potent);
+		Skill enhanced = new Skill(new EnhancedRepitoire(p));
+		enhanced.addChild(new PotentSplash(p));
+		enhanced.addChild(new PotentBrewing(p));
+		skillTree.addChild(enhanced);
 		
 		Skill poison = new Skill(new DeadlyPoison(p));
 		poison.addChild(new SunderingSplash(p));
@@ -29,5 +29,4 @@ public class Alchemy extends AbstractFantasyClass {
 		
 		skillTree.addChild(new Immunology(p));
 	}
-
 }

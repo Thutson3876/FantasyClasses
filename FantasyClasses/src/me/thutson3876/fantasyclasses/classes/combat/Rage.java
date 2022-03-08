@@ -22,13 +22,10 @@ public class Rage extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 8 * 20;
+		this.coolDowninTicks = 12 * 20;
 		this.displayName = "Rage";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
-		this.absorb = new PotionEffect(PotionEffectType.ABSORPTION, duration, 1);
-		this.resist = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 1);
-		this.strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, 1);
 		
 		this.createItemStack(Material.CRACKED_DEEPSLATE_BRICKS);
 	}
@@ -73,6 +70,9 @@ public class Rage extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
+		this.absorb = new PotionEffect(PotionEffectType.ABSORPTION, duration, 0);
+		this.resist = new PotionEffect(PotionEffectType.DAMAGE_RESISTANCE, duration, 0);
+		this.strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, 0);
 	}
 
 }

@@ -8,6 +8,9 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.Damageable;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.Cuboid;
@@ -61,7 +64,7 @@ public class Excavation extends AbstractAbility {
 	@Override
 	public String getDescription() {
 		return "Dig with impressive strength and carve out a 3x3 cube in stone. Has a cooldown of &6"
-				+ (this.coolDowninTicks / 20);
+				+ (this.coolDowninTicks / 20) + " &rseconds";
 	}
 
 	@Override
@@ -86,8 +89,18 @@ public class Excavation extends AbstractAbility {
 		}
 		if (surroundingBlocks.isEmpty())
 			return false;
+		
+		ItemStack mainHand = player.getInventory().getItemInMainHand();
+		ItemMeta meta = mainHand.getItemMeta();
+		if(meta instanceof Damageable) {
+			Damageable newMeta = (Damageable)meta;
+			newMeta.setDamage(newMeta.getDamage() + surroundingBlocks.size());
+			mainHand.setItemMeta(newMeta);
+			player.getInventory().setItemInMainHand(mainHand);
+		}
+		
 		for (Block b : surroundingBlocks)
-			b.breakNaturally(player.getInventory().getItemInMainHand());
+			b.breakNaturally(mainHand);
 		return true;
 	}
 

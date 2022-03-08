@@ -40,7 +40,7 @@ public class CowSplosion implements RandomAbility {
 				}
 			}
 			
-		}.runTaskLater(FantasyClasses.getPlugin(), 12 * 20);
+		}.runTaskLater(FantasyClasses.getPlugin(), 8 * 20);
 	}
 
 }

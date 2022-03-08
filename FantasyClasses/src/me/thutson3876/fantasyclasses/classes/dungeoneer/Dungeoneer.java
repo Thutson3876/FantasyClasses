@@ -12,7 +12,7 @@ public class Dungeoneer extends AbstractFantasyClass {
 		super(p);
 		name = "Dungeoneer";
 
-		this.setItemStack(Material.TORCH, name, "A class based on diving into the mysterious depths of the world");
+		this.setItemStack(Material.IRON_PICKAXE, name, "A class based on diving into the mysterious depths of the world");
 
 		skillTree = new Skill(new BuiltToLast(p));
 		
@@ -28,6 +28,7 @@ public class Dungeoneer extends AbstractFantasyClass {
 		
 		Skill stone = new Skill(new StoneSkin(p));
 		stone.addChild(new DungeonDelver(p));
+		stone.addChild(new MiningSchematics(p));
 		skillTree.addChild(stone);
 	}
 

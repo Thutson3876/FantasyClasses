@@ -8,7 +8,6 @@ import org.bukkit.entity.Player;
 
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllBuffs;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllDebuffs;
-import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Arrowsplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Cleanse;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.CowSplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.DeathByDiamonds;
@@ -37,7 +36,6 @@ public class WondrousTable {
 		abilities.add(new Explosion());
 		abilities.add(new SpawnWither());
 		abilities.add(new SpawnHorde());
-		abilities.add(new Arrowsplosion());
 		abilities.add(new Cleanse());
 		abilities.add(new AllBuffs());
 		abilities.add(new AllDebuffs());
@@ -53,9 +51,9 @@ public class WondrousTable {
 	}
 	
 	public static void roll(Player p) {
-		int roll = rng.nextInt(abilities.size() + 1);
+		int roll = rng.nextInt(abilities.size());
 		
-		if(roll > abilities.size()) {
+		if(roll == abilities.size() - 1) {
 			roll(p);
 			roll(p);
 			return;

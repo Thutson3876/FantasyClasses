@@ -24,7 +24,7 @@ import me.thutson3876.fantasyclasses.util.Sphere;
 public class Tranquility extends AbstractAbility implements Bindable {
 
 	private Material boundType = null;
-	private double healAmt = 1.0;
+	private double healAmt = 1.5;
 	private int duration = 6 * 20;
 	private double maxDistance = 8.0;
 	private int tickRate = 20;
@@ -40,7 +40,8 @@ public class Tranquility extends AbstractAbility implements Bindable {
 		this.displayName = "Tranquility";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
-		aura = new HealingAura(player, maxDistance, displayName, BarColor.GREEN, tickRate, duration);
+		this.duration = 6 * 20;
+		
 
 		this.createItemStack(Material.ENCHANTED_GOLDEN_APPLE);		
 	}
@@ -58,16 +59,16 @@ public class Tranquility extends AbstractAbility implements Bindable {
 		if(!e.getPlayer().equals(player))
 			return false;
 		
-		if(e.getItem() == null || !e.getItem().getType().equals(this.boundType))
+		if(isOnCooldown())
 			return false;
 		
-		if(isOnCooldown())
+		if(e.getItem() == null || !e.getItem().getType().equals(this.boundType))
 			return false;
 		
 		if(!player.isSneaking())
 			return false;
 		
-		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR))
+		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 			return false;
 		
 		aura.toggleAura();
@@ -81,7 +82,7 @@ public class Tranquility extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getDescription() {
-		return "Cast a powerful healing spell centered on yourself that heals all nearby non-mob entities for &6" + healAmt + " &revery &6" + (tickRate / 20.0) + " &rseconds. You cannot sprint or swap hands while casting";
+		return "Cast a powerful healing spell centered on yourself that heals all nearby non-mob entities for &6" + healAmt + " &revery &6" + (tickRate / 20.0) + " &rseconds";
 	}
 
 	@Override
@@ -91,8 +92,10 @@ public class Tranquility extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		healAmt = 4.0 + 1.0 * currentLevel;
+		healAmt = 1.5 * currentLevel;
 		tickRate = 25 - 5 * currentLevel;
+		duration = 6 * 20;
+		aura = new HealingAura(player, maxDistance, displayName, BarColor.GREEN, tickRate, duration);
 		aura.setTickRate(tickRate);
 	}
 

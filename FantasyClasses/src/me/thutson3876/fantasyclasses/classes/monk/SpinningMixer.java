@@ -9,13 +9,14 @@ import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.inventory.InventoryOpenEvent;
+import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.abilities.Bindable;
 
-public class SpinningMixer extends AbstractAbility {
+public class SpinningMixer extends AbstractAbility implements Bindable {
 
 	private boolean weightless = false;
 
@@ -30,6 +31,8 @@ public class SpinningMixer extends AbstractAbility {
 	private float vertical_ticker = 0.0F;
 
 	private float horizontal_ticker = (float) (Math.random() * 2.0D * Math.PI);
+	
+	private Material type = null;
 
 	public SpinningMixer(Player p) {
 		super(p);
@@ -37,30 +40,38 @@ public class SpinningMixer extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 30 * 20;
+		this.coolDowninTicks = 16 * 20;
 		this.displayName = "Spinning Mixer";
 		this.skillPointCost = 2;
 		this.maximumLevel = 2;
 
-		this.createItemStack(Material.FEATHER);
+		this.createItemStack(Material.TARGET);
 	}
 
 	@Override
 	public boolean trigger(Event event) {
-		if (!(event instanceof InventoryOpenEvent))
+		if (!(event instanceof PlayerSwapHandItemsEvent))
 			return false;
 
-		InventoryOpenEvent e = (InventoryOpenEvent) event;
+		PlayerSwapHandItemsEvent e = (PlayerSwapHandItemsEvent) event;
 
 		if (!e.getPlayer().equals(player))
 			return false;
-
-		if (!e.getInventory().equals(player.getInventory()))
+			
+		boolean correctType = false;
+		
+		if(e.getMainHandItem() != null) {
+			if(e.getMainHandItem().getType().equals(type))
+				correctType = true;
+		}
+		if(e.getOffHandItem() != null) {
+			if(e.getOffHandItem().getType().equals(type))
+				correctType = true;
+		}
+			
+		if(!correctType)
 			return false;
-
-		if (!player.isSneaking())
-			return false;
-
+		
 		if (spawnTornado()) {
 			e.setCancelled(true);
 			return true;
@@ -71,13 +82,12 @@ public class SpinningMixer extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Open your inventory while crouching to activate";
+		return "Swap hands with the bound item type";
 	}
 
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return "Swiftly twirl the air around you to create a small tornado that sucks up any nearby entities. You have no gravity while using this ability at level 2";
 	}
 
 	@Override
@@ -149,5 +159,15 @@ public class SpinningMixer extends AbstractAbility {
 
 	private float horizontalTicker() {
 		return this.horizontal_ticker += 0.5F;
+	}
+
+	@Override
+	public Material getBoundType() {
+		return type;
+	}
+
+	@Override
+	public void setBoundType(Material type) {
+		this.type = type;
 	}
 }

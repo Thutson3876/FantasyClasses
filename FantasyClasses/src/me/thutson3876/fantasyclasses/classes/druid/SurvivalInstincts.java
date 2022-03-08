@@ -17,6 +17,7 @@ public class SurvivalInstincts extends AbstractAbility {
 	private PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, duration, 0);
 	private PotionEffect strength = new PotionEffect(PotionEffectType.INCREASE_DAMAGE, duration, 0);
 	private PotionEffect haste = new PotionEffect(PotionEffectType.FAST_DIGGING, duration, 0);
+	private PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, duration, 0);
 	
 	public SurvivalInstincts(Player p) {
 		super(p);
@@ -47,10 +48,11 @@ public class SurvivalInstincts extends AbstractAbility {
 		
 		double health = player.getHealth();
 		
-		if(e.getFinalDamage() < health)
+		if(e.getFinalDamage() >= health)
 			return false;
 		
-		e.setDamage(health - 2.0);
+		if(health - e.getFinalDamage() > 20.0 * 0.3)
+			return false;
 		
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1.2f, 1.0f);
 		player.getWorld().spawnParticle(Particle.FALLING_LAVA, player.getLocation(), 4);
@@ -58,6 +60,7 @@ public class SurvivalInstincts extends AbstractAbility {
 		player.addPotionEffect(speed);
 		player.addPotionEffect(strength);
 		player.addPotionEffect(haste);
+		player.addPotionEffect(regen);
 		
 		return true;
 	}
@@ -69,7 +72,7 @@ public class SurvivalInstincts extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Upon taking lethal damage, negate it and gain speed, strength, and haste for &6" + (duration / 20) + " &rseconds";
+		return "Upon being put to less than 30% of your max health, gain speed, strength, and haste for &6" + (duration / 20) + " &rseconds";
 	}
 
 	@Override

@@ -1,7 +1,7 @@
 package me.thutson3876.fantasyclasses.classes.combat;
 
-import org.bukkit.Effect;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -49,7 +49,7 @@ public class AxeWielder extends AbstractAbility {
 		
 		if(AbilityUtils.isCritical(player)) {
 			e.setDamage(e.getDamage() * dmgMod);
-			player.getWorld().playEffect(e.getEntity().getLocation(), Effect.POTION_BREAK, 2.0);
+			player.getWorld().playSound(e.getEntity().getLocation(), Sound.BLOCK_GLASS_BREAK, 1.1f, 0.6f);
 			return true;
 		}
 		

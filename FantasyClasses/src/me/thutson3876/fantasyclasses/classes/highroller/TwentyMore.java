@@ -16,6 +16,7 @@ public class TwentyMore extends AbstractAbility {
 
 	private final Random rng = new Random();
 	private int dc = 19;
+	private double dmgMod = 2.0;
 
 	public TwentyMore(Player p) {
 		super(p);
@@ -45,7 +46,7 @@ public class TwentyMore extends AbstractAbility {
 
 			int roll = rng.nextInt(20);
 			if (roll >= dc) {
-				e.setDamage(e.getDamage() * 2.0);
+				e.setDamage(e.getDamage() * dmgMod);
 				
 				player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PLAYER_ATTACK_CRIT, 1.2F, 1.2F);
 				player.getWorld().spawnParticle(Particle.CRIT_MAGIC, e.getEntity().getLocation(), roll);
@@ -70,7 +71,7 @@ public class TwentyMore extends AbstractAbility {
 	@Override
 	public String getDescription() {
 		return "Roll a d20 whenever you attack an entity. On a roll above a &6" + this.dc
-				+ "&r you get twice the drops. On a natural one, you take half of the dealt damage and it receives none";
+				+ "&r you deal twice as much damage. On a natural one, you take half of the dealt damage and it receives none";
 	}
 
 	@Override

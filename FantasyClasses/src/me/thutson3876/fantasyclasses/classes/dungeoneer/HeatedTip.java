@@ -14,11 +14,14 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.abilities.Bindable;
 import me.thutson3876.fantasyclasses.listeners.SkillPointExpListener;
 
-public class HeatedTip extends AbstractAbility {
+public class HeatedTip extends AbstractAbility implements Bindable {
 
 	private static final Map<Material, Material> SMELTABLES = smeltables();
+	
+	private Material type = null;
 	
 	public HeatedTip(Player p) {
 		super(p);
@@ -26,7 +29,7 @@ public class HeatedTip extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 30;
+		this.coolDowninTicks = 0;
 		this.displayName = "Heated Tip";
 		this.skillPointCost = 2;
 		this.maximumLevel = 1;
@@ -41,6 +44,12 @@ public class HeatedTip extends AbstractAbility {
 			if (!e.getPlayer().equals(player))
 				return false;
 
+			ItemStack item = player.getInventory().getItemInMainHand();
+			if(item == null)
+				return false;
+			if(!item.getType().equals(type))
+				return false;
+			
 			return smeltItem(e);
 		}
 		return false;
@@ -48,7 +57,7 @@ public class HeatedTip extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Mine a smeltable block";
+		return "Mine a smeltable block with the bound item type";
 	}
 
 	@Override
@@ -80,7 +89,7 @@ public class HeatedTip extends AbstractAbility {
 	    for (ItemStack item : toRemove) {
 	      drops.remove(item);
 	      drops.add(new ItemStack(SMELTABLES.get(item.getType()), item.getAmount()));
-	      fplayer.addSkillExp(SkillPointExpListener.getExpReward(item.getType()));
+	      fplayer.addSkillExp(SkillPointExpListener.getExpReward(item.getType()) / 2);
 	    } 
 	    for (ItemStack item : drops)
 	      block.getWorld().dropItemNaturally(block.getLocation(), item); 
@@ -123,4 +132,14 @@ public class HeatedTip extends AbstractAbility {
 		    materials.put(Material.SEA_PICKLE, Material.LIME_DYE);
 		    return materials;
 		  }
+
+	@Override
+	public Material getBoundType() {
+		return type;
+	}
+
+	@Override
+	public void setBoundType(Material type) {
+		this.type = type;
+	}
 }

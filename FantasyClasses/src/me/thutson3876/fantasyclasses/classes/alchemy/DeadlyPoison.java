@@ -13,7 +13,7 @@ import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
 public class DeadlyPoison extends AbstractAbility {
 
-	private int durationInTicks = 10;
+	private int durationInTicks = 15;
 	private PotionEffect poison;
 
 	public DeadlyPoison(Player p) {
@@ -22,7 +22,7 @@ public class DeadlyPoison extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 10;
+		this.coolDowninTicks = 15;
 		this.displayName = "Deadly Poison";
 		this.skillPointCost = 1;
 		this.maximumLevel = 2;
@@ -51,9 +51,16 @@ public class DeadlyPoison extends AbstractAbility {
 
 		if (target.hasPotionEffect(PotionEffectType.POISON)) {
 			PotionEffect currentEffect = target.getPotionEffect(PotionEffectType.POISON);
+			int newAmp = currentEffect.getAmplifier() + 1;
+			if(newAmp > 9)
+				newAmp = 9;
+			int newDuration = currentEffect.getDuration() + durationInTicks;
+			if(newDuration > 30 * 20)
+				newDuration = 30 * 20;
+			
 			target.addPotionEffect(new PotionEffect(PotionEffectType.POISON,
-					currentEffect.getDuration() > durationInTicks ? currentEffect.getDuration() : durationInTicks,
-					currentEffect.getAmplifier() + 1));
+					newDuration,
+					newAmp));
 		} else {
 			target.addPotionEffect(poison);
 		}
@@ -79,7 +86,7 @@ public class DeadlyPoison extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		durationInTicks = 10 * currentLevel;
+		durationInTicks = 15 * currentLevel;
 		poison = new PotionEffect(PotionEffectType.POISON, durationInTicks, 0);
 	}
 

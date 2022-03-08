@@ -7,6 +7,7 @@ import java.util.List;
 import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_BindAbility;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ChooseClass;
+import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_Help;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ResetSkills;
 
 public class CommandManager {
@@ -16,6 +17,7 @@ public class CommandManager {
 		commands.add(new Command_ChooseClass());
 		commands.add(new Command_BindAbility());
 		commands.add(new Command_ResetSkills());
+		commands.add(new Command_Help());
 		
 		this.registerCommands();
 	}

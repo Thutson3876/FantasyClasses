@@ -9,7 +9,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class UnarmoredMovement extends AbstractAbility {
 
-	private float speedMod = 0.02f;
+	private float speedMod = 0.014f;
 
 	public UnarmoredMovement(Player p) {
 		super(p);
@@ -50,7 +50,7 @@ public class UnarmoredMovement extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "While wearing no armor you move &6" + AbilityUtils.doubleRoundToXDecimals(speedMod * 100, 1)+ "% &rfaster";
+		return "While wearing no armor you move &6" + 7 * currentLevel + "% &rfaster";
 	}
 
 	@Override
@@ -60,7 +60,7 @@ public class UnarmoredMovement extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		speedMod = 0.02f * currentLevel;
+		speedMod = 0.014f * currentLevel;
 	}
 	
 	@Override

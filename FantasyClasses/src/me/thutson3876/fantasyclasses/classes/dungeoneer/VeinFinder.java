@@ -24,7 +24,7 @@ public class VeinFinder extends AbstractAbility {
 	private static final Map<Material, Material> refinedProducts = generateProductMap();
 	private static final Map<Material, Material> refinedDeepslateProducts = generateDeepslateProductMap();
 	
-	private int range = 16;
+	private int range = 20;
 	
 	public VeinFinder(Player p) {
 		super(p);
@@ -57,6 +57,9 @@ public class VeinFinder extends AbstractAbility {
 			return false;
 		
 		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
+			return false;
+		
+		if(e.getItem() == null)
 			return false;
 		
 		return getNearestOre(e.getItem(), e.getHand());
@@ -93,12 +96,20 @@ public class VeinFinder extends AbstractAbility {
 		}
 		
 		Location loc = player.getLocation();
-		List<Location> blockLocs = Sphere.generateSphere(loc, range, false);
+		List<Location> blockLocs = Sphere.generateSphereIncludingBlocks(loc, range, false);
 		Location veinLoc = null;
+		double distance = 9999;
 		for(Location l : blockLocs) {
 			if(l.getBlock().getType().equals(oreType)) {
-				veinLoc = l;
-				break;
+				double newDistance = player.getLocation().distance(veinLoc);
+				if(veinLoc == null) {
+					veinLoc = l;
+				}
+				else if(newDistance < distance) {
+					veinLoc = l;
+					distance = newDistance;
+				}
+				
 			}
 		}
 		
@@ -120,7 +131,7 @@ public class VeinFinder extends AbstractAbility {
 		item.setAmount(item.getAmount() - 1);
 		player.getInventory().setItem(hand, item);
 		
-		player.playSound(loc, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.0f, 1.0f);
+		player.playSound(loc, Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.0f, 1.3f);
 		
 		EnderSignal eye = (EnderSignal) player.getWorld().spawnEntity(player.getLocation(), EntityType.ENDER_SIGNAL);
 		eye.setDropItem(false);
@@ -135,11 +146,11 @@ public class VeinFinder extends AbstractAbility {
 		products.put(Material.DIAMOND, Material.DIAMOND_ORE);
 		products.put(Material.COPPER_INGOT, Material.COPPER_ORE);
 		products.put(Material.EMERALD, Material.EMERALD_ORE);
-		products.put(Material.DIAMOND, Material.DIAMOND_ORE);
 		products.put(Material.IRON_INGOT, Material.IRON_ORE);
 		products.put(Material.GOLD_INGOT, Material.GOLD_ORE);
 		products.put(Material.REDSTONE, Material.REDSTONE_ORE);
 		products.put(Material.LAPIS_LAZULI, Material.LAPIS_ORE);
+		products.put(Material.COAL, Material.COAL_ORE);
 		
 		return products;
 	}
@@ -154,6 +165,7 @@ public class VeinFinder extends AbstractAbility {
 		products.put(Material.LAPIS_LAZULI, Material.DEEPSLATE_LAPIS_ORE);
 		products.put(Material.NETHERITE_SCRAP, Material.ANCIENT_DEBRIS);
 		products.put(Material.QUARTZ, Material.NETHER_QUARTZ_ORE);
+		products.put(Material.COAL, Material.DEEPSLATE_COAL_ORE);
 		
 		return products;
 	}

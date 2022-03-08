@@ -38,6 +38,7 @@ public class ClassSelectionGUI extends AbstractGUI {
 		long neededExp = player.calculateNextLevelExpCost() - player.calculateCurrentLevelExpCost();
 		int progressPercent = (int) Math.round(((double) currentExp / neededExp) * 10) - 1;
 		List<String> lore = new ArrayList<>();
+		lore.add(ChatUtils.chat("Skillpoints Available: &6" + player.getSkillPoints()));
 		lore.add(ChatUtils.chat("Exp: &6" + currentExp + " &r/ &6" + neededExp));
 		
 		ItemStack item = new ItemStack(Material.GOLD_BLOCK);

@@ -42,7 +42,10 @@ public class DiggyDiggyHole extends AbstractAbility implements Bindable {
 		if(isOnCooldown())
 			return false;
 		
-		if(e.getPlayer().equals(player))
+		if(!e.getPlayer().equals(player))
+			return false;
+		
+		if(e.getItem() == null)
 			return false;
 		
 		if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))

@@ -19,7 +19,7 @@ public class MiningSchematics extends AbstractAbility {
 	public void setDefaults() {
 		this.coolDowninTicks = 30;
 		this.displayName = "Mining Schematics";
-		this.skillPointCost = 3;
+		this.skillPointCost = 2;
 		this.maximumLevel = 1;
 
 		this.createItemStack(Material.SKELETON_SKULL);
@@ -38,6 +38,8 @@ public class MiningSchematics extends AbstractAbility {
 		Block b = e.getBlock();
 		if(b.hasMetadata("Collectible")) {
 			if(Collectible.MINING_SCHEMATICS.equals(Collectible.getMatchingCollectible(b.getType()))) {
+				player.sendMessage(Collectible.MINING_SCHEMATICS.getRandomLore());
+				e.setDropItems(false);
 				b.getWorld().dropItemNaturally(b.getLocation(), Collectible.generateDrop());
 				return true;
 			}

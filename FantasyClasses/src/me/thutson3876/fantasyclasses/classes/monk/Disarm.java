@@ -21,7 +21,7 @@ public class Disarm extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 15 * 20;
+		this.coolDowninTicks = 8 * 20;
 		this.displayName = "Disarm";
 		this.skillPointCost = 1;
 		this.maximumLevel = 1;

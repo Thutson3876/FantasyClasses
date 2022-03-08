@@ -17,7 +17,7 @@ public class SunderingSplash extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 16;
+		this.coolDowninTicks = 30;
 		this.displayName = "Sundering Splash";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
@@ -57,7 +57,7 @@ public class SunderingSplash extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		power = 1.0f * currentLevel;
+		power = 0.5f + (0.5f * currentLevel);
 	}
 
 }

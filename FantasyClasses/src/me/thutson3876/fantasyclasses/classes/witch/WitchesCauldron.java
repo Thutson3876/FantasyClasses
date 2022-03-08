@@ -5,8 +5,10 @@ import java.util.Collection;
 import java.util.List;
 
 import org.bukkit.Material;
+import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.Levelled;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Item;
@@ -14,7 +16,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
@@ -57,6 +59,12 @@ public class WitchesCauldron extends AbstractAbility {
 		if(!block.getType().equals(Material.WATER_CAULDRON))
 			return false;
 		
+		Levelled l = ((Levelled)block.getBlockData());
+		if(l.getLevel() < l.getMaximumLevel())
+			return false;
+		
+		block.setType(Material.CAULDRON);
+		
 		Collection<Entity> entities =  block.getWorld().getNearbyEntities(block.getBoundingBox());
 		Collection<Material> mats = new ArrayList<>();
 		for(Entity ent : entities) {
@@ -67,22 +75,23 @@ public class WitchesCauldron extends AbstractAbility {
 			}
 		}
 		ItemStack brew = AbilityUtils.getWitchesBrew();
-		ItemMeta meta = brew.getItemMeta();
 
-		List<String> lore = meta.getLore();
-		if(lore == null)
-			lore = new ArrayList<>();
+		PotionMeta meta = (PotionMeta)brew.getItemMeta();
+		List<String> ingredients = new ArrayList<>();
 		
 		for (Material mat : mats) {
-			lore.add(mat.name().toLowerCase());
+			ingredients.add(mat.name());
 		}
+		meta.setDisplayName(WitchBrewRecipe.serializeIngredients(mats));
 		brew.setItemMeta(meta);
+		
 		block.getWorld().dropItemNaturally(block.getLocation(), brew);
 		
 		boolean isPerfect = false;
 		for(WitchBrewRecipe recipe : WitchBrewRecipe.values()) {
 			if(recipe.getResult().isSimilar(brew)) {
 				player.playSound(player.getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 1.0f, 1.0f);
+				block.getWorld().spawnParticle(Particle.SPELL_WITCH, block.getLocation(), 4);
 				isPerfect = true;
 				break;
 			}

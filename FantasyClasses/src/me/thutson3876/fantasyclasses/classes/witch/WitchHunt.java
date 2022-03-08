@@ -1,17 +1,17 @@
 package me.thutson3876.fantasyclasses.classes.witch;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.world.LootGenerateEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.loot.LootContext;
-import org.bukkit.loot.LootTable;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.abilities.Scalable;
@@ -38,45 +38,54 @@ public class WitchHunt extends AbstractAbility implements Scalable {
 
 	@Override
 	public boolean trigger(Event event) {
-		if(!isEnabled())
-			return false;
-		
-		if (!(event instanceof LootGenerateEvent))
-			return false;
+		 if(!isEnabled()) return false;
 
-		LootGenerateEvent e = (LootGenerateEvent) event;
-
-		LootContext context = e.getLootContext();
-		if (!context.getKiller().equals(player))
+		if (!(event instanceof EntityDeathEvent))
 			return false;
 
-		if (!e.getEntity().getType().equals(EntityType.WITCH))
+		EntityDeathEvent e = (EntityDeathEvent) event;
+
+		LivingEntity ent = e.getEntity();
+
+		if (ent.getKiller() == null)
 			return false;
 
-		LootTable lootTable = e.getLootTable();
-		Collection<ItemStack> drops = lootTable.populateLoot(rng, context);
+		if (!ent.getKiller().equals(player))
+			return false;
 
-		drops.addAll(lootTable.populateLoot(rng, context));
-		drops.addAll(lootTable.populateLoot(rng, context));
+		if (!ent.getType().equals(EntityType.WITCH))
+			return false;
+
+		Collection<ItemStack> drops = e.getDrops();
+		if (drops == null)
+			drops = new ArrayList<>();
+
+		boolean isLucky = false;
 		int chance = rng.nextInt(100);
-		if (chance > 89) {
+		if (chance > 30) {
+			isLucky = true;
 			int i = rng.nextInt(3);
-			switch (i) {
-			case 0:
-				drops.add(AbilityUtils.getBloodVial());
-			case 1:
-				drops.addAll(drops);
-			case 2:
+			if(i == 0) {
+				if (!drops.isEmpty()) {
+					drops.addAll(drops);
+					drops.addAll(drops);
+				}
+
+				e.setDroppedExp(e.getDroppedExp() * 5);
+			}
+			else if(i == 1) {
+				magicka += 5;
+			}	
+			else if(i == 2) {
 				drops.add(AbilityUtils.generateRandomWitchesBrew());
 			}
 		}
 
 		magicka += 5;
-		e.setLoot(drops);
 
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 0.7f, 1.2f);
 
-		return true;
+		return isLucky;
 	}
 
 	@Override
@@ -86,7 +95,8 @@ public class WitchHunt extends AbstractAbility implements Scalable {
 
 	@Override
 	public String getDescription() {
-		return "Kill other witches to absorb their power and attain their possessions. Your current magicka level: &6" + magicka;
+		return "Kill other witches to absorb their power and attain their possessions. Your current magicka level: &6"
+				+ magicka;
 	}
 
 	@Override

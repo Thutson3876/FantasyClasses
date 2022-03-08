@@ -16,10 +16,10 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 public class Rejuvination extends AbstractAbility implements Bindable {
 
 	private Material boundType = null;
-	private double healAmt = 4.0;
+	private double healAmt = 2.0;
 	private int duration = 6 * 20;
 	private PotionEffect regen = null;
-	private double maxAngle = 0.5;
+	private double maxAngle = 1.4;
 	private double maxDistance = 6.0;
 	
 	public Rejuvination(Player p) {
@@ -54,7 +54,7 @@ public class Rejuvination extends AbstractAbility implements Bindable {
 		
 		LivingEntity target = null;
 		if(e.getAction().equals(Action.RIGHT_CLICK_AIR)) {
-			target = AbilityUtils.getLivingEntityClosestToCursor(player, maxAngle, maxDistance, 0.1);
+			target = AbilityUtils.getLivingEntityClosestToCursor(player, maxAngle, maxDistance, 0.3);
 			if(target == null)
 				target = player;
 		}
@@ -89,7 +89,7 @@ public class Rejuvination extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		healAmt = 1.0 + 3.0 * currentLevel;
+		healAmt = 1.0 + 1.0 * currentLevel;
 		if(currentLevel >= maximumLevel)
 			regen = new PotionEffect(PotionEffectType.REGENERATION, duration, 0);
 	}

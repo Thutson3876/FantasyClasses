@@ -15,29 +15,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 public class NaturesBlessing extends AbstractAbility {
 	
 	private BukkitTask task = null;
-	private BukkitRunnable runnable = new BukkitRunnable() {
-
-		@Override
-		public void run() {
-			if(player.getHealth() >= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
-				for(LivingEntity e : AbilityUtils.getNearbyPlayerPets(player, 15.0)) {
-					if(e.getHealth() >= e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
-						continue;
-
-					else {
-						AbilityUtils.heal(e, 1.0);
-						return;
-					}
-						
-				}
-			}
-			else {
-				AbilityUtils.heal(player, 1.0);
-				return;
-			}
-		}
-		
-	};
+	private BukkitRunnable runnable = null;
 	
 	public NaturesBlessing(Player p) {
 		super(p);
@@ -45,7 +23,7 @@ public class NaturesBlessing extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 8 * 20;
+		this.coolDowninTicks = 6 * 20;
 		this.displayName = "Nature's Blessing";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
@@ -75,12 +53,36 @@ public class NaturesBlessing extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		coolDowninTicks = (10 - (currentLevel * 2)) * 20;
-		
-		if(task != null && (Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
+		coolDowninTicks = (8 - (currentLevel * 2)) * 20;
+		if(task == null) {
+			this.runnable = new BukkitRunnable() {
+
+				@Override
+				public void run() {
+					if(player.getHealth() >= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue()) {
+						for(LivingEntity e : AbilityUtils.getNearbyPlayerPets(player, 15.0)) {
+							if(e.getHealth() >= e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue())
+								continue;
+
+							else {
+								AbilityUtils.heal(e, 1.0);
+								return;
+							}
+								
+						}
+					}
+					else {
+						AbilityUtils.heal(player, 1.0);
+						return;
+					}
+				}
+				
+			};
+			
+			task = runnable.runTaskTimer(plugin, coolDowninTicks, coolDowninTicks);
+		}
+		else if((Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
 			task.cancel();
-		
-		task = runnable.runTaskTimer(plugin, coolDowninTicks, coolDowninTicks);
 	}
 
 }

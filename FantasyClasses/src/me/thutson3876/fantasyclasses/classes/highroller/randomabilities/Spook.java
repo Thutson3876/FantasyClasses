@@ -23,20 +23,23 @@ public class Spook implements RandomAbility {
 		
 		Random rng = new Random();
 		
-		BukkitRunnable task = new BukkitRunnable() {
-
-			@Override
-			public void run() {
-				p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 0.3f + rng.nextFloat(), 1.0f);
-			}
-			
-		};
+		
 		
 		for(int i = 0; i < 300; i++) {
 			int buffer = rng.nextInt(100) + 20;
-			task.runTaskLater(FantasyClasses.getPlugin(), buffer);
+			
+			new BukkitRunnable() {
+
+				@Override
+				public void run() {
+					p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 0.3f + rng.nextFloat(), 1.0f);
+				}
+				
+			}.runTaskLater(FantasyClasses.getPlugin(), buffer);
 			i += buffer;
 		}
+		
+		//make this make a bunch of different tasks with increasing times
 	}
 
 }

@@ -62,6 +62,9 @@ public class WitchWand extends AbstractAbility implements Bindable {
 		else if (event instanceof ProjectileHitEvent) {
 			ProjectileHitEvent e = (ProjectileHitEvent) event;
 
+			if(e.getEntity().getShooter() == null)
+				return false;
+			
 			if (!e.getEntity().getShooter().equals(player))
 				return false;
 
@@ -79,8 +82,8 @@ public class WitchWand extends AbstractAbility implements Bindable {
 			if(hit.isDead())
 				return false;
 			
-			livingHit.damage(damage, player);
-			livingHit.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, (int) Math.round(getMagickaBonus() * 50), 0));
+			livingHit.damage(calculateDamage(), player);
+			livingHit.addPotionEffect(new PotionEffect(PotionEffectType.LEVITATION, calculateLevitationDuration(), 0));
 		}
 		return false;
 	}
@@ -92,8 +95,8 @@ public class WitchWand extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getDescription() {
-		return "Launch a ball of energy from your wand that causes its target to levitate. It deals &6"
-				+ damage * (1 + getMagickaBonus()) + " &rdamage and has a cooldown of &6" + this.coolDowninTicks / 20
+		return "Launch a ball of energy from your wand that causes its target to levitate for &6" + AbilityUtils.doubleRoundToXDecimals((double)calculateLevitationDuration() / 20.0, 2) + "&rseconds. It deals &6"
+				+ AbilityUtils.doubleRoundToXDecimals(calculateDamage(), 1) + " &rdamage and has a cooldown of &6" + this.coolDowninTicks / 20
 				+ " &rseconds";
 	}
 
@@ -104,7 +107,7 @@ public class WitchWand extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		damage = 4.0 + 2.0 * currentLevel * (1 + getMagickaBonus());
+		damage = 3.0 + 3.0 * currentLevel;
 		this.coolDowninTicks = (6 - currentLevel) * 20;
 	}
 
@@ -132,6 +135,14 @@ public class WitchWand extends AbstractAbility implements Bindable {
 		//bullet.setVelocity(bullet.getVelocity().multiply(bulletVelocity));
 
 		player.getWorld().playSound(spawnAt, Sound.ENTITY_SHULKER_SHOOT, 0.7f, 1.2F);
+	}
+	
+	private double calculateDamage() {
+		return damage * (1 + getMagickaBonus());
+	}
+	
+	private int calculateLevitationDuration() {
+		return (int) Math.round(getMagickaBonus() * 50);
 	}
 
 	private double getMagickaBonus() {

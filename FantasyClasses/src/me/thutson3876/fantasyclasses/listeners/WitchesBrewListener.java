@@ -1,5 +1,8 @@
 package me.thutson3876.fantasyclasses.listeners;
 
+import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PotionSplashEvent;
@@ -17,12 +20,25 @@ public class WitchesBrewListener implements Listener {
 	
 	@EventHandler
 	public void onPotionSplashEvent(PotionSplashEvent e) {
-		ItemStack potion = e.getPotion().getItem();
-		for(WitchBrewRecipe recipe : WitchBrewRecipe.values()) {
-			if(potion.isSimilar(recipe.getResult())) {
-				recipe.runAction(e);
-				return;
-			}	
+		Block hit = e.getHitBlock();
+		Entity target = e.getHitEntity();
+		Location loc = null;
+		if(hit == null) {
+			if(target != null)
+				loc = target.getLocation();
+			
+			else
+				loc = e.getPotion().getLocation();
 		}
+		else {
+			loc = hit.getRelative(e.getHitBlockFace()).getLocation();
+		}
+		
+		ItemStack potion = e.getPotion().getItem();
+		WitchBrewRecipe recipe = WitchBrewRecipe.getMatching(potion);
+		if(recipe == null)
+			return;
+		
+		recipe.runAction(e, loc);
 	}
 }

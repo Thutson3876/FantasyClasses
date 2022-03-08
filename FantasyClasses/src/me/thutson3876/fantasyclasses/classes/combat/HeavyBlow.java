@@ -50,12 +50,12 @@ public class HeavyBlow extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Attack an entity with a sword";
+		return "Attack an entity with an axe";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Your refined skill with the blade allows you to deal &6" + dmgMod + " &rmore damage with a sword";
+		return "Your refined skill with the blade allows you to deal &6" + dmgMod + " &rmore damage with an axe";
 	}
 
 	@Override

@@ -27,7 +27,7 @@ public class ReagantHarvest extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 0;
+		this.coolDowninTicks = 30;
 		this.displayName = "Reagant Harvest";
 		this.skillPointCost = 1;
 		this.maximumLevel = 5;
@@ -41,6 +41,9 @@ public class ReagantHarvest extends AbstractAbility {
 
 			EntityDeathEvent e = (EntityDeathEvent) event;
 
+			if(e.getEntity().getKiller() == null || !e.getEntity().getKiller().equals(player))
+				return false;
+			
 			List<ItemStack> drops = e.getDrops();
 			List<ItemStack> extraDrops = new ArrayList<>();
 			Random rng = new Random();
@@ -80,8 +83,8 @@ public class ReagantHarvest extends AbstractAbility {
 			if (ageable.getAge() < ageable.getMaximumAge()) {
 				return false;
 			}
-			
-			if(e.isDropItems()) {
+			Random rng = new Random();
+			if(e.isDropItems() && rng.nextDouble() < this.dropChance) {
 				e.getBlock().getWorld().dropItemNaturally(e.getBlock().getLocation(), new ItemStack(type));
 				return true;
 			}

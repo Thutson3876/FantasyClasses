@@ -3,18 +3,23 @@ package me.thutson3876.fantasyclasses.classes.druid;
 import java.util.Random;
 
 import org.bukkit.Material;
+import org.bukkit.Sound;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExhaustionEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent;
 import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
+import org.bukkit.event.entity.EntityTameEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerExpChangeEvent;
 import org.bukkit.event.player.PlayerItemDamageEvent;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.abilities.Scalable;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 import me.thutson3876.fantasyclasses.util.DamageCauseList;
 import me.thutson3876.fantasyclasses.util.MaterialLists;
 
@@ -23,6 +28,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 	private final double enviroMod = 1.5;
 	private final float foodMod = 0.5f;
 	private int bonusMod = 0;
+	private double prevMaxHp = 20.0;
 	
 	public Survivalist(Player p) {
 		super(p);
@@ -51,11 +57,17 @@ public class Survivalist extends AbstractAbility implements Scalable {
 				return false;
 			
 			int change = player.getFoodLevel() - e.getFoodLevel();
-			if(change >= 0)
+			if(change >= 0) {
+				e.setFoodLevel((int) (e.getFoodLevel() + (Math.round(change * (bonusValue() / 500.0)))));
 				return false;
+			}
+			
+			Random rng = new Random();
+			if(rng.nextDouble() < 0.5)
+				bonusMod++;
+				
 			
 			e.setFoodLevel(e.getFoodLevel() - (Math.round(change * foodMod)));
-			
 			
 			return false;
 		}
@@ -74,6 +86,10 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			
 			if(!e.getEntity().equals(player))
 				return false;
+			
+			double maxHp = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
+			if(e.getDamage() >= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() / 2.0)
+				player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHp - 2.0);
 			
 			if(!DamageCauseList.ENVIRONMENTAL.getDamageCauseList().contains(e.getCause()))
 				return false;
@@ -122,10 +138,32 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			e.setAmount(newAmt);
 			return false;
 		}
+		else if(event instanceof PlayerBedEnterEvent) {
+			PlayerBedEnterEvent e = (PlayerBedEnterEvent)event;
+			
+			if(!e.getPlayer().equals(player))
+				return false;
+			
+			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(prevMaxHp);
+			player.playSound(player.getLocation(), Sound.MUSIC_MENU, 0.3f, 1.0f);
+			player.sendMessage(ChatUtils.chat("&5You begin to feel well rested..."));
+			
+			return false;
+		}
+		else if(event instanceof EntityTameEvent) {
+				EntityTameEvent e = (EntityTameEvent)event;
+				if(e.getOwner().equals(player))
+					bonusMod++;
+		}
 		
 		return false;
 	}
 
+	@Override
+	public void deInit() {
+		player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(prevMaxHp);
+	}
+	
 	@Override
 	public String getInstructions() {
 		return "Survive";
@@ -143,6 +181,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 
 	@Override
 	public void applyLevelModifiers() {
+		this.prevMaxHp = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
 	}
 	
 	private double bonusValue() {

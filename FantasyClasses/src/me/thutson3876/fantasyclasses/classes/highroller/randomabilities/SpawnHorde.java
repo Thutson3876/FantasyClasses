@@ -19,7 +19,7 @@ public class SpawnHorde implements RandomAbility {
 		types.add(EntityType.ZOMBIE);
 		types.add(EntityType.SKELETON);
 		types.add(EntityType.HUSK);
-		types.add(EntityType.DROWNED);
+		types.add(EntityType.STRAY);
 		types.add(EntityType.WITHER_SKELETON);
 	}
 	

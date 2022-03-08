@@ -9,9 +9,6 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitRunnable;
-
-import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.util.Sphere;
 
 public class SpookReal implements RandomAbility {
@@ -30,21 +27,7 @@ public class SpookReal implements RandomAbility {
 		for(int i = 0; i < 5; i++) {
 			p.getWorld().spawnEntity(locs.get(rng.nextInt(locs.size())), EntityType.GHAST);
 		}
-		
-		BukkitRunnable task = new BukkitRunnable() {
 
-			@Override
-			public void run() {
-				p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 0.2f + rng.nextFloat(), 1.0f);
-			}
-			
-		};
-		
-		for(int i = 0; i < 300; i++) {
-			int buffer = rng.nextInt(100) + 20;
-			task.runTaskLater(FantasyClasses.getPlugin(), buffer);
-			i += buffer;
-		}
 	}
 
 }

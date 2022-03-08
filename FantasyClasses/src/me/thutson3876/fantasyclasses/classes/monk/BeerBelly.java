@@ -9,7 +9,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class BeerBelly extends AbstractAbility {
 
-	double conversion = 0.2;
+	double conversion = 0.08;
 	
 	public BeerBelly(Player p) {
 		super(p);
@@ -17,7 +17,7 @@ public class BeerBelly extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 30;
+		this.coolDowninTicks = 0;
 		this.displayName = "Beer Belly";
 		this.skillPointCost = 1;
 		this.maximumLevel = 2;
@@ -35,6 +35,8 @@ public class BeerBelly extends AbstractAbility {
 		if(!e.getEntity().equals(player))
 			return false;
 		
+		if(AbilityUtils.hasArmor(player))
+			return false;
 		
 		double dmg = e.getDamage();
 		player.setExhaustion((float) (player.getExhaustion() + (dmg * conversion)));
@@ -45,12 +47,12 @@ public class BeerBelly extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Take damage";
+		return "Take damage while not wearing armor";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Convert &6" + AbilityUtils.doubleRoundToXDecimals(conversion * 100, 1) + "% &rof damage taken into exhaustion";
+		return "Convert &6" + AbilityUtils.doubleRoundToXDecimals(conversion * 100, 1) + "% &rof damage taken into exhaustion while not wearing armor";
 	}
 
 	@Override
@@ -60,7 +62,7 @@ public class BeerBelly extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		conversion = 0.2 * currentLevel;
+		conversion = 0.08 * currentLevel;
 	}
 
 }

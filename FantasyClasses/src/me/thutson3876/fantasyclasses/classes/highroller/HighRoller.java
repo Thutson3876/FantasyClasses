@@ -19,6 +19,7 @@ public class HighRoller extends AbstractFantasyClass {
 		skillTree.addChild(new AnimalHandling(p));
 		skillTree.addChild(new ConstitutionSavingThrow(p));
 		skillTree.addChild(new CharismaCheck(p));
+		skillTree.addChild(new GrandAppetite(p));
 		skillTree.addChild(new HookLineAnd(p));
 		skillTree.addChild(new WondrousMagic(p));
 	}

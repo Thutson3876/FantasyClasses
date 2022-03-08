@@ -45,7 +45,8 @@ public class Command_BindAbility extends AbstractCommand implements Listener {
 					if(s.equalsIgnoreCase(abil.getCommandName())) {
 						Material type = player.getInventory().getItemInMainHand().getType();
 						if(type == null || type.equals(Material.AIR)) {
-							sender.sendMessage(ChatUtils.chat("&4Error: Must be holding desired item type"));
+							sender.sendMessage(ChatUtils.chat("&6" + s + " &bhas been unbound"));
+							((Bindable)abil).setBoundType(null);
 							return true;
 						}
 							
@@ -69,7 +70,7 @@ public class Command_BindAbility extends AbstractCommand implements Listener {
 			return values;
 		Player player = (Player) sender;
 
-		if (args.length == 0)
+		if (args.length == 1)
 			values = boundAbilityNames(player);
 
 		return values;

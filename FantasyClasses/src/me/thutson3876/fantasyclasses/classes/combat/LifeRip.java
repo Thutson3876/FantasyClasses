@@ -1,6 +1,9 @@
 package me.thutson3876.fantasyclasses.classes.combat;
 
 import org.bukkit.Material;
+import org.bukkit.Particle;
+import org.bukkit.Sound;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -43,7 +46,8 @@ public class LifeRip extends AbstractAbility {
 		if(!e.getDamager().equals(this.player))
 			return false;
 
-		if(!(e.getEntity() instanceof LivingEntity))
+		Entity ent = e.getEntity();
+		if(!(ent instanceof LivingEntity))
 			return false;
 		
 		if(!e.getCause().equals(DamageCause.ENTITY_ATTACK))
@@ -55,6 +59,8 @@ public class LifeRip extends AbstractAbility {
 		if(e.getFinalDamage() < 1.0)
 			return false;
 		
+		ent.getWorld().playSound(ent.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1.4f, 0.7f);
+		ent.getWorld().spawnParticle(Particle.CRIMSON_SPORE, ent.getLocation(), 3);
 		AbilityUtils.heal(player, healAmt);
 		
 		return true;

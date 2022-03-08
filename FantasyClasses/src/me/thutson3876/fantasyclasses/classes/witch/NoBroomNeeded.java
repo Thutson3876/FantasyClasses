@@ -48,7 +48,7 @@ public class NoBroomNeeded extends AbstractAbility {
 
 			e.setCancelled(true);
 
-			player.setVelocity(player.getVelocity().multiply(1.2).add(new Vector(0, 2, 0)));
+			player.setVelocity(player.getVelocity().add(new Vector(0, 2, 0)));
 
 			isGliding = true;
 			player.setGliding(true);

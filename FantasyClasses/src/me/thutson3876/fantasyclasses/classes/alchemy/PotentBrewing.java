@@ -2,19 +2,18 @@ package me.thutson3876.fantasyclasses.classes.alchemy;
 
 import java.util.List;
 import java.util.Random;
-import java.util.UUID;
 
+import org.bukkit.Color;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.event.inventory.BrewEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.custombrewing.CauldronBrewEvent;
 import me.thutson3876.fantasyclasses.util.PotionList;
 
 public class PotentBrewing extends AbstractAbility {
@@ -22,10 +21,8 @@ public class PotentBrewing extends AbstractAbility {
 	private double chance = 0.1;
 	private int maxAmp = 1;
 	private int minAmp = 0;
-	private int maxDuration = 20;
-	private int minDuration = 10;
-	private boolean triggerTwice = false;
-	private Random rng = new Random();
+	private int maxDuration = 40;
+	private int minDuration = 20;
 
 	public PotentBrewing(Player p) {
 		super(p);
@@ -33,7 +30,7 @@ public class PotentBrewing extends AbstractAbility {
 
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 16;
+		this.coolDowninTicks = 30;
 		this.displayName = "Potent Brewing";
 		this.skillPointCost = 1;
 		this.maximumLevel = 10;
@@ -43,81 +40,74 @@ public class PotentBrewing extends AbstractAbility {
 
 	@Override
 	public boolean trigger(Event event) {
-		if (!(event instanceof BrewEvent))
-			return false;
+		return false;
+	}
 
-		BrewEvent e = (BrewEvent) event;
+	public ItemStack newTrigger(Event event) {
+		if (!(event instanceof CauldronBrewEvent))
+			return null;
 
-		UUID uuid = plugin.getBrewTracker().getTracker().get(e.getBlock().getLocation());
+		CauldronBrewEvent e = (CauldronBrewEvent) event;
 
-		if (!player.getUniqueId().equals(uuid))
-			return false;
+		ItemStack prevResult = e.getResult();
 
+		if (!e.getPlayer().equals(player))
+			return prevResult;
+
+		Random rng = new Random();
 		if (rng.nextDouble() > chance)
-			return false;
+			return prevResult;
 
-		ItemStack[] newContents = new ItemStack[e.getContents().getStorageContents().length];
-		for (int l = 0; l < (triggerTwice ? 1 : 0); l++) {
-			for (ItemStack i : e.getContents().getStorageContents()) {
-				int j = 0;
-				if (i == null || !i.getType().equals(Material.POTION)) {
-					newContents[j] = i;
-					j++;
-					continue;
-				}
+		ItemStack i = e.getResult();
 
-				ItemMeta meta = i.getItemMeta();
-				if (!(meta instanceof PotionMeta)) {
-					newContents[j] = i;
-					j++;
-					continue;
-				}
+		ItemMeta meta = i.getItemMeta();
+		if (!(meta instanceof PotionMeta)) {
+			return prevResult;
+		}
+		PotionMeta potMeta = (PotionMeta) meta;
 
-				PotionMeta potMeta = (PotionMeta) meta;
-				if (potMeta.hasCustomEffects() && !triggerTwice)
-					continue;
+		PotionEffectType type = potMeta.getCustomEffects().get(0).getType();
+		potMeta.addCustomEffect(potMeta.getCustomEffects().get(0), true);
 
-				PotionEffectType type = potMeta.getBasePotionData().getType().getEffectType();
-				List<PotionEffectType> buffs = PotionList.BUFF.getPotList();
-				List<PotionEffectType> debuffs = PotionList.DEBUFF.getPotList();
-
-				PotionEffectType newType = null;
-				if (buffs.contains(type)) {
-					do {
-						newType = buffs.get(buffs.size());
-					} while (newType.equals(type) || potMeta.hasCustomEffect(newType));
-
-					potMeta.addCustomEffect(new PotionEffect(newType, (rng.nextInt(maxDuration) + minDuration) * 20,
-							rng.nextInt(maxAmp) + minAmp), false);
-
-				} else if (debuffs.contains(type)) {
-					do {
-						newType = debuffs.get(debuffs.size());
-					} while (newType.equals(type) || potMeta.hasCustomEffect(newType));
-
-					potMeta.addCustomEffect(new PotionEffect(debuffs.get(debuffs.size()),
-							(rng.nextInt(maxDuration) + minDuration) * 20, rng.nextInt(maxAmp) + minAmp), false);
-				}
-
-				i.setItemMeta(potMeta);
-				newContents[j] = i;
-				j++;
-				continue;
-			}
+		List<PotionEffectType> buffs = PotionList.BUFF.getPotList();
+		List<PotionEffectType> debuffs = PotionList.DEBUFF.getPotList();
+		if (i == null || (!i.getType().equals(Material.POTION) && !i.getType().equals(Material.SPLASH_POTION))) {
+			return prevResult;
 		}
 
-		return true;
+		PotionEffectType newType = null;
+		if (buffs.contains(type)) {
+			potMeta.setColor(Color.YELLOW);
+			do {
+				newType = buffs.get(rng.nextInt(buffs.size()));
+			} while (newType.equals(type) || potMeta.hasCustomEffect(newType));
+
+			potMeta.addCustomEffect(new PotionEffect(newType, (rng.nextInt(maxDuration) + minDuration) * 20,
+					rng.nextInt(maxAmp) + minAmp), false);
+
+		} else if (debuffs.contains(type)) {
+			potMeta.setColor(Color.BLACK);
+			do {
+				newType = debuffs.get(rng.nextInt(debuffs.size()));
+			} while (newType.equals(type) || potMeta.hasCustomEffect(newType));
+			potMeta.addCustomEffect(new PotionEffect(newType,
+					(rng.nextInt((int) (maxDuration * 0.5)) + minDuration) * 20, rng.nextInt(maxAmp) + minAmp), false);
+		}
+
+		i.setItemMeta(potMeta);
+		e.setResult(i);
+		return i;
 	}
 
 	@Override
 	public String getInstructions() {
-		return "Brew a potion";
+		return "Brew a potion using Enhanced Repitoire";
 	}
 
 	@Override
 	public String getDescription() {
-		return "When brewing, gain a &6" + chance * 100
-				+ "% &rchance to give it a random additional effect. Bonus duration at level 4 and bonus potency at level 7. Level 10 applies this effect twice";
+		return "When brewing using Enhanced Repitoire, gain a &6" + chance * 100
+				+ "% &rchance to give it a random additional effect. Bonus duration at level 4 and bonus potency at level 7";
 	}
 
 	@Override
@@ -129,15 +119,12 @@ public class PotentBrewing extends AbstractAbility {
 	public void applyLevelModifiers() {
 		chance = 0.1 * currentLevel;
 		if (currentLevel > 3) {
-			maxDuration = 40;
-			minDuration = 30;
+			maxDuration = 180;
+			minDuration = 45;
 		}
 		if (currentLevel > 6) {
 			maxAmp = 3;
 			minAmp = 1;
-		}
-		if (currentLevel > 9) {
-			triggerTwice = true;
 		}
 
 	}

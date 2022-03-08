@@ -45,10 +45,6 @@ public abstract class AbstractAbility implements Ability, Listener {
 		}
 	}
 
-	public AbstractAbility() {
-		setDefaults();
-	}
-
 	@Override
 	public Player getPlayer() {
 		return player;

@@ -11,6 +11,7 @@ import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.scheduler.BukkitTask;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
@@ -18,7 +19,8 @@ public class DungeonDelver extends AbstractAbility {
 
 	private int taskID = 0;
 
-	private BukkitRunnable task;
+	private BukkitTask task = null;
+	private BukkitRunnable runnable = null;
 
 	private int maxLightLevel = 8;
 
@@ -39,27 +41,10 @@ public class DungeonDelver extends AbstractAbility {
 		this.skillPointCost = 2;
 		this.maximumLevel = 3;
 
-		this.task = new BukkitRunnable() {
-			public void run() {
-				if (player == null) {
-					deInit();
-					return;
-				}
-				if (player.isDead())
-					return;
-				Location loc = player.getLocation();
-				if (loc.getBlock().getLightLevel() > maxLightLevel
-						|| loc.getWorld().getHighestBlockAt(loc).getY() < loc.getY()) {
-					player.removePotionEffect(PotionEffectType.NIGHT_VISION);
-					return;
-				}
-				applyPotionEffects();
-			}
-		};
-
 		this.createItemStack(Material.ENDER_EYE);
 	}
 
+	@Override
 	public void deInit() {
 		if (this.task == null || this.taskID == 0)
 			return;
@@ -89,15 +74,40 @@ public class DungeonDelver extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		switch(this.currentLevel) {
-			case 1: effects.add(darkVision);
-			case 2: effects.add(speed);
-			case 3: effects.add(strength);
+		if(currentLevel > 0)
+			effects.add(darkVision);
+		if(currentLevel > 1)
+			effects.add(speed);
+		if(currentLevel > 2)
+			effects.add(strength);
+		
+		if(task == null) {
+			
 		}
+		else if((Bukkit.getScheduler().isCurrentlyRunning(task.getTaskId()) || Bukkit.getScheduler().isQueued(task.getTaskId())))
+			task.cancel();
+		
+		this.runnable = new BukkitRunnable() {
 
-		if(this.currentLevel > 0 && this.taskID == 0 && this.task != null)
-			this.taskID = this.task.runTaskTimer(plugin, 20L, 20L).getTaskId();
-
+			public void run() {
+				if (player == null) {
+					deInit();
+					return;
+				}
+				if (player.isDead())
+					return;
+				Location loc = player.getLocation();
+				if (loc.getBlock().getLightLevel() > maxLightLevel
+						|| loc.getWorld().getHighestBlockAt(loc).getY() < loc.getY()) {
+					player.removePotionEffect(PotionEffectType.NIGHT_VISION);
+					return;
+				}
+				applyPotionEffects();
+			}
+			
+		};
+		
+		task = runnable.runTaskTimer(plugin, coolDowninTicks, coolDowninTicks);
 	}
 
 	private void applyPotionEffects() {

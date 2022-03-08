@@ -75,11 +75,12 @@ public class HookLineAnd extends AbstractAbility {
 		if(!e.getState().equals(PlayerFishEvent.State.CAUGHT_FISH))
 			return false;
 		
-		e.getCaught().remove();
+		
 		
 		Entity newEntity = null;
 		int roll = rng.nextInt(20);
 		if(roll > dc) {
+			e.getCaught().remove();
 			newEntity = player.getWorld().spawnEntity(e.getHook().getLocation(), goodRolls.get(rng.nextInt(goodRolls.size())));
 			if(newEntity.getType().equals(EntityType.DROPPED_ITEM)) {
 				Material type = goodItemRolls.get(rng.nextInt(goodItemRolls.size()));
@@ -87,6 +88,7 @@ public class HookLineAnd extends AbstractAbility {
 			}
 		}
 		else if(roll == 0) {
+			e.getCaught().remove();
 			newEntity = player.getWorld().spawnEntity(e.getHook().getLocation(), badRolls.get(rng.nextInt(badRolls.size())));
 		}
 		

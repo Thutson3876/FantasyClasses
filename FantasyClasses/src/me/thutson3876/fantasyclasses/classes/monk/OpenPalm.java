@@ -9,7 +9,7 @@ import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
 public class OpenPalm extends AbstractAbility {
 
-	private double damageMod = 3.0;
+	private double damageMod = 1.5;
 	
 	public OpenPalm(Player p) {
 		super(p);
@@ -36,7 +36,7 @@ public class OpenPalm extends AbstractAbility {
 			return false;
 		
 		if (!(player.getInventory().getItemInMainHand() == null
-				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)))
+				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)  || player.getInventory().getItemInMainHand().getType().equals(Material.STICK)))
 			return false;
 		
 		e.setDamage(e.getDamage() + damageMod);
@@ -61,7 +61,7 @@ public class OpenPalm extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		damageMod = 3.0 * currentLevel;
+		damageMod = 1.5 * currentLevel;
 	}
 
 	public double getDamageModifier() {

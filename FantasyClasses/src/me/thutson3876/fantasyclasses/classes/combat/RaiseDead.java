@@ -46,8 +46,6 @@ public class RaiseDead extends AbstractAbility implements Bindable {
 		this.displayName = "Raise Dead";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
-		mobTypes.add(EntityType.ZOMBIE);
-		mobTypes.add(EntityType.HUSK);
 
 		this.createItemStack(Material.SKELETON_SKULL);
 	}
@@ -94,6 +92,16 @@ public class RaiseDead extends AbstractAbility implements Bindable {
 			
 			if(e.getTarget() == null || mobTypes.contains(e.getTarget().getType()) || e.getTarget().equals(player)) {
 				List<LivingEntity> nearbyEntities = AbilityUtils.getNearbyLivingEntities(player, 15, 15, 15);
+				if(nearbyEntities == null) {
+					e.setTarget(null);
+					return false;
+				}
+				nearbyEntities.removeAll(undead);
+				if(nearbyEntities.isEmpty()) {
+					e.setTarget(null);
+					return false;
+				}
+					
 				e.setTarget(AbilityUtils.getNearestLivingEntity(player.getLocation(), nearbyEntities));
 				return false;
 			}
@@ -131,6 +139,8 @@ public class RaiseDead extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
+		this.mobTypes.add(EntityType.ZOMBIE);
+		this.mobTypes.add(EntityType.HUSK);
 		maxAmt = 1 + currentLevel;
 		if(this.currentLevel == 2) {
 			mobTypes.add(EntityType.SKELETON);

@@ -27,6 +27,12 @@ public class Combat extends AbstractFantasyClass {
 		axe.addChild(new HeavyBlow(p));
 		skillTree.addChild(axe);
 		
+		Skill bow = new Skill(new Archer(p));
+		bow.addChild(new Disengage(p));
+		bow.addChild(new Camoflauge(p));
+		bow.addChild(new ExplosiveArrows(p));
+		skillTree.addChild(bow);
+		
 		Skill scythe = new Skill(new ScytheSmith(p));
 		scythe.addChild(new Cripple(p));
 		scythe.addChild(new LifeRip(p));
