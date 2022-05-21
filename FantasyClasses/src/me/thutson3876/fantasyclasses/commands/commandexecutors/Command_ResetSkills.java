@@ -1,10 +1,5 @@
 package me.thutson3876.fantasyclasses.commands.commandexecutors;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.command.Command;
@@ -19,21 +14,7 @@ import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class Command_ResetSkills extends AbstractCommand implements Listener {
 	
-	private static Map<Material, Integer> costs = new HashMap<>();
-	
-	static {
-		costs.put(Material.DIAMOND, 1);
-		costs.put(Material.BLAZE_ROD, 3);
-		costs.put(Material.ENDER_PEARL, 1);
-		costs.put(Material.IRON_BLOCK, 1);
-		costs.put(Material.GOLD_BLOCK, 1);
-		costs.put(Material.REDSTONE_BLOCK, 2);
-		costs.put(Material.GOLDEN_CARROT, 3);
-		costs.put(Material.GLISTERING_MELON_SLICE, 3);
-		costs.put(Material.GOLDEN_APPLE, 1);
-		costs.put(Material.PRISMARINE_CRYSTALS, 4);
-		costs.put(Material.BELL, 1);
-	}
+	private static final int COST = 1;
 	
 	public Command_ResetSkills() {
 		super("resetskills", new String[] { "rskills" });
@@ -58,10 +39,9 @@ public class Command_ResetSkills extends AbstractCommand implements Listener {
 			sender.sendMessage(ChatUtils.chat("&4Error: Must be a player to use this command"));
 			return false;
 		}
-				
-		Integer cost = costs.get(item.getType());
-		if(cost != null) {
-			cost *= 1 + (fplayer.getPlayerLevel() / 5);
+		
+		int cost = COST * (fplayer.getPlayerLevel() / 5);
+		if(item != null && item.getType().equals(Material.DIAMOND)) {
 			if(item.getAmount() >= cost) {
 				item.setAmount(item.getAmount() - cost);
 				player.getInventory().setItemInMainHand(item);
@@ -70,14 +50,10 @@ public class Command_ResetSkills extends AbstractCommand implements Listener {
 				player.sendMessage(ChatUtils.chat("&5Successfully reset skills!"));
 				return true;
 			}
-			
 		}
 		
-		sender.sendMessage(ChatUtils.chat("&4Error: Must pay for the cost to reset per 5 player levels. Hold out item type in main hand in an amount equal to the presented cost. Payment options shown below:"));
-		List<Material> keyList = new ArrayList<>(costs.keySet());
-		for(int i = 0; i < keyList.size(); i++) {
-			sender.sendMessage(ChatUtils.chat("&6" + keyList.get(i).name() + "&5: &6" + (1 + costs.get(keyList.get(i)) * (fplayer.getPlayerLevel() / 5))));
-		}
+		sender.sendMessage(ChatUtils.chat("&4Error: Must pay a diamond to reset per 5 player levels. Hold the diamonds in main hand."));
+		sender.sendMessage(ChatUtils.chat("&3Current Cost: &6" + cost + " diamonds"));
 		
 		
 		return true;

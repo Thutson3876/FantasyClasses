@@ -23,13 +23,13 @@ public class DiggyDiggyHole extends AbstractAbility implements Bindable {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 60 * 20;
+		this.coolDowninTicks = 30 * 20;
 		this.displayName = "Diggy Diggy Hole";
-		this.skillPointCost = 3;
+		this.skillPointCost = 1;
 		this.maximumLevel = 2;
 		haste = new PotionEffect(PotionEffectType.FAST_DIGGING, duration, 1);
 
-		this.createItemStack(Material.FEATHER);
+		this.createItemStack(Material.CRACKED_STONE_BRICKS);
 	}
 
 	@Override

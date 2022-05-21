@@ -2,20 +2,20 @@ package me.thutson3876.fantasyclasses.classes;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
-
+import java.util.Map;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import me.thutson3876.fantasyclasses.abilities.Ability;
-import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.abilities.skills.Skill;
-import me.thutson3876.fantasyclasses.classes.combat.Momentum;
 import me.thutson3876.fantasyclasses.gui.AbstractGUI;
 import me.thutson3876.fantasyclasses.gui.GuiItem;
 import me.thutson3876.fantasyclasses.gui.SkillTreeGUI;
+import me.thutson3876.fantasyclasses.gui.treegui.ClassGUI;
 import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public abstract class AbstractFantasyClass implements FantasyClass {
@@ -25,6 +25,7 @@ public abstract class AbstractFantasyClass implements FantasyClass {
 	protected String description;
 	protected Skill skillTree;
 	protected Player p;
+	protected Map<Integer, Skill> skillMap = new HashMap<>();
 
 	public AbstractFantasyClass(Player p) {
 		this.p = p;
@@ -55,6 +56,10 @@ public abstract class AbstractFantasyClass implements FantasyClass {
 		GuiItem guiItem = new GuiItem(item, currentInv, skillTreeGui);
 
 		return guiItem;
+	}
+	
+	public GuiItem asTreeGuiItem(AbstractGUI currentInv) {
+		return new GuiItem(item, new ClassGUI(this.p, currentInv, this));
 	}
 
 	public String getName() {
@@ -107,10 +112,25 @@ public abstract class AbstractFantasyClass implements FantasyClass {
 		return false;
 	}
 	
-	public static List<Class<? extends AbstractAbility>> getAbilityClassList() {
+	protected void setSkillInMap(Integer index, Skill skill) {
+		skillMap.put(index, skill);
+	}
+	
+	public Map<Integer, Skill> getSkillMap(){
+		return skillMap;
+	}
+	
+	protected void setPrerequisites() {
+		for(Skill s : skillTree) {
+			if(s.getPrev() != null)
+				s.getAbility().setPrerequisite(s.getPrev().getAbility().getCommandName());
+		}
+	}
+	
+	/*public static List<Class<? extends AbstractAbility>> getAbilityClassList() {
 		List<Class<? extends AbstractAbility>> abilityClasses = new ArrayList<>();
 		abilityClasses.add(Momentum.class);
 		
 		return abilityClasses;
-	}
+	}*/
 }

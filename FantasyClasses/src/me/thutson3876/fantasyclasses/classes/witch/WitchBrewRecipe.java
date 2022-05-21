@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Color;
@@ -178,24 +179,24 @@ public enum WitchBrewRecipe {
 	}, Material.NETHER_WART, Material.REDSTONE, Material.FERMENTED_SPIDER_EYE, Material.EGG),
 	LEECH((event, loc) -> {
 		for(LivingEntity e : event.getAffectedEntities()) {
-			e.damage(12 * event.getIntensity(e));
+			e.damage(20 * event.getIntensity(e));
 		}
 		ProjectileSource source = event.getPotion().getShooter();
 		if(source instanceof LivingEntity)
-			AbilityUtils.heal((LivingEntity)source, 12);
+			AbilityUtils.heal((LivingEntity)source, 20);
 		
 	}, Material.NETHER_WART, Material.REDSTONE, Material.FERMENTED_SPIDER_EYE, Material.SOUL_LANTERN, Material.BEETROOT);
 
-	private final ItemStack result;
-	private final Collection<Material> ingredients;
-	private final WitchesBrewAction action;
+	private ItemStack result;
+	private Collection<Material> ingredients;
+	private WitchesBrewAction action;
 
 	private WitchBrewRecipe(WitchesBrewAction action, Material... ingredients) {
 		ItemStack result = AbilityUtils.getWitchesBrew();
 		PotionMeta meta = (PotionMeta) result.getItemMeta();
 
 		this.ingredients = Arrays.asList(ingredients);
-		meta.setDisplayName(this.serializeIngredients());
+		meta.setDisplayName(serializeIngredients(Arrays.asList(ingredients)));
 
 		result.setItemMeta(meta);
 
@@ -302,5 +303,16 @@ public enum WitchBrewRecipe {
 			mats.add(Material.getMaterial(s));
 		}
 		return mats;
+	}
+	
+	public static ItemStack getRandom() {
+		Random rng = new Random();
+		WitchBrewRecipe recipe = values()[rng.nextInt(values().length)];
+		ItemStack item = recipe.getResult();
+		ItemMeta meta = item.getItemMeta();
+		meta.setDisplayName(serializeIngredients(recipe.ingredients));
+		item.setItemMeta(meta);
+		
+		return item;
 	}
 }

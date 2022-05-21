@@ -38,7 +38,7 @@ public class GuiItem {
 
 	public void onClick(HumanEntity ent) {
 		if (linkedInventory != null)
-			ent.openInventory(linkedInventory.inv);
+			ent.openInventory(linkedInventory.getInv());
 	}
 
 	public AbstractGUI getCurrentInventory() {

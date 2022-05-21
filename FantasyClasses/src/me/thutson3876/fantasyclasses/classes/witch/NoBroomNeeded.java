@@ -40,7 +40,7 @@ public class NoBroomNeeded extends AbstractAbility {
 			if (isOnCooldown())
 				return false;
 
-			if (AbilityUtils.getHeightAboveGround(player) < 0.3)
+			if (AbilityUtils.getHeightAboveGround(player) < 0.6)
 				return false;
 
 			 if(!e.isSneaking())
@@ -92,7 +92,7 @@ public class NoBroomNeeded extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Launch yourself high into the air and glide to your destination safely. Without the need of a broom. Has a cooldown of &6 "
+		return "Launch yourself high into the air and glide to your destination safely. Without the need of a broom. Has a cooldown of &6"
 				+ this.coolDowninTicks / 20 + " &rseconds";
 	}
 

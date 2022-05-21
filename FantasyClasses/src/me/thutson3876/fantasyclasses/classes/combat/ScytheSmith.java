@@ -1,6 +1,8 @@
 package me.thutson3876.fantasyclasses.classes.combat;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.bukkit.Material;
@@ -19,11 +21,21 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class ScytheSmith extends AbstractAbility {
 
-	private double damageMod = 6.0;
+	private static Map<Material, Integer> typeBonus = new HashMap<>();
+	private double damageMod = 4.0;
 	private final double attackSpeedMod = -3.7;
 	private AttributeModifier attackSpeed;
 	private AttributeModifier attackDamage;
 
+	static {
+		typeBonus.put(Material.WOODEN_HOE, 1);
+		typeBonus.put(Material.STONE_HOE, 2);
+		typeBonus.put(Material.IRON_HOE, 3);
+		typeBonus.put(Material.GOLDEN_HOE, 2);
+		typeBonus.put(Material.DIAMOND_HOE, 4);
+		typeBonus.put(Material.NETHERITE_HOE, 5);
+	}
+	
 	public ScytheSmith(Player p) {
 		super(p);
 	}
@@ -33,7 +45,7 @@ public class ScytheSmith extends AbstractAbility {
 		this.coolDowninTicks = 0;
 		this.displayName = "Scythe Smith";
 		this.skillPointCost = 1;
-		this.maximumLevel = 2;
+		this.maximumLevel = 3;
 		this.attackSpeed = new AttributeModifier(new UUID(8, 3), "Scythe Smith", attackSpeedMod, Operation.ADD_NUMBER,
 				EquipmentSlot.HAND);
 		this.attackDamage = new AttributeModifier(new UUID(9, 3), "Scythe Smith", damageMod, Operation.ADD_NUMBER,
@@ -72,7 +84,8 @@ public class ScytheSmith extends AbstractAbility {
 		}
 		
 		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_SPEED, attackSpeed);
-		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, attackDamage);
+		meta.addAttributeModifier(Attribute.GENERIC_ATTACK_DAMAGE, new AttributeModifier(new UUID(9, 3), "Scythe Smith", (damageMod * currentLevel) + typeBonus.get(item.getType()), Operation.ADD_NUMBER,
+				EquipmentSlot.HAND));
 		item.setItemMeta(meta);
 		e.setCurrentItem(item);
 		
@@ -102,8 +115,6 @@ public class ScytheSmith extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		this.attackDamage = new AttributeModifier(new UUID(9, 3), "Scythe Smith", damageMod * currentLevel, Operation.ADD_NUMBER,
-				EquipmentSlot.HAND);
 	}
 
 }

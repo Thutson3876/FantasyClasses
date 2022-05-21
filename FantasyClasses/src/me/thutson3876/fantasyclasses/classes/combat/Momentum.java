@@ -8,7 +8,7 @@ import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
 public class Momentum extends AbstractAbility {
 
-	private double dmgMod = 1.0;
+	private double dmgMod = 0.1;
 	
 	public Momentum(Player p) {
 		super(p);
@@ -35,12 +35,9 @@ public class Momentum extends AbstractAbility {
 		if(!e.getDamager().equals(this.player))
 			return false;
 		
-		if(player.isSprinting()) {
-			e.setDamage(e.getDamage() * dmgMod);
-			return true;
-		}
+		e.setDamage(e.getDamage() * (1 + dmgMod * player.getVelocity().length()));
 			
-		return false;
+		return true;
 	}
 
 	@Override
@@ -60,7 +57,7 @@ public class Momentum extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Your attacks while sprinting deal &6" + dmgMod + "&r times more damage";
+		return "Your attacks deal more damage based on your momentum";
 	}
 
 	@Override
@@ -75,7 +72,7 @@ public class Momentum extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		dmgMod = 1.0 + (0.2 * currentLevel);
+		dmgMod = 0.1 + (0.1 * currentLevel);
 	}
 
 }

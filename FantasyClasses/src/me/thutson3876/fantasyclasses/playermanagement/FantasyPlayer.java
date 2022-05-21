@@ -2,6 +2,8 @@
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,7 +25,7 @@ import me.thutson3876.fantasyclasses.classes.highroller.HighRoller;
 import me.thutson3876.fantasyclasses.classes.monk.Monk;
 import me.thutson3876.fantasyclasses.classes.seaguardian.SeaGuardian;
 import me.thutson3876.fantasyclasses.classes.witch.Witchcraft;
-import me.thutson3876.fantasyclasses.gui.ClassSelectionGUI;
+import me.thutson3876.fantasyclasses.gui.treegui.TreeGUI;
 import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class FantasyPlayer {
@@ -35,6 +37,9 @@ public class FantasyPlayer {
 	private List<AbstractFantasyClass> classes = new ArrayList<>();
 	private Map<String, Integer> scalables = new HashMap<>();
 
+	private boolean friendlyFire = false;
+	private boolean damageMeters = false;
+	
 	private int skillPoints = 0;
 	private int level = 0;
 	private long skillExp = 0;
@@ -53,6 +58,8 @@ public class FantasyPlayer {
 		FileConfiguration config = plugin.getConfig();
 		if(!config.contains("players." + uuid)) {
 			config.set("players." + uuid + ".name", p.getDisplayName());
+			config.set("players." + uuid + ".friendlyfire", this.friendlyFire);
+			config.set("players." + uuid + ".damagemeters", this.damageMeters);
 			config.set("players." + uuid + ".skillpoints", this.skillPoints);
 			config.set("players." + uuid + ".exp", this.skillExp);
 			config.set("players." + uuid + ".abilities", new ArrayList<String>());
@@ -66,6 +73,22 @@ public class FantasyPlayer {
 		plugin.saveConfig();
 	}
 
+	public boolean hasFriendlyFire() {
+		return friendlyFire;
+	}
+
+	public void setFriendlyFire(boolean friendlyFire) {
+		this.friendlyFire = friendlyFire;
+	}
+
+	public boolean hasDamageMeters() {
+		return damageMeters;
+	}
+
+	public void setDamageMeters(boolean damageMeters) {
+		this.damageMeters = damageMeters;
+	}
+	
 	public void addSkillPoints(int amt) {
 		this.skillPoints += amt;
 	}
@@ -87,13 +110,16 @@ public class FantasyPlayer {
 	public void addSkillExp(int amt) {
 		skillExp += amt;
 		int newLevel = calculateLevel();
+		if(amt > 0)
+			bukkitPlayer.sendMessage(ChatUtils.chat("&6Gained &3" + amt + " &6experience!"));
+		
 		if(newLevel > level) {
 			skillPoints += newLevel - level;
 			level = newLevel;
 			
 			bukkitPlayer.playSound(bukkitPlayer.getLocation(), Sound.ENTITY_WANDERING_TRADER_YES, 1.0f, 1.3f);
-			bukkitPlayer.sendMessage(ChatUtils.chat("%6Level Up! Your new level is &3" + newLevel));
-			bukkitPlayer.sendMessage(ChatUtils.chat("%6Use &3/chooseclass &6to spend your new skillpoint!"));
+			bukkitPlayer.sendMessage(ChatUtils.chat("&6Level Up! Your new level is &3" + newLevel));
+			bukkitPlayer.sendMessage(ChatUtils.chat("&6Use &3/chooseclass &6to spend your new skillpoint!"));
 		}
 	}
 	
@@ -147,7 +173,8 @@ public class FantasyPlayer {
 	}
 
 	public void openClassGui() {
-		ClassSelectionGUI gui = new ClassSelectionGUI(bukkitPlayer);
+		//ClassSelectionGUI gui = new ClassSelectionGUI(bukkitPlayer);
+		TreeGUI gui = new TreeGUI(bukkitPlayer);
 		gui.openInventory(bukkitPlayer);
 	}
 	
@@ -201,11 +228,23 @@ public class FantasyPlayer {
 			abilities.add(abil);
 		}
 		
+		sortAbilities();
+	}
+	
+	private void sortAbilities() {
+		Collections.sort(abilities, new Comparator<Ability>() {
+            @Override
+            public int compare(Ability abil1, Ability abil2) {
+                return abil1.getPriority().getLevel() - abil2.getPriority().getLevel();
+            }
+        });
 	}
 	
 	private void loadFromConfig() {
 		String uuid = this.bukkitPlayer.getUniqueId().toString();
 		FileConfiguration config = plugin.getConfig();
+		this.friendlyFire = config.getBoolean("players." + uuid + ".friendlyfire");
+		this.damageMeters = config.getBoolean("players." + uuid + ".damagemeters");
 		this.skillPoints = config.getInt("players." + uuid + ".skillpoints");
 		this.skillExp = config.getInt("players." + uuid + ".exp");
         List<?> abilList = config.getList("players." + uuid + ".abilities");
@@ -233,12 +272,15 @@ public class FantasyPlayer {
         	
         	addAbility(abil);
         }
+        
 	}
 	
 	public void deInit() {
 		String uuid = bukkitPlayer.getUniqueId().toString();
 		List<Map<String, Object>> list = new ArrayList<>();
 		FileConfiguration config = plugin.getConfig();
+		config.set("players." + uuid + ".friendlyfire", this.friendlyFire);
+		config.set("players." + uuid + ".damagemeters", this.damageMeters);
 		config.set("players." + uuid + ".skillpoints", this.skillPoints);
 		config.set("players." + uuid + ".exp", this.skillExp);
 		for(Ability abil : this.abilities) {
@@ -252,6 +294,8 @@ public class FantasyPlayer {
 		
 		removeAttributeModifiers(bukkitPlayer, Attribute.GENERIC_ATTACK_SPEED);
 		removeAttributeModifiers(bukkitPlayer, Attribute.GENERIC_MOVEMENT_SPEED);
+		removeAttributeModifiers(bukkitPlayer, Attribute.GENERIC_MAX_HEALTH);
+		bukkitPlayer.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(20.0);
 	}
 	
 	private static void removeAttributeModifiers(Player p, Attribute att) {

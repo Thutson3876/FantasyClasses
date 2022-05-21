@@ -8,7 +8,6 @@ import java.util.List;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-
 import me.thutson3876.fantasyclasses.abilities.Ability;
 import me.thutson3876.fantasyclasses.gui.AbstractGUI;
 import me.thutson3876.fantasyclasses.gui.GuiItem;
@@ -156,6 +155,8 @@ public class Skill implements Iterable<Skill> {
 	}
 	
 	public Skill getMatchingSkill(ItemStack item) {
+		if(item == null)
+			return null;
 		for(Skill s : this) {
 			if(item.isSimilar(s.getAbility().getItemStack())) {
 				return s;

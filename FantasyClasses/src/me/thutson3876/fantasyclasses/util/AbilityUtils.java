@@ -16,6 +16,8 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.data.Ageable;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -23,6 +25,7 @@ import org.bukkit.entity.Tameable;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
@@ -39,7 +42,7 @@ public class AbilityUtils {
 		bloodMeta.setColor(Color.RED);
 		bloodMeta.setDisplayName(ChatUtils.chat("&4Blood Vial"));
 		bloodTemp.setItemMeta(bloodMeta);
-		
+
 		BLOOD_VIAL = bloodTemp;
 
 		ItemStack witchTemp = new ItemStack(Material.SPLASH_POTION);
@@ -49,10 +52,17 @@ public class AbilityUtils {
 		List<String> lore = new ArrayList<>();
 		lore.add("Ingredients: ");
 		witchTemp.setItemMeta(witchMeta);
-		
+
 		WITCHES_BREW = witchTemp;
 	}
 
+	public static Location getMidpoint(Location l1, Location l2) {
+		double x = (l1.getX() + l2.getX()) / 2.0;
+		double y = (l1.getY() + l2.getY()) / 2.0;
+		double z = (l1.getZ() + l2.getZ()) / 2.0;
+		return new Location(l1.getWorld(), x, y, z);
+	}
+	
 	public static LivingEntity getLivingTarget(LivingEntity ent, double range) {
 		for (Entity e : getNearbyLivingEntities(ent, range, range, range)) {
 			if (e.getLocation().distance(ent.getEyeLocation()) < 0.1) {
@@ -62,14 +72,14 @@ public class AbilityUtils {
 
 		return null;
 	}
-	
-	public static List<LivingEntity> onlyLiving(List<Entity> entities){
+
+	public static List<LivingEntity> onlyLiving(List<Entity> entities) {
 		List<LivingEntity> result = new ArrayList<>();
-		for(Entity ent : entities) {
-			if(ent instanceof LivingEntity)
-				result.add((LivingEntity)ent);
+		for (Entity ent : entities) {
+			if (ent instanceof LivingEntity)
+				result.add((LivingEntity) ent);
 		}
-		
+
 		return result;
 	}
 
@@ -82,27 +92,36 @@ public class AbilityUtils {
 
 		return livingEntities;
 	}
-	
+
 	public static LivingEntity getNearestLivingEntity(Location loc, List<LivingEntity> entities) {
-		if(entities.isEmpty())
+		if (entities.isEmpty())
 			return null;
-		
+
 		LivingEntity nearest = entities.get(0);
 		double distance = 99999;
-		for(LivingEntity ent : entities) {
+		for (LivingEntity ent : entities) {
 			double temp = ent.getLocation().distance(loc);
-			if(temp > distance) {
+			if (temp > distance) {
 				distance = temp;
 				nearest = ent;
 			}
 		}
-		
+
 		return nearest;
 	}
-	
+
+	public static BlockFace getBlockFace(Player player, int range) {
+		List<Block> lastTwoTargetBlocks = player.getLastTwoTargetBlocks(null, range);
+		if (lastTwoTargetBlocks.size() != 2 || !lastTwoTargetBlocks.get(1).getType().isOccluding())
+			return null;
+		Block targetBlock = lastTwoTargetBlocks.get(1);
+		Block adjacentBlock = lastTwoTargetBlocks.get(0);
+		return targetBlock.getFace(adjacentBlock);
+	}
+
 	public static Vector getDifferentialVector(Location from, Location to) {
-        return new Vector((to.getX() - from.getX()), to.getY() - from.getY(), (to.getZ() - from.getZ()));
-    }
+		return new Vector((to.getX() - from.getX()), to.getY() - from.getY(), (to.getZ() - from.getZ()));
+	}
 
 	public static void randomSpreadGeneration(Location start, Material fillType, int spreadChance, int decreasePerTick,
 			boolean replaceAll) {
@@ -123,22 +142,32 @@ public class AbilityUtils {
 		}
 		return;
 	}
+	
+	public static List<Player> getNearbyPlayers(Entity ent, double range){
+		List<Player> list = new ArrayList<>();
+		for(Entity e : ent.getNearbyEntities(range, range, range)) {
+			if(e instanceof Player)
+				list.add((Player)e);
+		}
+		
+		return list;
+	}
 
 	public static void heal(LivingEntity e, double amt) {
-		if(e == null || e.isDead())
+		if (e == null || e.isDead())
 			return;
-		
+
 		double maxhp = e.getAttribute(Attribute.GENERIC_MAX_HEALTH).getValue();
-		if(e.hasPotionEffect(PotionEffectType.UNLUCK))
+		if (e.hasPotionEffect(PotionEffectType.UNLUCK) || e.hasPotionEffect(PotionEffectType.WITHER))
 			amt *= 0.5;
-		
+
 		double newhp = e.getHealth() + amt;
 		if (newhp > maxhp)
 			newhp = maxhp;
 
 		e.setHealth(newhp);
 		e.getWorld().spawnParticle(Particle.COMPOSTER, e.getLocation(), 6);
-		e.getWorld().playSound(e.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 1.5f, 1.0f);
+		e.getWorld().playSound(e.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_CHIME, 2.0f, 1.1f);
 	}
 
 	public static void setMaxHealth(Entity e, double amt, Operation op) {
@@ -201,18 +230,14 @@ public class AbilityUtils {
 		return closest;
 	}
 
-	public static List<Material> getCropMaterials() {
-		List<Material> materials = new LinkedList<>();
-		materials.add(Material.POTATOES);
-		materials.add(Material.CARROTS);
-		materials.add(Material.WHEAT_SEEDS);
-		materials.add(Material.BEETROOTS);
-		materials.add(Material.COCOA_BEANS);
-		materials.add(Material.MELON_STEM);
-		materials.add(Material.ATTACHED_MELON_STEM);
-		materials.add(Material.PUMPKIN_STEM);
-		materials.add(Material.ATTACHED_PUMPKIN_STEM);
-		return materials;
+	public static boolean isHarvestable(BlockData data) {
+		if (!(data instanceof Ageable))
+			return false;
+		Ageable ageable = (Ageable) data;
+		if (ageable.getAge() < ageable.getMaximumAge())
+			return false;
+
+		return true;
 	}
 
 	public static List<Location> generateRectangle(Location center, double xLength, double zLength) {
@@ -287,7 +312,7 @@ public class AbilityUtils {
 
 		return targets;
 	}
-	
+
 	public static Entity getEntityClosestToCursor(Player p, double maxAngle, double maxDistance, double offset) {
 		Vector dirToDestination;
 		Vector playerDirection;
@@ -307,7 +332,7 @@ public class AbilityUtils {
 				angle = dirToDestination.angle(playerDirection);
 
 				if (angle < maxAngle && angle > -maxAngle) {
-					if(Math.abs(angle) > Math.abs(targetAngle)) {
+					if (Math.abs(angle) > Math.abs(targetAngle)) {
 						target = e;
 					}
 				}
@@ -316,8 +341,9 @@ public class AbilityUtils {
 
 		return target;
 	}
-	
-	public static LivingEntity getLivingEntityClosestToCursor(Player p, double maxAngle, double maxDistance, double offset) {
+
+	public static LivingEntity getLivingEntityClosestToCursor(Player p, double maxAngle, double maxDistance,
+			double offset) {
 		Vector dirToDestination;
 		Vector playerDirection;
 		double angle;
@@ -336,7 +362,7 @@ public class AbilityUtils {
 				angle = dirToDestination.angle(playerDirection);
 
 				if (angle < maxAngle && angle > -maxAngle) {
-					if(Math.abs(angle) > Math.abs(targetAngle)) {
+					if (Math.abs(angle) > Math.abs(targetAngle)) {
 						target = e;
 					}
 				}
@@ -381,6 +407,14 @@ public class AbilityUtils {
 		}
 
 		return entitiesAsList.toArray(new Entity[1]);
+	}
+
+	public static Vector getVectorBetween2Points(Location loc1, Location loc2, double distanceScaling) {
+		Vector returnVector = loc2.toVector().subtract(loc1.toVector()).normalize();
+		if (distanceScaling != 0)
+			returnVector.multiply(distanceScaling * loc2.distance(loc1));
+
+		return returnVector;
 	}
 
 	public static void moveToward(Entity entity, Location to, double speed) {
@@ -448,30 +482,51 @@ public class AbilityUtils {
 		}
 		return false;
 	}
-	
-	public static List<LivingEntity> getNearbyPlayerPets(Player p, double distance){
+
+	public static List<LivingEntity> getNearbyPlayerPets(Player p, double distance) {
 		List<LivingEntity> pets = new ArrayList<>();
-		for(Entity e : p.getNearbyEntities(distance, distance, distance)) {
-			if(e instanceof Tameable) {
-				if(((Tameable) e).getOwner() == null)
+		for (Entity e : p.getNearbyEntities(distance, distance, distance)) {
+			if (e instanceof Tameable) {
+				if (((Tameable) e).getOwner() == null)
 					continue;
-				
-				if(((Tameable) e).getOwner().equals(p))
+
+				if (((Tameable) e).getOwner().equals(p))
 					pets.add((LivingEntity) e);
 			}
 		}
-		
+
 		return pets;
 	}
-	
-	public static double doubleRoundToXDecimals(double val, int decimals){
+
+	public static void applyStackingPotionEffect(PotionEffect effect, LivingEntity entity, int maxAmp,
+			int maxDurationInTicks) {
+		if (entity.isDead())
+			return;
+
+		if (!entity.hasPotionEffect(effect.getType())) {
+			entity.addPotionEffect(effect);
+			return;
+		}
+
+		PotionEffect currentEffect = entity.getPotionEffect(effect.getType());
+		int newAmp = currentEffect.getAmplifier() + effect.getAmplifier();
+		if (newAmp > maxAmp)
+			newAmp = maxAmp;
+		int newDuration = currentEffect.getDuration() + effect.getDuration();
+		if (newDuration > maxDurationInTicks)
+			newDuration = maxDurationInTicks;
+
+		entity.addPotionEffect(new PotionEffect(effect.getType(), newDuration, newAmp));
+	}
+
+	public static double doubleRoundToXDecimals(double val, int decimals) {
 		String format = "###.";
-		for(int i = 0; i < decimals; i++) {
+		for (int i = 0; i < decimals; i++) {
 			format += "#";
 		}
 		DecimalFormat df2 = new DecimalFormat(format);
 		return Double.valueOf(df2.format(val));
-		}
+	}
 
 	public static boolean isBloodVial(ItemStack item) {
 		ItemMeta meta = item.getItemMeta();

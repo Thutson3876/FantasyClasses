@@ -2,6 +2,7 @@ package me.thutson3876.fantasyclasses.classes.combat;
 
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+
 import me.thutson3876.fantasyclasses.abilities.skills.Skill;
 import me.thutson3876.fantasyclasses.classes.AbstractFantasyClass;
 
@@ -16,28 +17,45 @@ public class Combat extends AbstractFantasyClass {
 		skillTree = new Skill(new Momentum(p));
 		
 		Skill sword = new Skill(new Swordsman(p));
-		sword.addChild(new DualWielding(p));
-		sword.addChild(new Parry(p));
-		sword.addChild(new HonedEdge(p));
+		Skill dual = sword.addChild(new HonedEdge(p)).addChild(new DualWielding(p));
+		dual.addChild(new Parry(p));
 		skillTree.addChild(sword);
 		
 		Skill axe = new Skill(new AxeWielder(p));
-		axe.addChild(new Rage(p));
-		axe.addChild(new DeepDive(p));
-		axe.addChild(new HeavyBlow(p));
+		Skill heav = axe.addChild(new HeavyBlow(p));
+		heav.addChild(new Rage(p)).addChild(new DeepDive(p));
 		skillTree.addChild(axe);
 		
 		Skill bow = new Skill(new Archer(p));
-		bow.addChild(new Disengage(p));
-		bow.addChild(new Camoflauge(p));
-		bow.addChild(new ExplosiveArrows(p));
+		Skill dis = bow.addChild(new Disengage(p));
+		dis.addChild(new Sharpshooter(p)).addChild(new Camoflauge(p));
+		dis.addChild(new ReturningArrows(p)).addChild(new ExplosiveArrows(p));
 		skillTree.addChild(bow);
 		
 		Skill scythe = new Skill(new ScytheSmith(p));
-		scythe.addChild(new Cripple(p));
-		scythe.addChild(new LifeRip(p));
-		scythe.addChild(new RaiseDead(p));
+		Skill raise = scythe.addChild(new LifeRip(p)).addChild(new Cripple(p)).addChild(new RaiseDead(p));
 		skillTree.addChild(scythe);
 		
+		setSkillInMap(4, skillTree);
+		setSkillInMap(9 + 1, sword);
+		setSkillInMap(18 + 0, sword.getNext().get(0));
+		setSkillInMap(27 + 0, dual);
+		setSkillInMap(36 + 0, dual.getNext().get(0));
+		setSkillInMap(9 + 3, axe);
+		setSkillInMap(18 + 3, heav);
+		setSkillInMap(27 + 3, heav.getNext().get(0));
+		setSkillInMap(27 + 2, heav.getNext().get(0).getNext().get(0));
+		setSkillInMap(9 + 5, bow);
+		setSkillInMap(18 + 5, dis);
+		setSkillInMap(18 + 6, dis.getNext().get(0));
+		setSkillInMap(27 + 6, dis.getNext().get(0).getNext().get(0));
+		setSkillInMap(27 + 5, dis.getNext().get(1));
+		setSkillInMap(36 + 5, dis.getNext().get(1).getNext().get(0));
+		setSkillInMap(9 + 7, scythe);
+		setSkillInMap(9 + 8, scythe.getNext().get(0));
+		setSkillInMap(18 + 8, raise.getPrev());
+		setSkillInMap(27 + 8, raise);
+		
+		this.setPrerequisites();
 	}
 }

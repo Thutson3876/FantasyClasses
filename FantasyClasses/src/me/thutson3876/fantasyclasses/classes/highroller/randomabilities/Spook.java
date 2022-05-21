@@ -9,6 +9,7 @@ import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class Spook implements RandomAbility {
 
@@ -19,11 +20,10 @@ public class Spook implements RandomAbility {
 		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 300, 2));
 		
 		p.playSound(p.getLocation(), Sound.AMBIENT_CAVE, 1.0f, 1.0f);
-		p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 0.7f, 1.0f);
 		
 		Random rng = new Random();
 		
-		
+		p.sendMessage(ChatUtils.chat("&4Uh oh..."));
 		
 		for(int i = 0; i < 300; i++) {
 			int buffer = rng.nextInt(100) + 20;
@@ -32,7 +32,8 @@ public class Spook implements RandomAbility {
 
 				@Override
 				public void run() {
-					p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SCREAM, 0.3f + rng.nextFloat(), 1.0f);
+					p.playSound(p.getLocation(), Sound.ENTITY_GHAST_SHOOT, 0.4f + rng.nextFloat(), 1.0f);
+					p.playSound(p.getLocation(), Sound.ENTITY_GHAST_AMBIENT, 0.4f + rng.nextFloat(), 1.0f);
 				}
 				
 			}.runTaskLater(FantasyClasses.getPlugin(), buffer);

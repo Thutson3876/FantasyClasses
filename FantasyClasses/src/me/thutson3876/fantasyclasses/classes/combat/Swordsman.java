@@ -19,7 +19,7 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class Swordsman extends AbstractAbility {
 
-	private final float speedMod = 0.2f;
+	private final float speedMod = 1.0f;
 	private AttributeModifier attackSpeed;
 
 	public Swordsman(Player p) {

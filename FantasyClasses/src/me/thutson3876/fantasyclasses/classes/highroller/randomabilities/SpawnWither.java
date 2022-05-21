@@ -5,6 +5,8 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import me.thutson3876.fantasyclasses.util.ChatUtils;
+
 public class SpawnWither implements RandomAbility {
 
 	@Override
@@ -18,6 +20,8 @@ public class SpawnWither implements RandomAbility {
 			loc = b.getLocation();
 		}
 		p.getWorld().spawnEntity(loc, EntityType.WITHER);
+		
+		p.sendMessage(ChatUtils.chat("&4Here's the plan: you run.... away"));
 	}
 
 }

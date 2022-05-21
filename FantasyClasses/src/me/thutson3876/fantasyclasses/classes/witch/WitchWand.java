@@ -95,7 +95,7 @@ public class WitchWand extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getDescription() {
-		return "Launch a ball of energy from your wand that causes its target to levitate for &6" + AbilityUtils.doubleRoundToXDecimals((double)calculateLevitationDuration() / 20.0, 2) + "&rseconds. It deals &6"
+		return "Launch a ball of energy from your wand that causes its target to levitate for &6" + AbilityUtils.doubleRoundToXDecimals((double)calculateLevitationDuration() / 20.0, 2) + " &rseconds. It deals &6"
 				+ AbilityUtils.doubleRoundToXDecimals(calculateDamage(), 1) + " &rdamage and has a cooldown of &6" + this.coolDowninTicks / 20
 				+ " &rseconds";
 	}

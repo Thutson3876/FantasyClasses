@@ -8,6 +8,7 @@ import org.bukkit.Location;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 import me.thutson3876.fantasyclasses.util.Sphere;
 
 public class SpawnHorde implements RandomAbility {
@@ -29,6 +30,8 @@ public class SpawnHorde implements RandomAbility {
 		for(Location loc : locs) {
 			loc.getWorld().spawnEntity(loc, types.get(rng.nextInt(types.size())), true);
 		}
+		
+		p.sendMessage(ChatUtils.chat("&4FOR THE HORDE!!!"));
 	}
 
 }

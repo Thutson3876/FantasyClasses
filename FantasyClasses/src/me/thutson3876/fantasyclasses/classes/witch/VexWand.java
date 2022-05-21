@@ -31,6 +31,7 @@ public class VexWand extends AbstractAbility implements Bindable {
 	private List<Creature> vexes = new ArrayList<>();
 	private int maxAmt = 2;
 	private int duration = 20 * 20;
+	private static final double MAX_RANGE = 30.0;
 	
 	public VexWand(Player p) {
 		super(p);
@@ -57,7 +58,7 @@ public class VexWand extends AbstractAbility implements Bindable {
 			if(e.getItem() == null || !e.getItem().getType().equals(this.boundType))
 				return false;
 			
-			if(!e.getAction().equals(Action.LEFT_CLICK_AIR))
+			if(!e.getAction().equals(Action.RIGHT_CLICK_AIR) && !e.getAction().equals(Action.RIGHT_CLICK_BLOCK))
 				return false;
 			
 			if(isOnCooldown())
@@ -99,7 +100,7 @@ public class VexWand extends AbstractAbility implements Bindable {
 				return false;
 			
 			for(Creature vex : vexes) {
-				if(e.getTo().distance(vex.getLocation()) > 20.0) {
+				if(e.getTo().distance(vex.getLocation()) > MAX_RANGE) {
 					vex.teleport(e.getTo());
 				}
 			}
@@ -110,7 +111,7 @@ public class VexWand extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getInstructions() {
-		return "Left-click with the bound item type";
+		return "Right-click with the bound item type";
 	}
 
 	@Override

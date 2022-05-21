@@ -13,7 +13,7 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class AxeWielder extends AbstractAbility {
 
-	private double dmgMod = 1.2;
+	private double dmgMod = 1.1;
 	
 	public AxeWielder(Player p) {
 		super(p);
@@ -63,7 +63,7 @@ public class AxeWielder extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Your critical hits with axes deal &6" + dmgMod * currentLevel + "&r times more damage";
+		return "When you hit a foe beneath you with an axe, deal &6" + AbilityUtils.doubleRoundToXDecimals(dmgMod, 2) + "&r times more damage";
 	}
 
 	@Override
@@ -73,7 +73,7 @@ public class AxeWielder extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		this.dmgMod = 1.0 + (0.2 * currentLevel);	
+		this.dmgMod = 1.0 + (0.1 * currentLevel);	
 	}
 
 }

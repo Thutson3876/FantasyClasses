@@ -20,6 +20,13 @@ public class PlayerCooldownDragonBar {
 	public PlayerCooldownDragonBar(Player player) {
 		this.player = player;
 	}
+	
+	public void deInit() {
+		for(Map.Entry<Ability, BossBar> entry : map.entrySet()) {
+			entry.getValue().setVisible(false);
+			entry.getValue().removeAll();
+		}
+	}
 
 	public void tick() {
 		Player player = this.player;

@@ -18,10 +18,10 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class KyoketsuShoge extends AbstractAbility implements Bindable {
 
-	private double velocityMod = 1.6;
+	private double velocityMod = 1.9;
 	private double damage = 4.0;
 	private Arrow arrow = null;
-	private double yMod = 1.0;
+	//private double yMod = 1.0;
 	
 	private Material type = null;
 
@@ -32,7 +32,7 @@ public class KyoketsuShoge extends AbstractAbility implements Bindable {
 	//fix weird launching
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 18 * 20;
+		this.coolDowninTicks = 12 * 20;
 		this.displayName = "Kyoketsu-Shoge";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
@@ -66,18 +66,21 @@ public class KyoketsuShoge extends AbstractAbility implements Bindable {
 				return false;
 
 			if (e.getHitBlock() != null) {
-				double speed = player.getLocation().distance(e.getHitBlock().getLocation());
+				player.setVelocity(AbilityUtils.getVectorBetween2Points(player.getLocation(), e.getHitBlock().getLocation(), 0.21));
+				/*double speed = player.getLocation().distance(e.getHitBlock().getLocation());
 				if(AbilityUtils.getHeightAboveGround(player) > 0.3)
 					speed = Math.sqrt(speed);
 				AbilityUtils.moveToward(player, e.getHitBlock().getLocation(),
-						speed, yMod);
+						speed, yMod);*/
 			}
 			if (e.getHitEntity() != null) {
-				double speed = player.getLocation().distance(e.getHitEntity().getLocation());
+				e.getHitEntity().setVelocity(AbilityUtils.getVectorBetween2Points(e.getHitEntity().getLocation(), player.getLocation(), 0.6));
+				
+				/*double speed = player.getLocation().distance(e.getHitEntity().getLocation());
 				if(!e.getEntity().isOnGround())
 					speed = Math.sqrt(speed);
 				AbilityUtils.moveToward(e.getHitEntity(), player.getLocation(),
-						Math.sqrt(player.getLocation().distance(e.getHitEntity().getLocation())), yMod);
+						Math.sqrt(player.getLocation().distance(e.getHitEntity().getLocation())), yMod);*/
 			}
 		}
 
@@ -105,7 +108,7 @@ public class KyoketsuShoge extends AbstractAbility implements Bindable {
 			}
 		};
 
-		task.runTaskLater(plugin, 6 * 20);
+		task.runTaskLater(plugin, 3 * 20);
 	}
 
 	@Override
@@ -126,8 +129,9 @@ public class KyoketsuShoge extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		coolDowninTicks = (23 - currentLevel * 5) * 20;
+		coolDowninTicks = (15 - currentLevel * 3) * 20;
 		damage = 4.0 * currentLevel;
+		velocityMod = 1.6 + 0.3 * currentLevel;
 	}
 
 	@Override

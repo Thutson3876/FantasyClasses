@@ -16,7 +16,7 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class LifeRip extends AbstractAbility {
 
-	private double healAmt = 3.0;
+	private double healAmt = 2.0;
 	
 	public LifeRip(Player p) {
 		super(p);
@@ -56,7 +56,7 @@ public class LifeRip extends AbstractAbility {
 		if(!(MaterialLists.HOE.getMaterials().contains(player.getInventory().getItemInMainHand().getType())))
 			return false;
 		
-		if(e.getFinalDamage() < 1.0)
+		if(e.getFinalDamage() < 2.0)
 			return false;
 		
 		ent.getWorld().playSound(ent.getLocation(), Sound.ENTITY_ZOMBIE_INFECT, 1.4f, 0.7f);

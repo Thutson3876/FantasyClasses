@@ -9,7 +9,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class BeerBelly extends AbstractAbility {
 
-	double conversion = 0.08;
+	double conversion = 0.06;
 	
 	public BeerBelly(Player p) {
 		super(p);
@@ -47,7 +47,7 @@ public class BeerBelly extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Take damage while not wearing armor";
+		return "Wear no armor";
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class BeerBelly extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		conversion = 0.08 * currentLevel;
+		conversion = 0.06 * currentLevel;
 	}
 
 }

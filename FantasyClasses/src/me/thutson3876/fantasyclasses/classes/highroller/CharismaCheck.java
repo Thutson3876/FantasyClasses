@@ -27,7 +27,6 @@ public class CharismaCheck extends AbstractAbility {
 	private final int duration = 30 * 20;
 	private final double radius = 30.0;
 	private final PotionEffect speed = new PotionEffect(PotionEffectType.SPEED, duration, 1);
-	private final PotionEffect haste = new PotionEffect(PotionEffectType.FAST_DIGGING, duration, 1);
 	
 	public CharismaCheck(Player p) {
 		super(p);
@@ -61,7 +60,7 @@ public class CharismaCheck extends AbstractAbility {
 			int roll = rng.nextInt(20);
 			if (roll >= dc) {
 				world.playSound(player.getLocation(), Sound.BLOCK_BELL_RESONATE, 1.0f, 1.0f);
-				world.spawnParticle(Particle.HEART, player.getLocation(), 6);
+				world.spawnParticle(Particle.HEART, player.getLocation(), 20);
 				
 				BukkitRunnable task = new BukkitRunnable() {
 	
@@ -80,7 +79,6 @@ public class CharismaCheck extends AbstractAbility {
 					if(ent instanceof Creature) {
 						((Creature) ent).setTarget(player);
 						((Creature) ent).addPotionEffect(speed);
-						((Creature) ent).addPotionEffect(haste);
 					}
 				}
 				
@@ -96,11 +94,12 @@ public class CharismaCheck extends AbstractAbility {
 				if(!e.getTarget().equals(player))
 					return false;
 			}
-			
-			e.setCancelled(isOn);
-			World world = player.getWorld();
-			world.playSound(e.getEntity().getLocation(), Sound.ENTITY_CAT_PURREOW, 1.3f, 1.0f);
-			world.spawnParticle(Particle.HEART, e.getEntity().getLocation(), 6);
+			if(isOn) {
+				e.setCancelled(true);
+				World world = player.getWorld();
+				world.playSound(e.getEntity().getLocation(), Sound.ENTITY_CAT_PURREOW, 1.3f, 1.0f);
+				world.spawnParticle(Particle.HEART, e.getEntity().getLocation(), 20);
+			}
 		}
 		return false;
 	}

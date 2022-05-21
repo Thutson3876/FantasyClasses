@@ -70,8 +70,14 @@ public class Command_BindAbility extends AbstractCommand implements Listener {
 			return values;
 		Player player = (Player) sender;
 
-		if (args.length == 1)
-			values = boundAbilityNames(player);
+		if (args.length != 1)
+			return values;
+		
+		String arg = args[0].toLowerCase();
+		for(String s : boundAbilityNames(player)) {
+			if(s.toLowerCase().contains(arg))
+				values.add(s);
+		}
 
 		return values;
 	}

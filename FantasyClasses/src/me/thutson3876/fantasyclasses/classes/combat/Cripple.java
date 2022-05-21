@@ -14,7 +14,7 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class Cripple extends AbstractAbility {
 
-	private int durationInTicks = 4 * 20;
+	private int durationInTicks = 5 * 20;
 	private PotionEffect blindness;
 	private PotionEffect slowness;
 	
@@ -24,7 +24,7 @@ public class Cripple extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 8 * 20;
+		this.coolDowninTicks = 10 * 20;
 		this.displayName = "Cripple";
 		this.skillPointCost = 1;
 		this.maximumLevel = 2;

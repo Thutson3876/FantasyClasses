@@ -23,6 +23,8 @@ public abstract class AbstractAbility implements Ability, Listener {
 
 	protected FantasyPlayer fplayer;
 	protected Player player;
+	
+	protected final Priority priority;
 
 	protected String displayName;
 
@@ -36,6 +38,7 @@ public abstract class AbstractAbility implements Ability, Listener {
 	protected boolean isEnabled = false;
 
 	protected ItemStack itemStack;
+	protected String prerequisite = "None";
 
 	public AbstractAbility(Player p) {
 		setDefaults();
@@ -43,6 +46,18 @@ public abstract class AbstractAbility implements Ability, Listener {
 			player = p;
 			fplayer = plugin.getPlayerManager().getPlayer(p);
 		}
+		
+		priority = Priority.NORMAL;
+	}
+	
+	public AbstractAbility(Player p, Priority priority) {
+		setDefaults();
+		if (p != null) {
+			player = p;
+			fplayer = plugin.getPlayerManager().getPlayer(p);
+		}
+		
+		this.priority = priority;
 	}
 
 	@Override
@@ -78,6 +93,17 @@ public abstract class AbstractAbility implements Ability, Listener {
 	public String getName() {
 		return displayName;
 	}
+	
+	@Override
+	public String getPrerequisite() {
+		return prerequisite;
+	}
+	
+	@Override
+	public void setPrerequisite(String preq) {
+		this.prerequisite = preq;
+		updateItemStack();
+	}
 
 	@Override
 	public int getCurrentLevel() {
@@ -96,7 +122,7 @@ public abstract class AbstractAbility implements Ability, Listener {
 		this.currentLevel++;
 		applyLevelModifiers();
 		this.updateItemStack();
-		this.player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.6F, 1F);
+		this.player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 0.7F, 1F);
 	}
 
 	@Override
@@ -109,6 +135,11 @@ public abstract class AbstractAbility implements Ability, Listener {
 		return currentLevel > 0;
 	}
 
+	@Override
+	public Priority getPriority() {
+		return priority;
+	}
+	
 	protected void enable() {
 		this.isEnabled = true;
 	}
@@ -122,10 +153,14 @@ public abstract class AbstractAbility implements Ability, Listener {
 	protected ItemStack createItemStack(Material mat) {
 		ItemStack item = new ItemStack(mat);
 		List<String> lore = new ArrayList<>();
-		lore.add("Level: " + this.currentLevel + "/" + this.maximumLevel);
-		lore.add("Cost: " + this.skillPointCost);
-		lore.add(this.getDescription());
-		lore.add(this.getInstructions());
+		List<String> temp = new ArrayList<>();
+		lore.add("Level: &6" + this.currentLevel + "&r/&6" + this.maximumLevel);
+		lore.add("Cost: &6" + this.skillPointCost);
+		temp.add(this.getDescription());
+		lore.addAll(ChatUtils.splitStringAtLength(temp, 35, "&r"));
+		temp = new ArrayList<>();
+		temp.add(this.getInstructions());
+		lore.addAll(ChatUtils.splitStringAtLength(temp, 35, "&3"));
 		
 		if(this instanceof Bindable) {
 			Bindable bindable = (Bindable)this;
@@ -136,13 +171,14 @@ public abstract class AbstractAbility implements Ability, Listener {
 				lore.add("&bBound to: &6" + bindable.getBoundType().name());
 			}
 		}
-
+		
 		List<String> loreFinal = new ArrayList<>();
-		lore = ChatUtils.splitStringAtLength(lore, 30);
+		lore = ChatUtils.splitStringAtLength(lore, 35);
 		
 		for(String s : lore) {
 			loreFinal.add(ChatUtils.chat(s));
 		}
+		
 
 		ItemMeta meta = item.getItemMeta();
 		meta.setDisplayName(ChatUtils.chat("&6" + this.displayName));

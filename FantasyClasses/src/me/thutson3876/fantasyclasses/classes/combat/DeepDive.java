@@ -1,18 +1,12 @@
 package me.thutson3876.fantasyclasses.classes.combat;
 
-import java.util.Random;
-
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.entity.FallingBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerToggleSneakEvent;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.util.AbilityUtils;
 import me.thutson3876.fantasyclasses.util.MaterialLists;
@@ -66,7 +60,7 @@ public class DeepDive extends AbstractAbility {
 	}
 
 	private boolean tempGroundPound(Player p, double speed) {
-		Location pLoc = p.getLocation();
+		//Location pLoc = p.getLocation();
 
 		double height = AbilityUtils.getHeightAboveGround(p);
 
@@ -79,17 +73,17 @@ public class DeepDive extends AbstractAbility {
 		if (blocksUnderPlayer[0] == null) {
 			return false;
 		}
-		Random rng = new Random();
+		//Random rng = new Random();
 
-		Vector yAxis = new Vector(0, 1, 0);
+		//Vector yAxis = new Vector(0, 1, 0);
 
 		BukkitRunnable task = new BukkitRunnable() {
 
 			@Override
 			public void run() {
-				Location bLoc = null;
+				//Location bLoc = null;
 
-				for (Block b : blocksUnderPlayer) {
+				/*for (Block b : blocksUnderPlayer) {
 					if (b != null) {
 						bLoc = b.getLocation();
 						FallingBlock temp = world.spawnFallingBlock(bLoc, b.getBlockData());
@@ -106,7 +100,7 @@ public class DeepDive extends AbstractAbility {
 						b.setType(Material.AIR);
 						temp.setVelocity(velocity);
 					}
-				}
+				}*/
 				p.setInvulnerable(true);
 				// System.out.println("Invulnerable!");
 				world.createExplosion(p.getLocation(), power, false, true, p);

@@ -34,6 +34,54 @@ public class ChatUtils {
 		return s.replaceAll("_", " ");
 	}
 	
+	public static List<String> splitStringAtLength(List<String> list, int splitLength, String colorCode){
+		List<String> returnList = new ArrayList<>();
+		for(String s : list) {
+			returnList.addAll(splitSingleString(s, splitLength, colorCode));
+		}
+		
+		return returnList;
+	}
+	
+	private static List<String> splitSingleString(String s, int splitLength, String colorCode){
+		List<String> returnList = new ArrayList<>();
+		if(s == null)
+			return null;
+		if(s.length() > splitLength) {
+			int i = s.indexOf(' ', splitLength - 15);
+			if(i == -1)
+				i = splitLength;
+			
+			String first = s.substring(0, i);
+			String second = s.substring(i + 1);
+			if(first.length() <= splitLength && second.length() <= splitLength) {
+				returnList.add(colorCode + first);
+				returnList.add(colorCode + second);
+
+				return returnList;
+			}
+			if(first.length() > splitLength) {
+				returnList.addAll(splitSingleString(first, splitLength, colorCode));
+			}
+			else {
+				returnList.add(colorCode + first);
+			}
+			
+			if(second.length() > splitLength) {
+				returnList.addAll(splitSingleString(second, splitLength, colorCode));
+			}
+			else {
+				returnList.add(colorCode + second);
+			}
+			
+		}
+		else {
+			returnList.add(colorCode + s);
+		}
+		
+		return returnList;
+	}
+	
 	public static List<String> splitStringAtLength(List<String> list, int splitLength){
 		List<String> returnList = new ArrayList<>();
 		for(String s : list) {

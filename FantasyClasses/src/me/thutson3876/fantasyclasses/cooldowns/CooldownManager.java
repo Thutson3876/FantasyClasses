@@ -29,6 +29,17 @@ public class CooldownManager {
 		FantasyClasses plugin = FantasyClasses.getPlugin();
 		this.taskId = Bukkit.getScheduler().scheduleSyncRepeatingTask(plugin, new UplinkReducingTask(), 1L, 1L);
 	}
+	
+	public void deInit() {
+		for(Player p : Bukkit.getOnlinePlayers()) {
+			PlayerCooldownDragonBar bar = bars.get(p);
+			if(bar != null)
+				bar.deInit();
+		}
+		
+		clearAllCooldowns();
+		shutdown();
+	}
 
 	public void shutdown() {
 		Bukkit.getScheduler().cancelTask(this.taskId);

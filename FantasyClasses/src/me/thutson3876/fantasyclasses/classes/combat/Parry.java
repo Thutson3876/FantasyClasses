@@ -14,7 +14,7 @@ import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class Parry extends AbstractAbility {
 
-	private int duration = 4;
+	private int duration = 5;
 	private Entity target = null;
 	
 	public Parry(Player p) {

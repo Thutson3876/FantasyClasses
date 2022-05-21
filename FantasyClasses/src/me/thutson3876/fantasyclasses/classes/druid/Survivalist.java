@@ -56,7 +56,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			if(!e.getEntity().equals(player))
 				return false;
 			
-			int change = player.getFoodLevel() - e.getFoodLevel();
+			int change = e.getFoodLevel() - player.getFoodLevel();
 			if(change >= 0) {
 				e.setFoodLevel((int) (e.getFoodLevel() + (Math.round(change * (bonusValue() / 500.0)))));
 				return false;
@@ -66,7 +66,6 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			if(rng.nextDouble() < 0.5)
 				bonusMod++;
 				
-			
 			e.setFoodLevel(e.getFoodLevel() - (Math.round(change * foodMod)));
 			
 			return false;
@@ -77,7 +76,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			if(!e.getEntity().equals(player))
 				return false;
 			
-			e.setExhaustion(e.getExhaustion() * foodMod);
+			e.setExhaustion(e.getExhaustion() * (1 + foodMod));
 			
 			return false;
 		}
@@ -86,10 +85,12 @@ public class Survivalist extends AbstractAbility implements Scalable {
 			
 			if(!e.getEntity().equals(player))
 				return false;
+			if(e.isCancelled())
+				return false;
 			
 			double maxHp = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
 			if(e.getDamage() >= player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue() / 2.0)
-				player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHp - 2.0);
+				player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(maxHp - 1.0);
 			
 			if(!DamageCauseList.ENVIRONMENTAL.getDamageCauseList().contains(e.getCause()))
 				return false;
@@ -145,7 +146,7 @@ public class Survivalist extends AbstractAbility implements Scalable {
 				return false;
 			
 			player.getAttribute(Attribute.GENERIC_MAX_HEALTH).setBaseValue(prevMaxHp);
-			player.playSound(player.getLocation(), Sound.MUSIC_MENU, 0.3f, 1.0f);
+			player.playSound(player.getLocation(), Sound.MUSIC_MENU, 0.5f, 1.0f);
 			player.sendMessage(ChatUtils.chat("&5You begin to feel well rested..."));
 			
 			return false;

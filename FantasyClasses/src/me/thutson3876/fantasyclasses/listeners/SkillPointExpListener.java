@@ -1,9 +1,9 @@
 package me.thutson3876.fantasyclasses.listeners;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -28,9 +28,11 @@ import org.bukkit.event.inventory.FurnaceExtractEvent;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
 import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class SkillPointExpListener implements Listener {
 
@@ -42,7 +44,7 @@ public class SkillPointExpListener implements Listener {
 	// Entity Killed
 	private static final FantasyClasses plugin = FantasyClasses.getPlugin();
 
-	private Map<LivingEntity, List<Player>> trackedEntities = new HashMap<>();
+	private Map<LivingEntity, HashSet<Player>> trackedEntities = new HashMap<>();
 
 	public SkillPointExpListener() {
 		Bukkit.getPluginManager().registerEvents(this, plugin);
@@ -128,33 +130,26 @@ public class SkillPointExpListener implements Listener {
 
 			if (e.getFinalDamage() < victim.getHealth()) {
 				addEntity(victim, player);
-			} else {
-				Integer expDrop = entityTypeExpDrop.get(victim.getType());
-				if (expDrop == null)
-					return;
-				List<Player> players = trackedEntities.remove(victim);
-				if (players != null) {
-					for (Player p : players) {
-						plugin.getPlayerManager().getPlayer(p).addSkillExp(expDrop);
+				new BukkitRunnable() {
+
+					@Override
+					public void run() {
+						if(victim.isDead() && trackedEntities.containsKey(victim)) {
+							entityDeath(victim);
+						}
+							
 					}
-				}
+					
+				}.runTaskLater(plugin, 3);
+			} else {
+				entityDeath(victim);
 			}
 		}
 	}
 
 	@EventHandler
 	public void onEntityDeathEvent(EntityDeathEvent e) {
-		Integer expDrop = entityTypeExpDrop.get(e.getEntityType());
-		if (expDrop == null)
-			return;
-
-		List<Player> players = trackedEntities.remove(e.getEntity());
-		if (players == null || players.isEmpty())
-			return;
-
-		for (Player p : players) {
-			plugin.getPlayerManager().getPlayer(p).addSkillExp(expDrop);
-		}
+		entityDeath(e.getEntity());
 	}
 
 	@EventHandler
@@ -194,8 +189,14 @@ public class SkillPointExpListener implements Listener {
 	@EventHandler
 	public void onFurnaceExtractEvent(FurnaceExtractEvent e) {
 		Integer exp = smeltTypeExpDrop.get(e.getItemType());
+		int expToDrop = 0;
+		Random rng = new Random();
 		if (exp != null) {
-			int expToDrop = (int) (((double)e.getItemAmount() / 8.0) * exp);
+			for(int i = 0; i < e.getItemAmount(); i++) {
+				if(rng.nextDouble() < 0.125)
+					expToDrop += exp;
+			}
+			
 			plugin.getPlayerManager().getPlayer(e.getPlayer()).addSkillExp(expToDrop);
 		}
 	}
@@ -204,27 +205,45 @@ public class SkillPointExpListener implements Listener {
 	public void onPlayerAdvancementDoneEvent(PlayerAdvancementDoneEvent e) {
 		if (checkAdvancementValidity(e.getAdvancement())) {
 			FantasyPlayer fplayer = plugin.getPlayerManager().getPlayer(e.getPlayer());
-			fplayer.addSkillExp((int) Math.round(10 * (1.0 + fplayer.getPlayerLevel() * 0.01)));
+			fplayer.addSkillExp(10);
+			fplayer.getPlayer().sendMessage(ChatUtils.chat("&6Congratulations on completing an advancement!"));
 		}
 	}
-
+	
 	private void addEntity(LivingEntity ent, Player... players) {
 		if (trackedEntities.containsKey(ent)) {
+			List<Player> trackedPlayers = new ArrayList<>();
+			trackedPlayers.addAll(trackedEntities.get(ent));
 			trackedEntities.get(ent).addAll(Arrays.asList(players));
 		} else {
-			List<Player> list = new LinkedList<>(Arrays.asList(players));
+			HashSet<Player> playerSet = new HashSet<>(Arrays.asList(players));
 
-			trackedEntities.put(ent, list);
+			trackedEntities.put(ent, playerSet);
 		}
 	}
 
+	private void entityDeath(Entity ent) {
+		Integer expDrop = entityTypeExpDrop.get(ent.getType());
+		if (expDrop == null)
+			return;
+		HashSet<Player> players = trackedEntities.remove(ent);
+		
+		expDrop += plugin.getMobManager().getExpDrop((LivingEntity) ent);
+		
+		if (players != null) {
+			for (Player p : players) {
+				plugin.getPlayerManager().getPlayer(p).addSkillExp(expDrop);
+			}
+		}
+	}
+	
 	private static boolean checkAdvancementValidity(Advancement adv) {
-		Collection<String> criteriaList = adv.getCriteria();
+		/*Collection<String> criteriaList = adv.getCriteria();
 		for (String criteria : criteriaList) {
 			if (criteria.equalsIgnoreCase("has_the_recipe")) {
 				return false;
 			}
-		}
+		}*/
 		return true;
 	}
 

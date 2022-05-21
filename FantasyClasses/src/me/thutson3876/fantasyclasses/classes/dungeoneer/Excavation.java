@@ -31,7 +31,7 @@ public class Excavation extends AbstractAbility {
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
 
-		this.createItemStack(Material.CRACKED_STONE_BRICKS);
+		this.createItemStack(Material.CRACKED_DEEPSLATE_BRICKS);
 	}
 
 	@Override

@@ -22,7 +22,7 @@ public class Rage extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 12 * 20;
+		this.coolDowninTicks = 20 * 20;
 		this.displayName = "Rage";
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;

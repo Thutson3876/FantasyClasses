@@ -89,7 +89,7 @@ public class Rejuvination extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		healAmt = 1.0 + 1.0 * currentLevel;
+		healAmt = 2.0 * currentLevel;
 		if(currentLevel >= maximumLevel)
 			regen = new PotionEffect(PotionEffectType.REGENERATION, duration, 0);
 	}

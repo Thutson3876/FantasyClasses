@@ -2,8 +2,6 @@ package me.thutson3876.fantasyclasses.classes.witch;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Random;
-
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.EntityType;
@@ -15,11 +13,9 @@ import org.bukkit.inventory.ItemStack;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.abilities.Scalable;
-import me.thutson3876.fantasyclasses.util.AbilityUtils;
 
 public class WitchHunt extends AbstractAbility implements Scalable {
 
-	private Random rng = new Random();
 	private int magicka = 100;
 
 	public WitchHunt(Player p) {
@@ -38,7 +34,8 @@ public class WitchHunt extends AbstractAbility implements Scalable {
 
 	@Override
 	public boolean trigger(Event event) {
-		 if(!isEnabled()) return false;
+		if (!isEnabled())
+			return false;
 
 		if (!(event instanceof EntityDeathEvent))
 			return false;
@@ -60,32 +57,19 @@ public class WitchHunt extends AbstractAbility implements Scalable {
 		if (drops == null)
 			drops = new ArrayList<>();
 
-		boolean isLucky = false;
-		int chance = rng.nextInt(100);
-		if (chance > 30) {
-			isLucky = true;
-			int i = rng.nextInt(3);
-			if(i == 0) {
-				if (!drops.isEmpty()) {
-					drops.addAll(drops);
-					drops.addAll(drops);
-				}
-
-				e.setDroppedExp(e.getDroppedExp() * 5);
-			}
-			else if(i == 1) {
-				magicka += 5;
-			}	
-			else if(i == 2) {
-				drops.add(AbilityUtils.generateRandomWitchesBrew());
-			}
+		if (!drops.isEmpty()) {
+			drops.addAll(drops);
+			drops.addAll(drops);
 		}
+
+		e.setDroppedExp(e.getDroppedExp() * 3);
+		drops.add(WitchBrewRecipe.getRandom());
 
 		magicka += 5;
 
 		player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WITCH_CELEBRATE, 0.7f, 1.2f);
 
-		return isLucky;
+		return true;
 	}
 
 	@Override

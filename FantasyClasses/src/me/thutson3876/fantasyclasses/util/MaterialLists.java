@@ -7,7 +7,7 @@ import org.bukkit.Material;
 
 public enum MaterialLists {
 	
-	MELEE_WEAPON, SWORD, AXE, HOE, PICKAXE, EXOTIC_WEAPON, TOOL, ARMOR, POTION, ALCHEMICAL_INGREDIENT, DRUID_FOOD, LEAVES;
+	MELEE_WEAPON, SWORD, AXE, HOE, PICKAXE, EXOTIC_WEAPON, TOOL, ARMOR, POTION, ALCHEMICAL_INGREDIENT, DRUID_FOOD, CROP, LEAVES, ICE;
 	
 	private List<Material> matList = new ArrayList<>();
 	
@@ -71,7 +71,6 @@ public enum MaterialLists {
 		TOOL.matList.addAll(EXOTIC_WEAPON.matList);
 		TOOL.matList.addAll(PICKAXE.matList);
 		TOOL.matList.add(Material.FISHING_ROD);
-		
 		//Armor
 		ARMOR.matList.add(Material.LEATHER_HELMET);
 		ARMOR.matList.add(Material.LEATHER_CHESTPLATE);
@@ -125,6 +124,16 @@ public enum MaterialLists {
 		DRUID_FOOD.matList.add(Material.BEETROOT);
 		DRUID_FOOD.matList.add(Material.SWEET_BERRIES);
 		DRUID_FOOD.matList.add(Material.GLOW_BERRIES);
+		//Crop
+		CROP.matList.add(Material.POTATOES);
+	    CROP.matList.add(Material.CARROTS);
+	    CROP.matList.add(Material.WHEAT);
+	    CROP.matList.add(Material.BEETROOTS);
+	    CROP.matList.add(Material.COCOA_BEANS);
+	    CROP.matList.add(Material.MELON_STEM);
+	    CROP.matList.add(Material.ATTACHED_MELON_STEM);
+	    CROP.matList.add(Material.PUMPKIN_STEM);
+	    CROP.matList.add(Material.ATTACHED_PUMPKIN_STEM);
 		//Leaves
 		LEAVES.matList.add(Material.ACACIA_LEAVES);
 		LEAVES.matList.add(Material.AZALEA_LEAVES);
@@ -134,6 +143,11 @@ public enum MaterialLists {
 		LEAVES.matList.add(Material.JUNGLE_LEAVES);
 		LEAVES.matList.add(Material.OAK_LEAVES);
 		LEAVES.matList.add(Material.SPRUCE_LEAVES);
+		//Ice
+		ICE.matList.add(Material.ICE);
+		ICE.matList.add(Material.BLUE_ICE);
+		ICE.matList.add(Material.FROSTED_ICE);
+		ICE.matList.add(Material.PACKED_ICE);
 	}
 	
 	public List<Material> getMaterials(){

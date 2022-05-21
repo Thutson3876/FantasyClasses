@@ -1,5 +1,6 @@
 name: FantasyClasses
-version: 0.5
+version: 1.0
+load: startup
 author: thutson3876
 main: me.thutson3876.fantasyclasses.FantasyClasses
 description: The spiritual successor to my previous plugin FantasyTools
@@ -18,3 +19,12 @@ commands:
   fantasyhelp:
     usage: /<command>
     description: informs the user of key information relating to this plugin
+  addskillexp:
+    usage: /<command> <amt> <player>
+    description: add plugin skill experience to a player
+  togglefriendlyfire:
+    usage: /<command>
+    description: toggle damage dealt to other players
+  toggledamagemeters:
+    usage: /<command>
+    description: toggle your damage being relayed back to you

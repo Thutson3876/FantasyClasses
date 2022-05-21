@@ -74,5 +74,29 @@ public class Sphere {
 
 		return circleBlocks;
 	}
+	
+	public static List<Location> generateCircle(Location center, int radius, boolean hollow){
+		List<Location> circleBlocks = new ArrayList<Location>();
+
+		int bx = center.getBlockX();
+		int bz = center.getBlockZ();
+
+		for (int x = bx - radius; x <= bx + radius; x++) {
+				for (int z = bz - radius; z <= bz + radius; z++) {
+
+					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
+
+					if (distance < radius * radius && !(hollow && distance < ((radius - 1) * (radius - 1)))) {
+
+						Location l = new Location(center.getWorld(), x, center.getY(), z);
+						
+						circleBlocks.add(l);
+
+					}
+				}
+		}
+
+		return circleBlocks;
+	}
 
 }

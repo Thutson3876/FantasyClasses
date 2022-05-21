@@ -11,16 +11,16 @@ public class BasicGUI extends AbstractGUI {
 		this.setItems(items);
 		initializeItems();
 		
-		if(this.forward != null)
+		/*if(this.forward != null)
 			this.initializeForwardItem(forward);
 
 		if(this.back != null)
-			this.initializeBackItem(back);
+			this.initializeBackItem(back);*/
 	}
 
 	@Override
-	public void initializeItems() {
-		int halfway = Math.round((inv.getSize() - 1) / 2);
+	protected void initializeItems() {
+		int halfway = Math.round((getInv().getSize() - 1) / 2);
 		List<GuiItem> itemList = this.items;
 		
 		int listSize = itemList.size();
@@ -37,14 +37,14 @@ public class BasicGUI extends AbstractGUI {
 			for (GuiItem item : itemList) {
 				if(item.equals(this.back) || item.equals(this.forward))
 					continue;
-				inv.setItem(startIndex, item.getItem());
+				getInv().setItem(startIndex, item.getItem());
 				startIndex++;
 			}
 		} else if (listSize % 2 == 0) {
 			for (GuiItem item : itemList) {
 				if(item.equals(this.back) || item.equals(this.forward))
 					continue;
-				inv.setItem(startIndex, item.getItem());
+				getInv().setItem(startIndex, item.getItem());
 				startIndex++;
 				if (startIndex == 13) {
 					startIndex++;
@@ -54,7 +54,7 @@ public class BasicGUI extends AbstractGUI {
 			for (GuiItem item : itemList) {
 				if(item.equals(this.back) || item.equals(this.forward))
 					continue;
-				inv.setItem(startIndex, item.getItem());
+				getInv().setItem(startIndex, item.getItem());
 				startIndex++;
 			}
 		}

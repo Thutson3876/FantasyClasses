@@ -20,7 +20,7 @@ public class HotHands extends AbstractAbility {
 	public void setDefaults() {
 		this.coolDowninTicks = 12 * 20;
 		this.displayName = "Hot Hands";
-		this.skillPointCost = 2;
+		this.skillPointCost = 1;
 		this.maximumLevel = 3;
 
 		this.createItemStack(Material.LAVA_BUCKET);
@@ -28,6 +28,7 @@ public class HotHands extends AbstractAbility {
 
 	@Override
 	public boolean trigger(Event event) {
+		
 		if(!(event instanceof EntityDamageByEntityEvent))
 			return false;
 		

@@ -62,7 +62,7 @@ public class HookLineAnd extends AbstractAbility {
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
 		
-		this.createItemStack(Material.COD);
+		this.createItemStack(Material.FISHING_ROD);
 	}
 
 	@Override
@@ -107,7 +107,7 @@ public class HookLineAnd extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Roll a d20 when you catch a fish. :)";
+		return "Roll a d20 when you catch a 'fish'";
 	}
 
 	@Override

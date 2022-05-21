@@ -67,6 +67,7 @@ public class TwentySides extends AbstractAbility {
 
 			Firework firework = (Firework) player.getWorld().spawnEntity(e.getBlock().getLocation(),
 					EntityType.FIREWORK);
+			firework.setShooter(player);
 			FireworkMeta meta = firework.getFireworkMeta();
 
 			Type type = Type.STAR;
@@ -82,7 +83,7 @@ public class TwentySides extends AbstractAbility {
 			
 			return true;
 		} else if (roll == 0) {
-			e.getBlock().getWorld().createExplosion(e.getBlock().getLocation(), 3.5f, false, true);
+			e.getBlock().getWorld().createExplosion(e.getBlock().getLocation(), 3.5f, false, false, player);
 			return true;
 		}
 

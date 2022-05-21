@@ -5,11 +5,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.util.AbilityUtils;
 import me.thutson3876.fantasyclasses.util.DamageCauseList;
 
 public class MagicalTolerance extends AbstractAbility {
 
-	private double resist = 0.1;
+	private double resist = 0.05;
 	
 	public MagicalTolerance(Player p) {
 		super(p);
@@ -20,7 +21,7 @@ public class MagicalTolerance extends AbstractAbility {
 		this.coolDowninTicks = 0;
 		this.displayName = "Magical Tolerance";
 		this.skillPointCost = 1;
-		this.maximumLevel = 5;
+		this.maximumLevel = 4;
 
 		this.createItemStack(Material.BLAZE_POWDER);		
 	}
@@ -50,7 +51,7 @@ public class MagicalTolerance extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Whenever you take magical damage, reduce the amount by &6" + resist * 100.0 + "%";
+		return "Whenever you take magical damage, reduce the amount by &6" + AbilityUtils.doubleRoundToXDecimals(resist * 100.0, 2) + "%";
 	}
 
 	@Override
@@ -60,7 +61,7 @@ public class MagicalTolerance extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		this.resist = 0.1 * currentLevel;
+		this.resist = 0.05 * currentLevel;
 	}
 
 }

@@ -28,7 +28,7 @@ public class NaturesBlessing extends AbstractAbility {
 		this.skillPointCost = 1;
 		this.maximumLevel = 3;
 
-		this.createItemStack(Material.FLOWERING_AZALEA_LEAVES);
+		this.createItemStack(Material.BIG_DRIPLEAF);
 	}
 
 	@Override

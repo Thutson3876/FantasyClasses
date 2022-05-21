@@ -8,6 +8,8 @@ import org.bukkit.Sound;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Player;
 
+import me.thutson3876.fantasyclasses.util.ChatUtils;
+
 public class RandomTeleport implements RandomAbility {
 
 	@Override
@@ -22,6 +24,8 @@ public class RandomTeleport implements RandomAbility {
 		p.teleport(newLoc);
 		newLoc.getWorld().playSound(newLoc, Sound.ENTITY_ENDERMAN_TELEPORT, 0.8f, 1.0f);
 		newLoc.getWorld().spawnParticle(Particle.WARPED_SPORE, newLoc, 4);
+		
+		p.sendMessage(ChatUtils.chat("&4Not as easy as it looks, is it?"));
 	}
 
 }

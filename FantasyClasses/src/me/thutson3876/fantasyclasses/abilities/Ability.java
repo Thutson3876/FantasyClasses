@@ -38,8 +38,14 @@ public interface Ability extends ConfigurationSerializable {
 	String getDescription();
 
 	String getCommandName();
+	
+	void setPrerequisite(String preq);
+	
+	String getPrerequisite();
 
 	boolean getDealsDamage();
+	
+	Priority getPriority();
 
 	boolean isEnabled();
 

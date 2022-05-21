@@ -1,31 +1,62 @@
 package me.thutson3876.fantasyclasses.classes.highroller.randomabilities;
 
-import java.util.Random;
-
-import org.bukkit.Location;
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.FallingBlock;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.util.Vector;
+import org.bukkit.scheduler.BukkitRunnable;
+
+import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class MidasTouch implements RandomAbility {
 	
+	private static final int MAX_DURATION = 5 * 20;
+	
+	private int count = MAX_DURATION;
+	private BossBar bar = Bukkit.createBossBar(ChatUtils.chat("&6Midas Touch"), BarColor.YELLOW, BarStyle.SEGMENTED_12, new org.bukkit.boss.BarFlag[0]);
+	
 	@Override
 	public void run(Player p) {
-		World world = p.getWorld();
-		Location loc = p.getLocation();
-		Random rng = new Random();
-		Block b = loc.getBlock();
-		b.setType(Material.GOLD_BLOCK);
-		BlockData data = b.getBlockData();
+		bar.setProgress(1.0);
+		bar.setVisible(true);
+		bar.addPlayer(p);
 		
-		for(int i = 0; i < rng.nextInt(5) + 3; i++) {
-			FallingBlock fb = world.spawnFallingBlock(loc, data);
-			fb.setVelocity(Vector.getRandom().multiply(rng.nextDouble() + 0.7));
-		}
+		p.sendMessage(ChatUtils.chat("&aYou feeling that tingly sensation? Its carpal tunnel go touch some grass"));
+		
+		new BukkitRunnable() {
+
+			@Override
+			public void run() {
+				if(p == null || p.isDead()) {
+					this.cancel();
+					bar.setVisible(false);
+					bar.removePlayer(p);
+					return;
+				}
+				if(count <= 1) {
+					this.cancel();
+					bar.setVisible(false);
+					bar.removePlayer(p);
+					return;
+				}
+				
+				double value = count / MAX_DURATION;
+				value = Math.min(Math.max(0.0D, value), 1.0D);
+				bar.setProgress(value);
+				bar.setVisible(true);
+				
+				Block b = p.getLocation().getBlock();
+				b.setType(Material.GOLD_BLOCK);
+				
+				count--;
+			}
+			
+		}.runTaskTimer(FantasyClasses.getPlugin(), 1, 1);
+		
 	}
 
 }

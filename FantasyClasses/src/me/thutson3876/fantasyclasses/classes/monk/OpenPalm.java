@@ -9,7 +9,8 @@ import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
 public class OpenPalm extends AbstractAbility {
 
-	private double damageMod = 1.5;
+	private static double damageModPerLevel = 0.75;
+	private double damageMod = damageModPerLevel;
 	
 	public OpenPalm(Player p) {
 		super(p);
@@ -46,12 +47,12 @@ public class OpenPalm extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Attack an entity with an empty hand";
+		return "Attack with empty hand";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Your attacks deal &6" + damageMod + "&r extra damage";
+		return "Your attacks deal &6" + (damageMod * 2) + "&r extra damage";
 	}
 
 	@Override
@@ -61,10 +62,14 @@ public class OpenPalm extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		damageMod = 1.5 * currentLevel;
+		damageMod = damageModPerLevel * currentLevel;
 	}
 
 	public double getDamageModifier() {
 		return damageMod;
+	}
+	
+	public static double getDamageModPerLevel() {
+		return damageModPerLevel;
 	}
 }

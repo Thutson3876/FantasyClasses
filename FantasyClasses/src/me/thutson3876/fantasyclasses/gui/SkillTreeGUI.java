@@ -57,14 +57,16 @@ public class SkillTreeGUI extends BasicGUI implements Listener {
 		for (GuiItem item : itemList) {
 			if (item.equals(this.back))
 				continue;
-			inv.setItem(start, item.getItem());
+			getInv().setItem(start, item.getItem());
 			Skill itemSkill = skill.getMatchingSkill(item.getItem());
+			if(itemSkill == null)
+				continue;
 			Skill prev = itemSkill.getPrev();
 			if ((prev == null || prev.getAbility().getCurrentLevel() > 0) && itemSkill.getAbility().getCurrentLevel() < itemSkill.getAbility().getMaxLevel()) {
-				inv.setItem(start + 9, levelUpItem);
+				getInv().setItem(start + 9, levelUpItem);
 			}
-			else if(inv.getItem(start + 9) == null || inv.getItem(start + 9).equals(levelUpItem))
-				inv.setItem(start + 9, getDefaultFiller());
+			else if(getInv().getItem(start + 9) == null || getInv().getItem(start + 9).equals(levelUpItem))
+				getInv().setItem(start + 9, getDefaultFiller());
 				
 			
 			if(item.getLinkedInventory() != null)
@@ -79,7 +81,7 @@ public class SkillTreeGUI extends BasicGUI implements Listener {
 	@EventHandler
 	public void onInventoryClick(final InventoryClickEvent e) {
 		Inventory inventory = e.getInventory();
-		if (inventory.equals(inv)) {
+		if (inventory.equals(getInv())) {
 			e.setCancelled(true);
 		} else {
 			return;
@@ -96,7 +98,7 @@ public class SkillTreeGUI extends BasicGUI implements Listener {
 			if (clickedItem.equals(item.getItem())) {
 				if (item.getLinkedInventory() == null)
 					break;
-				p.openInventory(item.getLinkedInventory().inv);
+				p.openInventory(item.getLinkedInventory().getInv());
 				break;
 			}
 		}
@@ -137,7 +139,7 @@ public class SkillTreeGUI extends BasicGUI implements Listener {
 				}
 			}
 
-			this.inv.setItem(e.getSlot() - 9, newItem);
+			this.getInv().setItem(e.getSlot() - 9, newItem);
 			refresh();
 		} else {
 			e.getWhoClicked().sendMessage(ChatUtils.chat("&4Error: Not enough skillpoints"));

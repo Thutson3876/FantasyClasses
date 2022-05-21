@@ -23,10 +23,10 @@ public class ClassSelectionGUI extends AbstractGUI {
 		for(int i = 0; i < classes.size(); i++) {
 			GuiItem temp = player.getFantasyClasses().get(i).asGuiItem(this);
 			items.add(temp);
-			inv.setItem(10 + i, temp.getItem());
+			getInv().setItem(10 + i, temp.getItem());
 		}
 		for(int i = 0; i < 9; i++) {
-			inv.setItem(i, getDefaultFiller());
+			getInv().setItem(i, getDefaultFiller());
 		}
 		generateExpBar();
 
@@ -52,7 +52,7 @@ public class ClassSelectionGUI extends AbstractGUI {
 				item.setType(Material.STONE);
 			}
 			
-			inv.setItem(i, item);
+			getInv().setItem(i, item);
 		}
 	}
 }

@@ -1,13 +1,12 @@
 package me.thutson3876.fantasyclasses.classes.monk;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
-import me.thutson3876.fantasyclasses.util.Collectible;
+import me.thutson3876.fantasyclasses.collectible.Collectible;
 
 public class AncientTechnique extends AbstractAbility {
 
@@ -19,7 +18,7 @@ public class AncientTechnique extends AbstractAbility {
 	public void setDefaults() {
 		this.coolDowninTicks = 30;
 		this.displayName = "Ancient Technique";
-		this.skillPointCost = 2;
+		this.skillPointCost = 1;
 		this.maximumLevel = 1;
 
 		this.createItemStack(Material.LECTERN);
@@ -35,15 +34,7 @@ public class AncientTechnique extends AbstractAbility {
 		if(!e.getPlayer().equals(player))
 			return false;
 		
-		Block b = e.getBlock();
-		if(b.hasMetadata("Collectible")) {
-			if(Collectible.ANCIENT_TECHNIQUE.equals(Collectible.getMatchingCollectible(b.getType()))) {
-				player.sendMessage(Collectible.ANCIENT_TECHNIQUE.getRandomLore());
-				e.setDropItems(false);
-				b.getWorld().dropItemNaturally(b.getLocation(), Collectible.generateDrop());
-				return true;
-			}
-		}
+		Collectible.ANCIENT_TECHNIQUE.onBreakEvent(e);
 		
 		return false;
 	}

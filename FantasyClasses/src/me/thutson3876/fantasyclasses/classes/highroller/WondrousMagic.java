@@ -19,7 +19,7 @@ public class WondrousMagic extends AbstractAbility implements Bindable {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 180 * 20;
+		this.coolDowninTicks = 1 * 20;
 		this.displayName = "Wondrous Magic";
 		this.skillPointCost = 2;
 		this.maximumLevel = 1;	
@@ -58,7 +58,7 @@ public class WondrousMagic extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getDescription() {
-		return "Cast a random effect";
+		return "Cast a random effect. WARNING: DO NOT USE NEAR BUILDS OR IMPORTANT AREAS";
 	}
 
 	@Override

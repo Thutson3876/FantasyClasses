@@ -25,7 +25,7 @@ public class SurvivalInstincts extends AbstractAbility {
 	
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 80 * 20;
+		this.coolDowninTicks = 60 * 20;
 		this.displayName = "Survival Instincts";
 		this.skillPointCost = 1;
 		this.maximumLevel = 1;
@@ -67,7 +67,7 @@ public class SurvivalInstincts extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Take lethal damage";
+		return "Take damage at 30% health";
 	}
 
 	@Override

@@ -20,13 +20,15 @@ import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class DualWielding extends AbstractAbility {
 
-	private int breakDuration = 50;
+	private int breakDuration = 60;
 	private PotionEffect blindness;
-	private double healAmt = 4.0;
+	private double healAmt = 2.0;
 	private AttributeModifier attackSpeed;
 
 	public DualWielding(Player p) {
 		super(p);
+		this.attackSpeed = new AttributeModifier(displayName, 2.0, Operation.ADD_NUMBER);
+		this.blindness = new PotionEffect(PotionEffectType.BLINDNESS, 60, 2);
 	}
 
 	@Override
@@ -35,8 +37,6 @@ public class DualWielding extends AbstractAbility {
 		this.displayName = "Dual Wielding";
 		this.skillPointCost = 2;
 		this.maximumLevel = 1;
-		this.attackSpeed = new AttributeModifier(displayName, 1.0, Operation.ADD_NUMBER);
-		this.blindness = new PotionEffect(PotionEffectType.BLINDNESS, 60, 2);
 
 		this.createItemStack(Material.IRON_SWORD);
 	}

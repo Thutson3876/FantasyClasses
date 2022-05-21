@@ -5,10 +5,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_AddSkillExp;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_BindAbility;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ChooseClass;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_Help;
 import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ResetSkills;
+import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ToggleDamageMeters;
+import me.thutson3876.fantasyclasses.commands.commandexecutors.Command_ToggleFriendlyFire;
 
 public class CommandManager {
 	private List<AbstractCommand> commands = new LinkedList<>();
@@ -18,6 +21,9 @@ public class CommandManager {
 		commands.add(new Command_BindAbility());
 		commands.add(new Command_ResetSkills());
 		commands.add(new Command_Help());
+		commands.add(new Command_AddSkillExp());
+		commands.add(new Command_ToggleDamageMeters());
+		commands.add(new Command_ToggleFriendlyFire());
 		
 		this.registerCommands();
 	}

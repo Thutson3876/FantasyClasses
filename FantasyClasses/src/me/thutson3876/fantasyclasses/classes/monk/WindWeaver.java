@@ -60,12 +60,13 @@ public class WindWeaver extends AbstractAbility {
 				|| player.getInventory().getItemInMainHand().getType().equals(Material.AIR)  || player.getInventory().getItemInMainHand().getType().equals(Material.STICK)))
 			return false;
 
-		double damage = 3.0;
+		double damage = 1.0;
 		List<Ability> abils = getFantasyPlayer().getAbilities();
 		
 		for(int i = 0; i < abils.size(); i++) {
 			if(abils.get(i).getName().equalsIgnoreCase("open palm")) {
-				damage = abils.get(i).getCurrentLevel() * 1.5;
+				damage = abils.get(i).getCurrentLevel() * (OpenPalm.getDamageModPerLevel());
+				break;
 			}
 		}
 		

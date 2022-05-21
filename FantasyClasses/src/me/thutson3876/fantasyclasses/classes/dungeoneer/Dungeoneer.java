@@ -16,20 +16,38 @@ public class Dungeoneer extends AbstractFantasyClass {
 
 		skillTree = new Skill(new BuiltToLast(p));
 		
-		Skill heat = new Skill(new HotHeaded(p));
-		heat.addChild(new HeatedTip(p));
-		heat.addChild(new HotHands(p));
-		skillTree.addChild(heat);
-		
 		Skill mine = new Skill(new DiggyDiggyHole(p));
-		mine.addChild(new Excavation(p));
-		mine.addChild(new VeinFinder(p));
+		Skill delv = mine.addChild(new Excavation(p)).addChild(new StoneSkin(p)).addChild(new DungeonDelver(p));
+		Skill hot = delv.addChild(new HotHeaded(p)).addChild(new HeatedTip(p)).addChild(new HotHands(p));
+		hot.addChild(new FieryExplosion(p));
 		skillTree.addChild(mine);
+		delv.addChild(new VeinFinder(p));
+		delv.addChild(new MiningSchematics(p));
 		
-		Skill stone = new Skill(new StoneSkin(p));
-		stone.addChild(new DungeonDelver(p));
-		stone.addChild(new MiningSchematics(p));
-		skillTree.addChild(stone);
+		Skill shadow = new Skill(new Shadowstep(p));
+		shadow.addChild(new Shadowmeld(p)).addChild(new Backstab(p));
+		shadow.getNext().get(0).addChild(new Stealth(p));
+		shadow.getNext().get(0).addChild(new Nimble(p));
+		delv.addChild(shadow);
+		
+		setSkillInMap(3, skillTree);
+		setSkillInMap(4, mine);
+		setSkillInMap(5, mine.getNext().get(0));
+		setSkillInMap(9 + 5, delv.getPrev());
+		setSkillInMap(18 + 6, delv);
+		setSkillInMap(9 + 6, delv.getNext().get(1));
+		setSkillInMap(18 + 7, delv.getNext().get(2));
+		setSkillInMap(27 + 7, hot.getPrev().getPrev());
+		setSkillInMap(27 + 8, hot.getPrev());
+		setSkillInMap(36 + 8, hot);
+		setSkillInMap(45 + 8, hot.getNext().get(0));
+		setSkillInMap(27 + 5, shadow);
+		setSkillInMap(36 + 4, shadow.getNext().get(0));
+		setSkillInMap(45 + 3, shadow.getNext().get(0).getNext().get(0));
+		setSkillInMap(27 + 3, shadow.getNext().get(0).getNext().get(1));
+		setSkillInMap(27 + 3, shadow.getNext().get(0).getNext().get(2));
+		
+		this.setPrerequisites();
 	}
 
 }

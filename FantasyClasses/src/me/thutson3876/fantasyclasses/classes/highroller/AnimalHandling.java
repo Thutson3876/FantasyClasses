@@ -62,7 +62,7 @@ public class AnimalHandling extends AbstractAbility {
 			justTriggered = false;
 		}
 		
-		world.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 0.8f, 1.0f);
+		world.playSound(player.getLocation(), Sound.ENTITY_VILLAGER_AMBIENT, 1.0f, 1.0f);
 		return true;
 	}
 

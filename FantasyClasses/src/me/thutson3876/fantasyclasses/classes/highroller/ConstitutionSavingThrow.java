@@ -8,14 +8,10 @@ import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 
 public class ConstitutionSavingThrow extends AbstractAbility {
 
-	private final PotionEffect regen = new PotionEffect(PotionEffectType.REGENERATION, 5 * 20, 1);
 	private final Random rng = new Random();
 	private int dc = 19;
 	
@@ -46,17 +42,18 @@ public class ConstitutionSavingThrow extends AbstractAbility {
 		if(isOnCooldown())
 			return false;
 		
+		if(e.isCancelled())
+			return false;
+		
 		int roll = rng.nextInt(20);
 		World world = player.getWorld();
 		if (roll >= dc) {
-			e.setDamage(0.0);
-			e.setCancelled(true);
-			player.addPotionEffect(regen);
+			e.setDamage(e.getDamage() / 2);
 			
-			world.playSound(player.getLocation(), Sound.BLOCK_CAKE_ADD_CANDLE, 1.0f, 1.0f);
+			world.playSound(player.getLocation(), Sound.BLOCK_CAKE_ADD_CANDLE, 0.9f, 1.0f);
 		}
 		else if(roll == 0) {
-			e.setDamage(e.getDamage() * 3.0);
+			e.setDamage(e.getDamage() * 2.0);
 			
 			world.playSound(player.getLocation(), Sound.BLOCK_GLASS_BREAK, 1.0f, 1.0f);
 		}
@@ -72,7 +69,7 @@ public class ConstitutionSavingThrow extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Roll a d20 when you take damage. On a roll above a &6" + this.dc + "&r take no damage and gain regeneration. On a natural one, take triple damage";
+		return "Roll a d20 when you take damage. On a roll above a &6" + this.dc + "&r take half damage. On a natural one, take double instead";
 	}
 
 	@Override

@@ -28,5 +28,15 @@ public class Alchemy extends AbstractFantasyClass {
 		skillTree.addChild(poison);
 		
 		skillTree.addChild(new Immunology(p));
+		
+		setSkillInMap(4, skillTree);
+		setSkillInMap(9 + 3, enhanced);
+		setSkillInMap(18 + 1, enhanced.getNext().get(0));
+		setSkillInMap(18 + 3, enhanced.getNext().get(1));
+		setSkillInMap(9 + 5, poison);
+		setSkillInMap(18 + 5, poison.getNext().get(0));
+		setSkillInMap(18 + 7, poison.getNext().get(1));
+		setSkillInMap(9 + 4, skillTree.getNext().get(2));
 	}
+	
 }

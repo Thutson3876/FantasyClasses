@@ -22,7 +22,7 @@ public class UnarmoredMovement extends AbstractAbility {
 		this.skillPointCost = 1;
 		this.maximumLevel = 5;
 
-		this.createItemStack(Material.FEATHER);
+		this.createItemStack(Material.RABBIT_FOOT);
 	}
 
 	@Override

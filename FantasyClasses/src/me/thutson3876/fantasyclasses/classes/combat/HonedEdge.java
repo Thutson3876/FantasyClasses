@@ -5,7 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
+
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
+import me.thutson3876.fantasyclasses.util.AbilityUtils;
 import me.thutson3876.fantasyclasses.util.MaterialLists;
 
 public class HonedEdge extends AbstractAbility {
@@ -16,6 +18,7 @@ public class HonedEdge extends AbstractAbility {
 		super(p);
 	}
 	
+	//All damage adding abilities are adding double the stated amount
 	@Override
 	public void setDefaults() {
 		this.coolDowninTicks = 0;
@@ -49,12 +52,12 @@ public class HonedEdge extends AbstractAbility {
 
 	@Override
 	public String getInstructions() {
-		return "Attack an entity with a sword";
+		return "Attack with a sword";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Your refined skill with the blade allows you to deal &6" + dmgMod + " &rmore damage with a sword";
+		return "Your refined skill with the blade allows you to deal &6" + AbilityUtils.doubleRoundToXDecimals(dmgMod, 2) + " &rmore damage with a sword";
 	}
 
 	@Override

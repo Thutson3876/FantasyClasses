@@ -73,7 +73,7 @@ public class Forager extends AbstractAbility {
 
 	@Override
 	public String getDescription() {
-		return "Leaves have a &6" + AbilityUtils.doubleRoundToXDecimals(chanceOnBreak * 100, 1) + "% &rchance to drop fresh food, and a &6" + goldenChance * 100
+		return "Leaves have a &6" + AbilityUtils.doubleRoundToXDecimals(chanceOnBreak * 100, 2) + "% &rchance to drop fresh food, and a &6" + goldenChance * 100
 				+ "% &rchance to drop a golden apple";
 	}
 

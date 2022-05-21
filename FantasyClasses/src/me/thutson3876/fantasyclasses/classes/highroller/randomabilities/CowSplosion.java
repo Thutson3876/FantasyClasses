@@ -12,6 +12,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import me.thutson3876.fantasyclasses.FantasyClasses;
+import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public class CowSplosion implements RandomAbility {
 
@@ -26,7 +27,8 @@ public class CowSplosion implements RandomAbility {
 			cows.add(world.spawnEntity(loc, EntityType.COW));
 		}
 		
-		world.playSound(loc, Sound.ENTITY_CREEPER_PRIMED, 1.5f, 0.8f);
+		world.playSound(loc, Sound.ENTITY_CREEPER_PRIMED, 1.2f, 0.8f);
+		p.sendMessage(ChatUtils.chat("&aMMMMMOOOOOOOOO!!!"));
 		
 		new BukkitRunnable() {
 
@@ -40,7 +42,7 @@ public class CowSplosion implements RandomAbility {
 				}
 			}
 			
-		}.runTaskLater(FantasyClasses.getPlugin(), 8 * 20);
+		}.runTaskLater(FantasyClasses.getPlugin(), 7 * 20);
 	}
 
 }

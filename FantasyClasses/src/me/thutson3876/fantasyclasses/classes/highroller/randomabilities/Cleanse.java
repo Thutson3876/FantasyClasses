@@ -8,6 +8,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import me.thutson3876.fantasyclasses.util.ChatUtils;
+
 public class Cleanse implements RandomAbility {
 
 	@Override
@@ -25,6 +27,7 @@ public class Cleanse implements RandomAbility {
 		p.addPotionEffect(new PotionEffect(PotionEffectType.SATURATION, 200, 0));
 		
 		p.playSound(p.getLocation(), Sound.ITEM_TOTEM_USE, 1.0f, 1.2f);
+		p.sendMessage(ChatUtils.chat("&aThe healthy benefits of a coffee enema"));
 	}
 
 }

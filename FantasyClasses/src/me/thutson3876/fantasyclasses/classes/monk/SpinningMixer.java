@@ -7,24 +7,28 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Sound;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerSwapHandItemsEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
+import me.thutson3876.fantasyclasses.abilities.Ability;
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
 import me.thutson3876.fantasyclasses.abilities.Bindable;
 
 public class SpinningMixer extends AbstractAbility implements Bindable {
 
-	private boolean weightless = false;
+	//private boolean weightless = false;
 
-	private double range = 3.5D;
+	private double range = 4.0D;
 
 	private int counter = 0;
 
 	private int duration = 12;
+	
+	private double damage = 1.0;
 
 	private List<Entity> entities = new ArrayList<>();
 
@@ -38,12 +42,19 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 		super(p);
 	}
 
+	
+	@Override
+	public void deInit() {
+		player.setGravity(true);
+	}
+	
+	//CHANGE WEIGHTLESSNESS AND MAKE LEVELING MATTER
 	@Override
 	public void setDefaults() {
-		this.coolDowninTicks = 16 * 20;
+		this.coolDowninTicks = 12 * 20;
 		this.displayName = "Spinning Mixer";
 		this.skillPointCost = 2;
-		this.maximumLevel = 2;
+		this.maximumLevel = 1;
 
 		this.createItemStack(Material.TARGET);
 	}
@@ -72,6 +83,14 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 		if(!correctType)
 			return false;
 		
+		List<Ability> abils = getFantasyPlayer().getAbilities();
+		for(int i = 0; i < abils.size(); i++) {
+			if(abils.get(i).getName().equalsIgnoreCase("open palm")) {
+				damage = abils.get(i).getCurrentLevel() * (OpenPalm.getDamageModPerLevel());
+				break;
+			}
+		}
+		
 		if (spawnTornado()) {
 			e.setCancelled(true);
 			return true;
@@ -82,12 +101,12 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 
 	@Override
 	public String getInstructions() {
-		return "Swap hands with the bound item type";
+		return "Swap hands with bound item type";
 	}
 
 	@Override
 	public String getDescription() {
-		return "Swiftly twirl the air around you to create a small tornado that sucks up any nearby entities. You have no gravity while using this ability at level 2";
+		return "Swiftly twirl the air around you to create a small tornado that sucks up any nearby entities";
 	}
 
 	@Override
@@ -97,8 +116,6 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 
 	@Override
 	public void applyLevelModifiers() {
-		if (this.currentLevel > 1)
-			weightless = true;
 	}
 
 	private boolean spawnTornado() {
@@ -115,9 +132,7 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 					for (Entity e : entities) {
 						e.setGravity(true);
 						e.setVelocity(e.getVelocity().add(Vector.getRandom().multiply(0.4D)));
-
 					}
-					player.setGravity(!weightless);
 					cancel();
 					return;
 				}
@@ -127,7 +142,7 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 		};
 		task.runTaskTimer(plugin, 0L, 2L);
 		
-		player.setGravity(!weightless);
+		player.getWorld().playSound(player.getLocation(), Sound.ITEM_ELYTRA_FLYING, 1.0f, 1.0f);
 		
 		return true;
 	}
@@ -143,7 +158,9 @@ public class SpinningMixer extends AbstractAbility implements Bindable {
 		}
 		for (Entity e : this.entities) {
 			e.setVelocity(v);
-
+			if(e instanceof LivingEntity)
+				((LivingEntity)e).damage(damage);
+			
 			if (counter % 3 == 0) {
 				e.getWorld().playSound(e.getLocation(), Sound.ENTITY_PHANTOM_FLAP, 1.0f, 0.8f);
 				e.getWorld().spawnParticle(Particle.WHITE_ASH, e.getLocation(), 1);

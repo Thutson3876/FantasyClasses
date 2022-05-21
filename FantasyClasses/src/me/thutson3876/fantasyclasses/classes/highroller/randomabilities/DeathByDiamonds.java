@@ -10,6 +10,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
+import me.thutson3876.fantasyclasses.util.ChatUtils;
+
 public class DeathByDiamonds implements RandomAbility {
 
 	@Override
@@ -30,9 +32,12 @@ public class DeathByDiamonds implements RandomAbility {
 		fb.setHurtEntities(true);
 		fb.setVelocity(new Vector(0, 1, 0));
 		fb.setFallDistance(6.0f);
+		b.setType(Material.AIR);
 	
 		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW_DIGGING, 120, 4));
 		p.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 120, 4));
+		
+		p.sendMessage(ChatUtils.chat("&aYummy yummy carbon"));
 	}
 
 }

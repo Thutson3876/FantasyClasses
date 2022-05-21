@@ -110,7 +110,7 @@ public class EnhancedRepitoire extends AbstractAbility{
 
 	@Override
 	public String getInstructions() {
-		return "Experiment :)";
+		return "Brew potions in a cauldron";
 	}
 
 	@Override

@@ -8,10 +8,12 @@ import org.bukkit.entity.Player;
 
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllBuffs;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.AllDebuffs;
+import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.ClassBasedRiches;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Cleanse;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.CowSplosion;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.DeathByDiamonds;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.Explosion;
+import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.FlyingPig;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.GodMode;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.MidasTouch;
 import me.thutson3876.fantasyclasses.classes.highroller.randomabilities.RandomAbility;
@@ -48,12 +50,15 @@ public class WondrousTable {
 		abilities.add(new CowSplosion());
 		abilities.add(new RandomTeleport());
 		abilities.add(new MidasTouch());
+		abilities.add(new FlyingPig());
+		abilities.add(new ClassBasedRiches());
+		abilities.add(null);
 	}
 	
 	public static void roll(Player p) {
 		int roll = rng.nextInt(abilities.size());
 		
-		if(roll == abilities.size() - 1) {
+		if(abilities.get(roll) == null) {
 			roll(p);
 			roll(p);
 			return;

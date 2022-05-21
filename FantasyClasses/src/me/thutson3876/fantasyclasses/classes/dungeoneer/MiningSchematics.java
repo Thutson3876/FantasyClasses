@@ -1,13 +1,12 @@
 package me.thutson3876.fantasyclasses.classes.dungeoneer;
 
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockBreakEvent;
 
 import me.thutson3876.fantasyclasses.abilities.AbstractAbility;
-import me.thutson3876.fantasyclasses.util.Collectible;
+import me.thutson3876.fantasyclasses.collectible.Collectible;
 
 public class MiningSchematics extends AbstractAbility {
 	
@@ -35,15 +34,7 @@ public class MiningSchematics extends AbstractAbility {
 		if(!e.getPlayer().equals(player))
 			return false;
 		
-		Block b = e.getBlock();
-		if(b.hasMetadata("Collectible")) {
-			if(Collectible.MINING_SCHEMATICS.equals(Collectible.getMatchingCollectible(b.getType()))) {
-				player.sendMessage(Collectible.MINING_SCHEMATICS.getRandomLore());
-				e.setDropItems(false);
-				b.getWorld().dropItemNaturally(b.getLocation(), Collectible.generateDrop());
-				return true;
-			}
-		}
+		Collectible.MINING_SCHEMATICS.onBreakEvent(e);
 		
 		return false;
 	}

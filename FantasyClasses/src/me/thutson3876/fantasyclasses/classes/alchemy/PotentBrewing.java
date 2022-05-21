@@ -18,7 +18,7 @@ import me.thutson3876.fantasyclasses.util.PotionList;
 
 public class PotentBrewing extends AbstractAbility {
 
-	private double chance = 0.1;
+	private double chance = 0.2;
 	private int maxAmp = 1;
 	private int minAmp = 0;
 	private int maxDuration = 40;
@@ -33,7 +33,7 @@ public class PotentBrewing extends AbstractAbility {
 		this.coolDowninTicks = 30;
 		this.displayName = "Potent Brewing";
 		this.skillPointCost = 1;
-		this.maximumLevel = 10;
+		this.maximumLevel = 5;
 
 		this.createItemStack(Material.NETHER_WART);
 	}
@@ -107,7 +107,7 @@ public class PotentBrewing extends AbstractAbility {
 	@Override
 	public String getDescription() {
 		return "When brewing using Enhanced Repitoire, gain a &6" + chance * 100
-				+ "% &rchance to give it a random additional effect. Bonus duration at level 4 and bonus potency at level 7";
+				+ "% &rchance to give it a random additional effect. Bonus duration at level 3 and bonus potency at level 5";
 	}
 
 	@Override
@@ -117,12 +117,12 @@ public class PotentBrewing extends AbstractAbility {
 
 	@Override
 	public void applyLevelModifiers() {
-		chance = 0.1 * currentLevel;
-		if (currentLevel > 3) {
+		chance = 0.2 * currentLevel;
+		if (currentLevel > 2) {
 			maxDuration = 180;
 			minDuration = 45;
 		}
-		if (currentLevel > 6) {
+		if (currentLevel > 4) {
 			maxAmp = 3;
 			minAmp = 1;
 		}

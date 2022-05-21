@@ -22,7 +22,7 @@ import me.thutson3876.fantasyclasses.playermanagement.FantasyPlayer;
 import me.thutson3876.fantasyclasses.util.ChatUtils;
 
 public abstract class AbstractGUI implements Listener {
-	protected final Inventory inv;
+	private final Inventory inv;
 
 	protected List<GuiItem> items = new ArrayList<>();
 	protected FantasyPlayer player;
@@ -36,7 +36,8 @@ public abstract class AbstractGUI implements Listener {
 		
 		inv = Bukkit.createInventory(null, size, title);
 		
-		initializeItems();
+		if(items != null && !items.isEmpty())
+			initializeItems();
 		
 		if (forward != null)
 			initializeForwardItem(forward);
@@ -45,33 +46,37 @@ public abstract class AbstractGUI implements Listener {
 			initializeBackItem(back);
 	}
 
-	public abstract void initializeItems();
+	protected abstract void initializeItems();
 
 	protected void initializeForwardItem(AbstractGUI forward) {
-		int size = inv.getSize();
+		int size = getInv().getSize();
 		int forPos = size - 1;
 
 		this.forward = createGuiItem(forward, Material.EMERALD_BLOCK, ChatUtils.chat("&2Next"));
 		ItemStack forwardItem = this.forward.getItem();
 
-		inv.setItem(forPos, forwardItem);
+		getInv().setItem(forPos, forwardItem);
 		items.add(this.forward);
 	}
 
 	protected void initializeBackItem(AbstractGUI back) {
-		int size = inv.getSize();
+		int size = getInv().getSize();
 		int backPos = size - 9;
 
 		this.back = createGuiItem(back, Material.REDSTONE_BLOCK, ChatUtils.chat("&4Back"));
 		ItemStack backItem = this.back.getItem();
 
-		inv.setItem(backPos, backItem);
+		getInv().setItem(backPos, backItem);
 		items.add(this.back);
 	}
 
 	public void setItems(List<GuiItem> items) {
 		this.items = items;
 		initializeItems();
+	}
+	
+	public void setJustItems(List<GuiItem> items) {
+		this.items = items;
 	}
 	
 	protected void reInitializeForwardBack() {
@@ -89,10 +94,10 @@ public abstract class AbstractGUI implements Listener {
 	}
 	
 	protected void fillGaps(ItemStack filler) {
-		for (int i = 0; i < inv.getSize(); i++) {
-			ItemStack item = inv.getItem(i);
+		for (int i = 0; i < getInv().getSize(); i++) {
+			ItemStack item = getInv().getItem(i);
 			if (item == null || item.getType().equals(Material.AIR)) {
-				inv.setItem(i, filler);
+				getInv().setItem(i, filler);
 			}
 		}
 	}
@@ -103,10 +108,10 @@ public abstract class AbstractGUI implements Listener {
 		meta.setDisplayName(" ");
 		fill.setItemMeta(meta);
 		
-		for (int i = 0; i < inv.getSize(); i++) {
-			ItemStack item = inv.getItem(i);
+		for (int i = 0; i < getInv().getSize(); i++) {
+			ItemStack item = getInv().getItem(i);
 			if (item == null || item.getType().equals(Material.AIR)) {
-				inv.setItem(i, fill);
+				getInv().setItem(i, fill);
 			}
 		}
 	}
@@ -125,12 +130,12 @@ public abstract class AbstractGUI implements Listener {
 	}
 
 	public void openInventory(final HumanEntity ent) {
-		ent.openInventory(inv);
+		ent.openInventory(getInv());
 	}
 	
 	public void refresh() {
 		initializeItems();
-		player.getPlayer().openInventory(inv);
+		player.getPlayer().openInventory(getInv());
 	}
 	
 	public static Inventory defaultFillGaps(Inventory inv, Material filler) {
@@ -160,7 +165,7 @@ public abstract class AbstractGUI implements Listener {
 
 	@EventHandler
 	public void onInventoryClick(final InventoryClickEvent e) {
-		if (e.getInventory() != inv)
+		if (e.getInventory() != getInv())
 			return;
 
 		e.setCancelled(true);
@@ -178,7 +183,7 @@ public abstract class AbstractGUI implements Listener {
 			if(clickedItem.equals(item.getItem())) {
 				if(item.getLinkedInventory() == null)
 					break;
-				p.openInventory(item.getLinkedInventory().inv);
+				p.openInventory(item.getLinkedInventory().getInv());
 				break;
 			}
 		}
@@ -186,8 +191,12 @@ public abstract class AbstractGUI implements Listener {
 
 	@EventHandler
 	public void onInventoryDrag(final InventoryDragEvent e) {
-		if (e.getInventory().equals(inv)) {
+		if (e.getInventory().equals(getInv())) {
 			e.setCancelled(true);
 		}
+	}
+
+	public Inventory getInv() {
+		return inv;
 	}
 }
